@@ -18,10 +18,16 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     const initialDucks = racePhysicsRef.current.initializeDucks();
     setDucks(initialDucks);
 
-    // Load background image
+    // Load background image with error handling
     const img = new Image();
+    img.onload = () => {
+      backgroundImageRef.current = img;
+    };
+    img.onerror = () => {
+      console.warn('Failed to load background image, using fallback gradient');
+      backgroundImageRef.current = null;
+    };
     img.src = VISUAL_CONSTANTS.BACKGROUND_IMAGE_PATH;
-    backgroundImageRef.current = img;
   }, []);
 
   useEffect(() => {
@@ -68,7 +74,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
   const drawBackground = (ctx, offset) => {
     const img = backgroundImageRef.current;
 
-    if (img && img.complete) {
+    if (img && img.complete && img.naturalWidth > 0) {
       // Calculate scaling to fit canvas height while maintaining aspect ratio
       const scale = ctx.canvas.height / img.height;
       const scaledWidth = img.width * scale;
