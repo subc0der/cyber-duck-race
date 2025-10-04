@@ -96,7 +96,7 @@ export const PHYSICS_CONSTANTS = {
   LEAD_PENALTY: 0.9,
   // Position thresholds
   // Minimum distance (in pixels) for catch-up mechanics and collision checks.
-  // Value of 50 balances responsiveness and prevents jitter in close races.
+  // POSITION_THRESHOLD_DISTANCE balances responsiveness and prevents jitter in close races.
   POSITION_THRESHOLD_DISTANCE: 50,
   // Relative positioning
   LEADER_OFFSET: 200,
