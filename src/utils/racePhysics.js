@@ -22,8 +22,13 @@ export class RacePhysics {
       typeof window.crypto.getRandomValues === 'function'
     ) {
       const array = new Uint32Array(1);
-      window.crypto.getRandomValues(array);
-      randomValue = array[0];
+      try {
+        window.crypto.getRandomValues(array);
+        randomValue = array[0];
+      } catch (e) {
+        console.warn('Web Crypto API call failed, falling back to Math.random(). Winner selection will be predictable in this environment.', e);
+        randomValue = Math.floor(Math.random() * 0xFFFFFFFF);
+      }
     } else {
       console.warn('Web Crypto API not available, falling back to Math.random(). Winner selection will be predictable in this environment.');
       randomValue = Math.floor(Math.random() * 0xFFFFFFFF);
