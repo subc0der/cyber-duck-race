@@ -21,7 +21,7 @@ export class RacePhysics {
       window.crypto.getRandomValues(array);
       randomValue = array[0];
     } else {
-      console.warn('WebCrypto API not available, falling back to Math.random(). Winner selection will be predictable in this environment.');
+      console.warn('Web Crypto API not available, falling back to Math.random(). Winner selection will be predictable in this environment.');
       randomValue = Math.floor(Math.random() * 0xFFFFFFFF);
     }
     this.predeterminedWinner = randomValue % DUCK_CONSTANTS.DUCK_NAMES.length;
