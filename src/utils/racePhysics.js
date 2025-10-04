@@ -26,7 +26,7 @@ export class RacePhysics {
         window.crypto.getRandomValues(array);
         randomValue = array[0];
       } catch (e) {
-        console.warn('Web Crypto API call failed, falling back to Math.random(). Winner selection will be predictable in this environment.', e);
+        console.warn('Crypto API failed, using fallback random generator');
         randomValue = Math.floor(Math.random() * 0xFFFFFFFF);
       }
     } else {
