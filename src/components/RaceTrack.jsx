@@ -19,15 +19,26 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     setDucks(initialDucks);
 
     // Load background image with error handling
+    let isMounted = true;
     const img = new Image();
     img.onload = () => {
-      backgroundImageRef.current = img;
+      if (isMounted) {
+        backgroundImageRef.current = img;
+      }
     };
     img.onerror = () => {
-      console.warn('Failed to load background image, using fallback gradient');
-      backgroundImageRef.current = null;
+      if (isMounted) {
+        console.warn('Failed to load background image, using fallback gradient');
+        backgroundImageRef.current = null;
+      }
     };
     img.src = VISUAL_CONSTANTS.BACKGROUND_IMAGE_PATH;
+
+    return () => {
+      isMounted = false;
+      img.onload = null;
+      img.onerror = null;
+    };
   }, []);
 
   useEffect(() => {
