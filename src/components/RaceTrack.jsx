@@ -20,7 +20,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
     // Load background image
     const img = new Image();
-    img.src = '/subcoder/BG00.jpg';
+    img.src = VISUAL_CONSTANTS.BACKGROUND_IMAGE_PATH;
     backgroundImageRef.current = img;
   }, []);
 
@@ -45,10 +45,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       ctx.clearRect(UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, canvas.width, canvas.height);
 
       backgroundOffset -= VISUAL_CONSTANTS.BACKGROUND_SCROLL_SPEED / UI_CONSTANTS.FRAME_RATE_DIVISOR;
-      const newOffset = drawBackground(ctx, backgroundOffset);
-      if (newOffset === 0) {
-        backgroundOffset = 0;
-      }
+      backgroundOffset = drawBackground(ctx, backgroundOffset);
 
       const updatedDucks = racePhysicsRef.current.updateDuckPositions(elapsed);
       drawDucks(ctx, updatedDucks);
