@@ -24,7 +24,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     let startTime = Date.now();
-    let backgroundOffset = 0;
+    let backgroundOffset = UI_CONSTANTS.INITIAL_BACKGROUND_OFFSET;
 
     const animate = () => {
       const currentTime = Date.now();
@@ -36,11 +36,11 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
         return;
       }
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, canvas.width, canvas.height);
 
       backgroundOffset -= VISUAL_CONSTANTS.BACKGROUND_SCROLL_SPEED / UI_CONSTANTS.FRAME_RATE_DIVISOR;
       if (backgroundOffset <= -canvas.width) {
-        backgroundOffset = 0;
+        backgroundOffset = UI_CONSTANTS.INITIAL_BACKGROUND_OFFSET;
       }
       drawBackground(ctx, backgroundOffset);
 
@@ -63,10 +63,10 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
   }, [isRacing, onRaceEnd]);
 
   const drawBackground = (ctx, offset) => {
-    const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
-    gradient.addColorStop(0, '#0a0a0a');
-    gradient.addColorStop(0.5, '#1a0033');
-    gradient.addColorStop(1, '#0a0a0a');
+    const gradient = ctx.createLinearGradient(UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, ctx.canvas.height);
+    gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_START, '#0a0a0a');
+    gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_MIDDLE, '#1a0033');
+    gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_END, '#0a0a0a');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 

@@ -4,6 +4,7 @@ import ControlPanel from './components/ControlPanel';
 import Leaderboard from './components/Leaderboard';
 import WinnerModal from './components/WinnerModal';
 import { RaceProvider } from './contexts/RaceContext';
+import { UI_CONSTANTS } from './utils/constants';
 import './styles/App.css';
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
       <div className="app">
         <div className="app-header">
           <h1 className="app-title">CYBER DUCK RACE</h1>
-          <div className="app-subtitle">Welcome to Neo-Quackyo 2099</div>
+          <div className="app-subtitle">Welcome to Neo-Quackyo {UI_CONSTANTS.GAME_YEAR}</div>
         </div>
 
         <div className="app-content">
@@ -64,7 +65,7 @@ function App() {
 
         <div className="app-footer">
           <div className="footer-text">
-            Powered by CyberDuck Industries © 2099
+            Powered by CyberDuck Industries © {UI_CONSTANTS.GAME_YEAR}
           </div>
         </div>
       </div>

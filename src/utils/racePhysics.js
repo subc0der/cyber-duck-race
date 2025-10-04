@@ -15,9 +15,16 @@ export class RacePhysics {
   }
 
   initializeDucks() {
-    const array = new Uint32Array(1);
-    window.crypto.getRandomValues(array);
-    this.predeterminedWinner = array[0] % DUCK_CONSTANTS.DUCK_NAMES.length;
+    let randomValue;
+    if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+      const array = new Uint32Array(1);
+      window.crypto.getRandomValues(array);
+      randomValue = array[0];
+    } else {
+      console.warn('[SECURITY WARNING] WebCrypto API not available, falling back to Math.random(). Winner selection may be predictable.');
+      randomValue = Math.floor(Math.random() * 0xFFFFFFFF);
+    }
+    this.predeterminedWinner = randomValue % DUCK_CONSTANTS.DUCK_NAMES.length;
 
     this.ducks = DUCK_CONSTANTS.DUCK_NAMES.map((name, index) => ({
       id: index,

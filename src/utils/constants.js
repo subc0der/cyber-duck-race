@@ -130,6 +130,17 @@ export const UI_CONSTANTS = {
   // Animation frame timing
   FRAME_RATE_DIVISOR: 60,
   MILLISECONDS_TO_SECONDS: 1000,
+  // Canvas positioning
+  CANVAS_ORIGIN: 0,
+  INITIAL_BACKGROUND_OFFSET: 0,
+  // Gradient positioning
+  GRADIENT_STOP_START: 0,
+  GRADIENT_STOP_MIDDLE: 0.5,
+  GRADIENT_STOP_END: 1,
+  // RaceContext defaults
+  INITIAL_BALANCE: 10000,
+  // App branding
+  GAME_YEAR: 2099,
 };
 
 export const AUDIO_CONSTANTS = {

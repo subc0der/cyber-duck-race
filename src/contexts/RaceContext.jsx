@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback } from 'react';
+import { UI_CONSTANTS } from '../utils/constants';
 
 const RaceContext = createContext();
 
@@ -16,7 +17,7 @@ export const RaceProvider = ({ children }) => {
     currentRace: null,
     raceHistory: [],
     bets: [],
-    balance: 10000,
+    balance: UI_CONSTANTS.INITIAL_BALANCE,
   });
 
   const startRace = useCallback(() => {
