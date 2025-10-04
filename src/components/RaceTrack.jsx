@@ -18,38 +18,19 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     const initialDucks = racePhysicsRef.current.initializeDucks();
     setDucks(initialDucks);
 
-    // Load background image with error handling using AbortController
-    const controller = new AbortController();
-    let objectUrl = null;
-    fetch(VISUAL_CONSTANTS.BACKGROUND_IMAGE_PATH, { signal: controller.signal })
-      .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.blob();
-      })
-      .then(blob => {
-        objectUrl = URL.createObjectURL(blob);
-        const img = new window.Image();
-        img.onload = () => {
-          backgroundImageRef.current = img;
-        };
-        img.onerror = () => {
-          console.warn('Failed to load background image, using fallback gradient');
-          backgroundImageRef.current = null;
-        };
-        img.src = objectUrl;
-      })
-      .catch(error => {
-        if (error.name !== 'AbortError') {
-          console.warn('Failed to fetch background image, using fallback gradient');
-          backgroundImageRef.current = null;
-        }
-      });
+    // Load background image directly as a static asset
+    const img = new window.Image();
+    img.onload = () => {
+      backgroundImageRef.current = img;
+    };
+    img.onerror = () => {
+      console.warn('Failed to load background image, using fallback gradient');
+      backgroundImageRef.current = null;
+    };
+    img.src = VISUAL_CONSTANTS.BACKGROUND_IMAGE_PATH;
 
     return () => {
-      controller.abort();
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl);
-      }
+      // No cleanup necessary for direct image loading
     };
   }, []);
 
