@@ -68,7 +68,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_MIDDLE, '#1a0033');
     gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_END, '#0a0a0a');
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fillRect(VISUAL_CONSTANTS.BACKGROUND_RECT_ORIGIN, VISUAL_CONSTANTS.BACKGROUND_RECT_ORIGIN, ctx.canvas.width, ctx.canvas.height);
 
     ctx.strokeStyle = '#00ffff';
     ctx.lineWidth = VISUAL_CONSTANTS.BACKGROUND_LINE_WIDTH;
@@ -128,8 +128,8 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     <div className="race-track">
       <canvas
         ref={canvasRef}
-        width={800}
-        height={600}
+        width={VISUAL_CONSTANTS.CANVAS_WIDTH}
+        height={VISUAL_CONSTANTS.CANVAS_HEIGHT}
         className="race-canvas"
       />
       <div className="track-overlay">

@@ -1,3 +1,4 @@
+import { UI_CONSTANTS } from '../utils/constants';
 import '../styles/Leaderboard.css';
 
 const Leaderboard = ({ raceHistory }) => {
@@ -6,14 +7,14 @@ const Leaderboard = ({ raceHistory }) => {
 
     raceHistory.forEach((race) => {
       if (race && race.name) {
-        duckWins[race.name] = (duckWins[race.name] || 0) + 1;
+        duckWins[race.name] = (duckWins[race.name] || UI_CONSTANTS.DEFAULT_WIN_COUNT) + UI_CONSTANTS.RANK_DISPLAY_OFFSET;
       }
     });
 
     return Object.entries(duckWins)
       .map(([name, wins]) => ({ name, wins }))
       .sort((a, b) => b.wins - a.wins)
-      .slice(0, 10);
+      .slice(UI_CONSTANTS.DEFAULT_WIN_COUNT, UI_CONSTANTS.MAX_LEADERBOARD_ENTRIES);
   };
 
   const leaderboardData = getLeaderboardData();
@@ -38,10 +39,10 @@ const Leaderboard = ({ raceHistory }) => {
             {leaderboardData.map((duck, index) => (
               <div key={index} className="leaderboard-item">
                 <span className="rank">
-                  {index === 0 && '🏆'}
-                  {index === 1 && '🥈'}
-                  {index === 2 && '🥉'}
-                  {index > 2 && `#${index + 1}`}
+                  {index === UI_CONSTANTS.RANK_FIRST_PLACE && '🏆'}
+                  {index === UI_CONSTANTS.RANK_SECOND_PLACE && '🥈'}
+                  {index === UI_CONSTANTS.RANK_THIRD_PLACE && '🥉'}
+                  {index > UI_CONSTANTS.RANK_THIRD_PLACE && `#${index + UI_CONSTANTS.RANK_DISPLAY_OFFSET}`}
                 </span>
                 <span className="name">{duck.name}</span>
                 <span className="wins">{duck.wins}</span>
@@ -64,7 +65,7 @@ const Leaderboard = ({ raceHistory }) => {
             <div className="stat-item">
               <span className="stat-label">LAST WINNER</span>
               <span className="stat-value">
-                {raceHistory.length > 0 ? raceHistory[raceHistory.length - 1].name : 'N/A'}
+                {raceHistory.length > UI_CONSTANTS.DEFAULT_WIN_COUNT ? raceHistory[raceHistory.length - UI_CONSTANTS.LAST_RACE_INDEX_OFFSET].name : 'N/A'}
               </span>
             </div>
           </div>
