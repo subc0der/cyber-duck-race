@@ -16,7 +16,11 @@ export class RacePhysics {
 
   initializeDucks() {
     let randomValue;
-    if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+    if (
+      typeof window !== 'undefined' &&
+      window.crypto &&
+      typeof window.crypto.getRandomValues === 'function'
+    ) {
       const array = new Uint32Array(1);
       window.crypto.getRandomValues(array);
       randomValue = array[0];
