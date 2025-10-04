@@ -95,11 +95,8 @@ export const PHYSICS_CONSTANTS = {
   CATCH_UP_BONUS: 1.2,
   LEAD_PENALTY: 0.9,
   // Position thresholds
-  /*
-   * Minimum distance (in pixels) between two objects for them to be considered "close" in physics calculations.
-   * Used to determine when special logic (e.g., catch-up mechanics or collision checks) should apply.
-   * Value of 50 was chosen to balance responsiveness and prevent jitter in close races.
-   */
+  // Minimum distance (in pixels) for catch-up mechanics and collision checks.
+  // Value of 50 balances responsiveness and prevents jitter in close races.
   POSITION_THRESHOLD_DISTANCE: 50,
   // Relative positioning
   LEADER_OFFSET: 200,
