@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { UI_CONSTANTS } from '../utils/constants';
 import '../styles/WinnerModal.css';
 
 const WinnerModal = ({ winner, onClose }) => {
@@ -8,7 +9,7 @@ const WinnerModal = ({ winner, onClose }) => {
     setShowConfetti(true);
     const timer = setTimeout(() => {
       setShowConfetti(false);
-    }, 3000);
+    }, UI_CONSTANTS.WINNER_DISPLAY_DURATION);
 
     return () => clearTimeout(timer);
   }, []);
@@ -18,14 +19,14 @@ const WinnerModal = ({ winner, onClose }) => {
       <div className="winner-modal" onClick={(e) => e.stopPropagation()}>
         {showConfetti && (
           <div className="confetti-container">
-            {[...Array(50)].map((_, i) => (
+            {[...Array(UI_CONSTANTS.CONFETTI_COUNT)].map((_, i) => (
               <div
                 key={i}
                 className="confetti"
                 style={{
-                  '--delay': `${Math.random() * 3}s`,
-                  '--position': `${Math.random() * 100}%`,
-                  '--color': ['#00ffff', '#ff00ff', '#9d00ff', '#ffff00'][i % 4],
+                  '--delay': `${Math.random() * UI_CONSTANTS.CONFETTI_ANIMATION_DURATION}s`,
+                  '--position': `${Math.random() * UI_CONSTANTS.CONFETTI_POSITION_RANGE}%`,
+                  '--color': ['#00ffff', '#ff00ff', '#9d00ff', '#ffff00'][i % UI_CONSTANTS.CONFETTI_COLOR_COUNT],
                 }}
               />
             ))}
@@ -40,11 +41,11 @@ const WinnerModal = ({ winner, onClose }) => {
           <div className="winner-stats">
             <div className="stat">
               <span className="stat-label">FINISH TIME</span>
-              <span className="stat-value">{winner.time || '15.0'}s</span>
+              <span className="stat-value">{winner.time || UI_CONSTANTS.DEFAULT_FINISH_TIME}s</span>
             </div>
             <div className="stat">
               <span className="stat-label">AVG SPEED</span>
-              <span className="stat-value">{winner.avgSpeed || '100'}px/s</span>
+              <span className="stat-value">{winner.avgSpeed || UI_CONSTANTS.DEFAULT_SPEED}px/s</span>
             </div>
           </div>
           <button className="btn btn-close" onClick={onClose}>

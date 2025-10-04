@@ -1,10 +1,10 @@
 import { useState, useCallback } from 'react';
 import RaceTrack from './components/RaceTrack';
 import ControlPanel from './components/ControlPanel';
-import BettingPanel from './components/BettingPanel';
 import Leaderboard from './components/Leaderboard';
 import WinnerModal from './components/WinnerModal';
 import { RaceProvider } from './contexts/RaceContext';
+import { UI_CONSTANTS } from './utils/constants';
 import './styles/App.css';
 
 function App() {
@@ -33,7 +33,7 @@ function App() {
       <div className="app">
         <div className="app-header">
           <h1 className="app-title">CYBER DUCK RACE</h1>
-          <div className="app-subtitle">Welcome to Neo-Quackyo 2099</div>
+          <div className="app-subtitle">Welcome to Neo-Quackyo {UI_CONSTANTS.GAME_YEAR}</div>
         </div>
 
         <div className="app-content">
@@ -42,17 +42,13 @@ function App() {
               isRacing={isRacing}
               onRaceEnd={handleRaceEnd}
             />
+          </div>
+
+          <div className="side-panel">
             <ControlPanel
               isRacing={isRacing}
               onStartRace={handleRaceStart}
               onResetRace={handleResetRace}
-            />
-          </div>
-
-          <div className="side-panel">
-            <BettingPanel
-              isRacing={isRacing}
-              disabled={isRacing}
             />
             <Leaderboard
               raceHistory={raceHistory}
@@ -69,7 +65,7 @@ function App() {
 
         <div className="app-footer">
           <div className="footer-text">
-            Powered by CyberDuck Industries © 2099
+            Powered by CyberDuck Industries © {UI_CONSTANTS.GAME_YEAR}
           </div>
         </div>
       </div>
