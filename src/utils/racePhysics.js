@@ -139,7 +139,7 @@ export class RacePhysics {
   determineWinner() {
     const winner = this.ducks[this.predeterminedWinner];
 
-    this.ducks.sort((a, b) => b.position - a.position);
+    // Removed unnecessary sort operation.
 
     return {
       id: winner.id,
