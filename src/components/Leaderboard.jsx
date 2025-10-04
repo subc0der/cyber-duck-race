@@ -14,7 +14,7 @@ const Leaderboard = ({ raceHistory }) => {
     return Object.entries(duckWins)
       .map(([name, wins]) => ({ name, wins }))
       .sort((a, b) => b.wins - a.wins)
-      .slice(UI_CONSTANTS.DEFAULT_WIN_COUNT, UI_CONSTANTS.MAX_LEADERBOARD_ENTRIES);
+      .slice(0, UI_CONSTANTS.MAX_LEADERBOARD_ENTRIES);
   };
 
   const leaderboardData = getLeaderboardData();
