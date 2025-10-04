@@ -51,6 +51,7 @@
 
 .winner-title {
   font-size: 48px;
+  color: #00ffff;
   background: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00);
   -webkit-background-clip: text;
   background-clip: text;

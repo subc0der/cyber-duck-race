@@ -15,6 +15,7 @@
 
 .app-title {
   font-size: 48px;
+  color: #00ffff;
   background: linear-gradient(90deg, #00ffff, #ff00ff, #9d00ff, #00ffff);
   background-size: 200% auto;
   -webkit-background-clip: text;
