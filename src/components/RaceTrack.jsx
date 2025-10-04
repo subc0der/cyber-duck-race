@@ -28,10 +28,6 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       backgroundImageRef.current = null;
     };
     img.src = VISUAL_CONSTANTS.BACKGROUND_IMAGE_PATH;
-
-    return () => {
-      // No cleanup necessary for direct image loading
-    };
   }, []);
 
   useEffect(() => {
