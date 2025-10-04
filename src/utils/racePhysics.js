@@ -136,11 +136,13 @@ export class RacePhysics {
     return adjustment;
   }
 
+  /**
+   * Determines and returns the winner of the race.
+   * The winner is selected based on the predeterminedWinner index.
+   * @returns {Object} An object containing the winner's id, name, color, race time, average speed, and final position.
+   */
   determineWinner() {
     const winner = this.ducks[this.predeterminedWinner];
-
-    // Removed unnecessary sort operation.
-
     return {
       id: winner.id,
       name: winner.name,
