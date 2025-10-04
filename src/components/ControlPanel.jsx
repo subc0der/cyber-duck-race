@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { UI_CONSTANTS } from '../utils/constants';
 import '../styles/ControlPanel.css';
 
 const ControlPanel = ({ isRacing, onStartRace, onResetRace }) => {
   const [countdown, setCountdown] = useState(null);
 
   const handleStartRace = () => {
-    let count = 3;
+    let count = UI_CONSTANTS.COUNTDOWN_START_VALUE;
     setCountdown(count);
 
     const countInterval = setInterval(() => {
@@ -17,10 +18,10 @@ const ControlPanel = ({ isRacing, onStartRace, onResetRace }) => {
         setTimeout(() => {
           setCountdown(null);
           onStartRace();
-        }, 500);
+        }, UI_CONSTANTS.COUNTDOWN_GO_DELAY);
         clearInterval(countInterval);
       }
-    }, 1000);
+    }, UI_CONSTANTS.COUNTDOWN_INTERVAL);
   };
 
   return (

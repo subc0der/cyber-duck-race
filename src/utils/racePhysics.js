@@ -24,13 +24,13 @@ export class RacePhysics {
       name,
       color: DUCK_CONSTANTS.DUCK_COLORS[index],
       position: 0,
-      displayX: RACE_CONSTANTS.DUCK_START_X + (index % 3) * 100,
-      y: 150 + Math.floor(index / 2) * 80,
+      displayX: RACE_CONSTANTS.DUCK_START_X + (index % DUCK_CONSTANTS.DUCKS_PER_ROW) * DUCK_CONSTANTS.DUCK_HORIZONTAL_SPACING,
+      y: DUCK_CONSTANTS.DUCK_INITIAL_Y + Math.floor(index / DUCK_CONSTANTS.DUCKS_PER_ROW) * DUCK_CONSTANTS.DUCK_ROW_SPACING,
       currentSpeed: RACE_CONSTANTS.BASE_SPEED,
       speedMultiplier: 1,
       targetSpeedMultiplier: 1,
       isWinner: index === this.predeterminedWinner,
-      variance: Math.random() * 0.2 - 0.1,
+      variance: Math.random() * DUCK_CONSTANTS.DUCK_SPEED_VARIANCE_RANGE - DUCK_CONSTANTS.DUCK_SPEED_VARIANCE_OFFSET,
       lastPositionChange: Date.now(),
     }));
 
@@ -57,16 +57,16 @@ export class RacePhysics {
       duck.position += effectiveSpeed / PHYSICS_CONSTANTS.POSITION_UPDATE_RATE;
 
       const leaderPosition = Math.max(...this.ducks.map(d => d.position));
-      const relativePosition = duck.position - (leaderPosition - 200);
+      const relativePosition = duck.position - (leaderPosition - PHYSICS_CONSTANTS.LEADER_OFFSET);
 
       duck.displayX = VISUAL_CONSTANTS.DUCK_CENTER_ZONE_MIN +
-        (relativePosition / 200) * (VISUAL_CONSTANTS.DUCK_CENTER_ZONE_MAX - VISUAL_CONSTANTS.DUCK_CENTER_ZONE_MIN);
+        (relativePosition / PHYSICS_CONSTANTS.RELATIVE_POSITION_SCALE) * (VISUAL_CONSTANTS.DUCK_CENTER_ZONE_MAX - VISUAL_CONSTANTS.DUCK_CENTER_ZONE_MIN);
 
-      duck.displayX = Math.max(50, Math.min(750, duck.displayX));
+      duck.displayX = Math.max(DUCK_CONSTANTS.DUCK_MIN_DISPLAY_X, Math.min(DUCK_CONSTANTS.DUCK_MAX_DISPLAY_X, duck.displayX));
 
-      if (Math.random() < 0.02) {
-        duck.y += (Math.random() - 0.5) * 4;
-        duck.y = Math.max(100, Math.min(500, duck.y));
+      if (Math.random() < DUCK_CONSTANTS.DUCK_VERTICAL_MOVEMENT_CHANCE) {
+        duck.y += (Math.random() - 0.5) * DUCK_CONSTANTS.DUCK_VERTICAL_VARIANCE;
+        duck.y = Math.max(DUCK_CONSTANTS.DUCK_MIN_Y, Math.min(DUCK_CONSTANTS.DUCK_MAX_Y, duck.y));
       }
     });
 
@@ -78,22 +78,22 @@ export class RacePhysics {
 
     this.ducks.forEach(duck => {
       if (duck.isWinner) {
-        if (progressPercent < 0.3) {
-          duck.targetSpeedMultiplier = 0.8 + Math.random() * 0.4;
-        } else if (progressPercent < 0.6) {
-          duck.targetSpeedMultiplier = 0.9 + Math.random() * 0.3;
-        } else if (progressPercent < 0.85) {
-          duck.targetSpeedMultiplier = 1.1 + Math.random() * 0.2;
+        if (progressPercent < RACE_CONSTANTS.EARLY_RACE_THRESHOLD) {
+          duck.targetSpeedMultiplier = RACE_CONSTANTS.EARLY_RACE_BASE_SPEED + Math.random() * RACE_CONSTANTS.EARLY_RACE_VARIANCE;
+        } else if (progressPercent < RACE_CONSTANTS.MID_RACE_THRESHOLD) {
+          duck.targetSpeedMultiplier = RACE_CONSTANTS.MID_RACE_BASE_SPEED + Math.random() * RACE_CONSTANTS.MID_RACE_VARIANCE;
+        } else if (progressPercent < RACE_CONSTANTS.LATE_RACE_THRESHOLD) {
+          duck.targetSpeedMultiplier = RACE_CONSTANTS.LATE_RACE_BASE_SPEED + Math.random() * RACE_CONSTANTS.LATE_RACE_VARIANCE;
         } else {
-          duck.targetSpeedMultiplier = 1.3 + Math.random() * 0.1;
+          duck.targetSpeedMultiplier = RACE_CONSTANTS.FINAL_RACE_BASE_SPEED + Math.random() * RACE_CONSTANTS.FINAL_RACE_VARIANCE;
         }
       } else {
-        const baseMultiplier = 0.7 + Math.random() * 0.6;
-        const varianceMultiplier = 1 + (Math.random() - 0.5) * 0.3;
+        const baseMultiplier = RACE_CONSTANTS.LOSER_BASE_SPEED + Math.random() * RACE_CONSTANTS.LOSER_SPEED_RANGE;
+        const varianceMultiplier = 1 + (Math.random() - 0.5) * RACE_CONSTANTS.LOSER_VARIANCE_MULTIPLIER;
         duck.targetSpeedMultiplier = baseMultiplier * varianceMultiplier;
 
-        if (progressPercent > 0.8 && Math.random() < 0.3) {
-          duck.targetSpeedMultiplier *= 0.85;
+        if (progressPercent > RACE_CONSTANTS.ENDGAME_THRESHOLD && Math.random() < RACE_CONSTANTS.ENDGAME_SLOWDOWN_CHANCE) {
+          duck.targetSpeedMultiplier *= RACE_CONSTANTS.ENDGAME_SLOWDOWN_FACTOR;
         }
       }
 
@@ -112,14 +112,14 @@ export class RacePhysics {
     const minPosition = Math.min(...positions);
     const avgPosition = positions.reduce((a, b) => a + b, 0) / positions.length;
 
-    if (duck.position < avgPosition - 50) {
+    if (duck.position < avgPosition - PHYSICS_CONSTANTS.POSITION_THRESHOLD_DISTANCE) {
       adjustment *= PHYSICS_CONSTANTS.CATCH_UP_BONUS;
-    } else if (duck.position > avgPosition + 50) {
+    } else if (duck.position > avgPosition + PHYSICS_CONSTANTS.POSITION_THRESHOLD_DISTANCE) {
       adjustment *= PHYSICS_CONSTANTS.LEAD_PENALTY;
     }
 
-    if (duck.isWinner && progressPercent > 0.7) {
-      const winnerBoost = 1 + (progressPercent - 0.7) * 0.5;
+    if (duck.isWinner && progressPercent > PHYSICS_CONSTANTS.WINNER_BOOST_START_PERCENT) {
+      const winnerBoost = 1 + (progressPercent - PHYSICS_CONSTANTS.WINNER_BOOST_START_PERCENT) * PHYSICS_CONSTANTS.WINNER_BOOST_MULTIPLIER;
       adjustment *= winnerBoost;
     }
 

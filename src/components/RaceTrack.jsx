@@ -28,7 +28,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
     const animate = () => {
       const currentTime = Date.now();
-      const elapsed = (currentTime - startTime) / 1000;
+      const elapsed = (currentTime - startTime) / UI_CONSTANTS.MILLISECONDS_TO_SECONDS;
 
       if (elapsed >= RACE_CONSTANTS.RACE_DURATION) {
         const winner = racePhysicsRef.current.determineWinner();
@@ -38,7 +38,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      backgroundOffset -= VISUAL_CONSTANTS.BACKGROUND_SCROLL_SPEED / 60;
+      backgroundOffset -= VISUAL_CONSTANTS.BACKGROUND_SCROLL_SPEED / UI_CONSTANTS.FRAME_RATE_DIVISOR;
       if (backgroundOffset <= -canvas.width) {
         backgroundOffset = 0;
       }
@@ -71,12 +71,12 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     ctx.strokeStyle = '#00ffff';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = VISUAL_CONSTANTS.BACKGROUND_LINE_WIDTH;
     ctx.shadowColor = '#00ffff';
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = VISUAL_CONSTANTS.BACKGROUND_GLOW_BLUR;
 
-    for (let i = 0; i < 20; i++) {
-      const x = (i * 60 + offset) % ctx.canvas.width;
+    for (let i = 0; i < VISUAL_CONSTANTS.BACKGROUND_GRID_LINES; i++) {
+      const x = (i * VISUAL_CONSTANTS.BACKGROUND_GRID_SPACING + offset) % ctx.canvas.width;
       ctx.beginPath();
       ctx.moveTo(x, 0);
       ctx.lineTo(x, ctx.canvas.height);
@@ -90,20 +90,20 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     duckList.forEach((duck) => {
       ctx.fillStyle = duck.color;
       ctx.shadowColor = duck.color;
-      ctx.shadowBlur = 15;
+      ctx.shadowBlur = VISUAL_CONSTANTS.DUCK_GLOW_BLUR;
 
       ctx.beginPath();
-      ctx.ellipse(duck.displayX, duck.y, 25, 20, 0, 0, Math.PI * 2);
+      ctx.ellipse(duck.displayX, duck.y, VISUAL_CONSTANTS.DUCK_WIDTH, VISUAL_CONSTANTS.DUCK_HEIGHT, 0, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
-      ctx.arc(duck.displayX - 8, duck.y - 5, 3, 0, Math.PI * 2);
+      ctx.arc(duck.displayX - VISUAL_CONSTANTS.DUCK_EYE_OFFSET_X, duck.y - VISUAL_CONSTANTS.DUCK_EYE_OFFSET_Y, VISUAL_CONSTANTS.DUCK_EYE_SIZE, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.fillStyle = duck.color;
       ctx.font = 'bold 12px monospace';
-      ctx.fillText(duck.name, duck.displayX - 20, duck.y - 30);
+      ctx.fillText(duck.name, duck.displayX - VISUAL_CONSTANTS.DUCK_NAME_OFFSET_X, duck.y - VISUAL_CONSTANTS.DUCK_NAME_OFFSET_Y);
 
       ctx.shadowBlur = 0;
     });
@@ -113,13 +113,13 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     ctx.fillStyle = '#00ffff';
     ctx.font = 'bold 20px monospace';
     ctx.shadowColor = '#00ffff';
-    ctx.shadowBlur = 5;
+    ctx.shadowBlur = VISUAL_CONSTANTS.INFO_TEXT_GLOW_BLUR;
 
     const timeLeft = Math.max(0, RACE_CONSTANTS.RACE_DURATION - elapsed);
-    ctx.fillText(`TIME: ${timeLeft.toFixed(1)}s`, 20, 40);
+    ctx.fillText(`TIME: ${timeLeft.toFixed(1)}s`, VISUAL_CONSTANTS.TIME_DISPLAY_X, VISUAL_CONSTANTS.TIME_DISPLAY_Y);
 
     const progress = (elapsed / RACE_CONSTANTS.RACE_DURATION) * 100;
-    ctx.fillText(`PROGRESS: ${progress.toFixed(0)}%`, 20, 70);
+    ctx.fillText(`PROGRESS: ${progress.toFixed(0)}%`, VISUAL_CONSTANTS.PROGRESS_DISPLAY_X, VISUAL_CONSTANTS.PROGRESS_DISPLAY_Y);
 
     ctx.shadowBlur = 0;
   };
