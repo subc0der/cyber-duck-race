@@ -97,7 +97,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
   const drawBackground = (ctx, offset) => {
     const img = backgroundImageRef.current;
 
-    if (img && img.complete) {
+    if (img && img.complete && img.naturalWidth > 0) {
       // Calculate scaling to fit canvas height while maintaining aspect ratio
       const scale = ctx.canvas.height / img.height;
       const scaledWidth = img.width * scale;
