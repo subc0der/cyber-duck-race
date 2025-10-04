@@ -30,7 +30,7 @@ export class RacePhysics {
         randomValue = Math.floor(Math.random() * 0xFFFFFFFF);
       }
     } else {
-      console.warn('Web Crypto API not available, falling back to Math.random(). Winner selection will be predictable in this environment.');
+      console.warn('Crypto API unavailable, using fallback random generator.');
       randomValue = Math.floor(Math.random() * 0xFFFFFFFF);
     }
     this.predeterminedWinner = randomValue % DUCK_CONSTANTS.DUCK_NAMES.length;
