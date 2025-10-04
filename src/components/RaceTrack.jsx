@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { RACE_CONSTANTS, VISUAL_CONSTANTS } from '../utils/constants';
+import { RACE_CONSTANTS, VISUAL_CONSTANTS, UI_CONSTANTS } from '../utils/constants';
 import { RacePhysics } from '../utils/racePhysics';
 import '../styles/RaceTrack.css';
 
