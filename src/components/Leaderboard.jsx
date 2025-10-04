@@ -7,7 +7,7 @@ const Leaderboard = ({ raceHistory }) => {
 
     raceHistory.forEach((race) => {
       if (race && race.name) {
-        duckWins[race.name] = (duckWins[race.name] || UI_CONSTANTS.DEFAULT_WIN_COUNT) + UI_CONSTANTS.RANK_DISPLAY_OFFSET;
+        duckWins[race.name] = (duckWins[race.name] || 0) + 1;
       }
     });
 
