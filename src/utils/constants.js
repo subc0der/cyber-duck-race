@@ -1,0 +1,105 @@
+export const RACE_CONSTANTS = {
+  RACE_DURATION: 15,
+  SPEED_CHANGE_INTERVAL: 2000,
+  MIN_SPEED_MULTIPLIER: 0.6,
+  MAX_SPEED_MULTIPLIER: 1.4,
+  BASE_SPEED: 50,
+  FINISH_LINE_X: 10000,
+  DUCK_START_X: 200,
+  DUCK_SPACING: 80,
+};
+
+export const VISUAL_CONSTANTS = {
+  BACKGROUND_SCROLL_SPEED: 300,
+  DUCK_CENTER_ZONE_MIN: 200,
+  DUCK_CENTER_ZONE_MAX: 400,
+  DUCK_FORWARD_MOVEMENT: 20,
+  DUCK_BACKWARD_MOVEMENT: 15,
+  CANVAS_WIDTH: 800,
+  CANVAS_HEIGHT: 600,
+  TRACK_LANES: 6,
+};
+
+export const DUCK_CONSTANTS = {
+  DUCK_NAMES: ['NEON', 'CYBER', 'MATRIX', 'BLADE', 'GHOST', 'CHROME'],
+  DUCK_COLORS: ['#00ffff', '#ff00ff', '#9d00ff', '#ffff00', '#00ff00', '#ff0099'],
+  DUCK_SIZE: {
+    WIDTH: 50,
+    HEIGHT: 40,
+  },
+};
+
+export const PHYSICS_CONSTANTS = {
+  ACCELERATION_FACTOR: 0.1,
+  DECELERATION_FACTOR: 0.15,
+  MAX_POSITION_CHANGE: 30,
+  SPEED_VARIANCE: 0.2,
+  POSITION_UPDATE_RATE: 60,
+  CATCH_UP_BONUS: 1.2,
+  LEAD_PENALTY: 0.9,
+};
+
+export const ANIMATION_CONSTANTS = {
+  FPS: 60,
+  FRAME_TIME: 1000 / 60,
+  SMOOTHING_FACTOR: 0.1,
+  INTERPOLATION_STEPS: 5,
+};
+
+export const BETTING_CONSTANTS = {
+  MIN_BET: 10,
+  MAX_BET: 10000,
+  DEFAULT_BET: 100,
+  INITIAL_BALANCE: 10000,
+  ODDS_RANGE: {
+    MIN: 2,
+    MAX: 8,
+  },
+};
+
+export const UI_CONSTANTS = {
+  MODAL_ANIMATION_DURATION: 300,
+  COUNTDOWN_DURATION: 3000,
+  WINNER_DISPLAY_DURATION: 5000,
+  NOTIFICATION_DURATION: 3000,
+  BUTTON_DEBOUNCE: 500,
+};
+
+export const AUDIO_CONSTANTS = {
+  MASTER_VOLUME: 0.7,
+  SFX_VOLUME: 0.8,
+  MUSIC_VOLUME: 0.5,
+  SOUND_EFFECTS: {
+    COUNTDOWN: 'countdown.mp3',
+    START: 'race-start.mp3',
+    WINNER: 'winner.mp3',
+    BET_PLACED: 'bet-placed.mp3',
+  },
+};
+
+export const THEME_CONSTANTS = {
+  COLORS: {
+    PRIMARY_CYAN: '#00ffff',
+    PRIMARY_PINK: '#ff00ff',
+    PRIMARY_PURPLE: '#9d00ff',
+    SECONDARY_YELLOW: '#ffff00',
+    SECONDARY_GREEN: '#00ff00',
+    BACKGROUND_DARK: '#0a0a0a',
+    BACKGROUND_MEDIUM: '#1a0033',
+    TEXT_PRIMARY: '#ffffff',
+    TEXT_SECONDARY: '#cccccc',
+    BORDER_GLOW: 'rgba(0, 255, 255, 0.5)',
+  },
+  SHADOWS: {
+    NEON_SMALL: '0 0 10px',
+    NEON_MEDIUM: '0 0 20px',
+    NEON_LARGE: '0 0 30px',
+    BOX_SHADOW: '0 4px 20px rgba(0, 255, 255, 0.3)',
+  },
+  ANIMATIONS: {
+    PULSE: 'pulse 2s infinite',
+    GLOW: 'glow 1.5s ease-in-out infinite alternate',
+    SLIDE_IN: 'slideIn 0.3s ease-out',
+    FADE_IN: 'fadeIn 0.5s ease-in',
+  },
+};

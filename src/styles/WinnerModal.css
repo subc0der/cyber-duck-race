@@ -1,0 +1,147 @@
+.winner-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.winner-modal {
+  position: relative;
+  background: linear-gradient(135deg, #0a0a0a, #1a0033);
+  border: 3px solid #00ffff;
+  border-radius: 12px;
+  padding: 40px;
+  min-width: 400px;
+  box-shadow: 0 0 50px rgba(0, 255, 255, 0.7);
+  animation: slideUp 0.5s ease;
+}
+
+.confetti-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--color);
+  top: -10px;
+  left: var(--position);
+  animation: fall var(--delay) linear infinite;
+}
+
+.winner-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.winner-title {
+  font-size: 48px;
+  background: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 20px;
+  animation: pulse 1s ease infinite;
+}
+
+.winner-name {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-shadow: 0 0 20px currentColor;
+}
+
+.winner-stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  color: #666;
+  font-size: 12px;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  display: block;
+  color: #00ffff;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.btn-close {
+  padding: 15px 40px;
+  background: linear-gradient(90deg, #00ffff, #ff00ff);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-close:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.trophy-icon {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 60px;
+  animation: bounce 1s ease infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-10px); }
+}

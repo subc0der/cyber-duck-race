@@ -1,0 +1,48 @@
+.race-track {
+  position: relative;
+  background: #0a0a0a;
+  border: 2px solid #00ffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), inset 0 0 30px rgba(0, 255, 255, 0.1);
+}
+
+.race-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+.track-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 255, 255, 0.02) 50%,
+    transparent 100%
+  );
+}
+
+.track-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(0, 255, 255, 0.1) 50px),
+    repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(0, 255, 255, 0.05) 50px);
+  animation: grid-move 2s linear infinite;
+}
+
+@keyframes grid-move {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50px); }
+}
