@@ -46,16 +46,6 @@ export const ANIMATION_CONSTANTS = {
   INTERPOLATION_STEPS: 5,
 };
 
-export const BETTING_CONSTANTS = {
-  MIN_BET: 10,
-  MAX_BET: 10000,
-  DEFAULT_BET: 100,
-  INITIAL_BALANCE: 10000,
-  ODDS_RANGE: {
-    MIN: 2,
-    MAX: 8,
-  },
-};
 
 export const UI_CONSTANTS = {
   MODAL_ANIMATION_DURATION: 300,
@@ -73,7 +63,6 @@ export const AUDIO_CONSTANTS = {
     COUNTDOWN: 'countdown.mp3',
     START: 'race-start.mp3',
     WINNER: 'winner.mp3',
-    BET_PLACED: 'bet-placed.mp3',
   },
 };
 

@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import RaceTrack from './components/RaceTrack';
 import ControlPanel from './components/ControlPanel';
-import BettingPanel from './components/BettingPanel';
 import Leaderboard from './components/Leaderboard';
 import WinnerModal from './components/WinnerModal';
 import { RaceProvider } from './contexts/RaceContext';
@@ -42,17 +41,13 @@ function App() {
               isRacing={isRacing}
               onRaceEnd={handleRaceEnd}
             />
+          </div>
+
+          <div className="side-panel">
             <ControlPanel
               isRacing={isRacing}
               onStartRace={handleRaceStart}
               onResetRace={handleResetRace}
-            />
-          </div>
-
-          <div className="side-panel">
-            <BettingPanel
-              isRacing={isRacing}
-              disabled={isRacing}
             />
             <Leaderboard
               raceHistory={raceHistory}
