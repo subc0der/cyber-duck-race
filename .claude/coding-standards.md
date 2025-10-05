@@ -261,19 +261,223 @@ if (offset <= -scaledWidth) return 0;
 
 ---
 
-## 10. Quick Checklist Before Committing
+## 10. React Best Practices
+
+### Rule: USE MODERN REACT EVENT HANDLERS
+**Deprecated APIs should be replaced with modern equivalents.**
+
+#### onKeyPress is Deprecated
+Use `onKeyDown` instead of the deprecated `onKeyPress` event handler.
+
+##### ✅ Correct Pattern
+```javascript
+const handleKeyDown = (e) => {
+  if (e.key === 'Enter') {
+    handleSubmit();
+  }
+};
+
+<input onKeyDown={handleKeyDown} />
+```
+
+##### ❌ Incorrect Pattern
+```javascript
+// WRONG: onKeyPress is deprecated
+const handleKeyPress = (e) => {
+  if (e.key === 'Enter') {
+    handleSubmit();
+  }
+};
+
+<input onKeyPress={handleKeyPress} />
+```
+
+---
+
+## 11. Accessibility Requirements
+
+### Rule: ALL INTERACTIVE ELEMENTS MUST HAVE ACCESSIBLE LABELS
+**Icon-only buttons and inputs must have `aria-label` attributes for screen readers.**
+
+#### ✅ Correct Pattern
+```javascript
+// Icon-only buttons MUST have aria-label
+<button
+  onClick={handleClick}
+  title="Audio Controls"
+  aria-label="Audio Controls"
+>
+  🔊
+</button>
+
+// Inputs should have aria-label when no visible label
+<input
+  type="text"
+  placeholder="Enter name"
+  aria-label="Participant name"
+/>
+```
+
+#### ❌ Incorrect Pattern
+```javascript
+// WRONG: Icon button without aria-label
+<button onClick={handleClick} title="Audio Controls">
+  🔊
+</button>
+
+// WRONG: Close button without accessible label
+<button onClick={handleClose}>
+  ×
+</button>
+```
+
+### Accessibility Checklist
+- [ ] All icon-only buttons have `aria-label`
+- [ ] All close buttons (×) have `aria-label="Close [description]"`
+- [ ] All inputs without visible labels have `aria-label`
+- [ ] Dynamic button text (Play/Pause) uses dynamic `aria-label`
+
+---
+
+## 12. Constant Usage Best Practices
+
+### Rule: DON'T MISUSE UNRELATED CONSTANTS
+**Only use constants that are semantically appropriate for the context.**
+
+#### ✅ Correct Pattern
+```javascript
+// Use literal 0 for array indexing
+const firstFile = e.target.files[0];
+
+// Use literal 0 for numeric calculations
+const timeLeft = Math.max(0, duration - elapsed);
+```
+
+#### ❌ Incorrect Pattern
+```javascript
+// WRONG: UI_CONSTANTS.CANVAS_ORIGIN (used for canvas coordinates)
+// being misused for file array indexing
+const file = e.target.files[UI_CONSTANTS.CANVAS_ORIGIN];
+
+// This couples unrelated concerns and obscures intent
+```
+
+### When to Use Literal Values
+Some values should remain as literals because creating a constant obscures meaning:
+- Array index `0` for first element
+- Math operations: `Math.max(0, value)` - zero as boundary
+- Common offsets: `index + 1`, `length - 1`
+
+### When to Create Constants
+Create constants when the value:
+- Has domain-specific meaning (e.g., `MAX_PARTICIPANTS: 24`)
+- Might change based on configuration
+- Appears multiple times with the same semantic meaning
+- Is a threshold or limit that defines behavior
+
+---
+
+## 13. Validation and User Feedback
+
+### Rule: PROVIDE FEEDBACK FOR ALL VALIDATION FAILURES
+**Never silently fail validation. Always show users why their action failed.**
+
+#### ✅ Correct Pattern
+```javascript
+const handleAdd = () => {
+  // Call validation unconditionally
+  const result = addParticipant(inputValue);
+
+  if (result.success) {
+    setInputValue('');
+    setErrorMessage('');
+  } else {
+    // Show the error to user
+    setErrorMessage(result.error);
+    setTimeout(() => setErrorMessage(''), 3000);
+  }
+};
+```
+
+#### ❌ Incorrect Pattern
+```javascript
+// WRONG: Pre-validation prevents error messages
+const handleAdd = () => {
+  if (inputValue.trim()) {  // This prevents empty name error from showing
+    const result = addParticipant(inputValue);
+    // User never sees "Name cannot be empty" message
+  }
+};
+```
+
+### Validation Best Practices
+- Call validation functions unconditionally
+- Display returned error messages to users
+- Use timeouts for auto-dismissing errors (3 seconds recommended)
+- Clear error state on successful operations
+
+---
+
+## 14. Edge Case Protection
+
+### Rule: GUARD AGAINST DIVISION BY ZERO
+**Always check for zero before modulo or division operations.**
+
+#### ✅ Correct Pattern
+```javascript
+// Guard against empty arrays
+this.predeterminedWinner = duckNames.length > 0
+  ? (randomValue % duckNames.length)
+  : 0;
+
+// Alternative: null for "no winner" state
+this.predeterminedWinner = duckNames.length > 0
+  ? (randomValue % duckNames.length)
+  : null;
+```
+
+#### ❌ Incorrect Pattern
+```javascript
+// WRONG: Modulo by zero when duckNames is empty results in NaN
+this.predeterminedWinner = randomValue % duckNames.length;
+```
+
+### Common Edge Cases to Check
+- **Empty arrays**: Check `array.length > 0` before indexing/modulo
+- **Null/undefined**: Use optional chaining `object?.property`
+- **Division by zero**: Validate denominator before division
+- **Array bounds**: Validate index before accessing `array[index]`
+
+---
+
+## 15. Quick Checklist Before Committing
 
 Before creating a PR, verify:
 
+**Code Quality:**
 - [ ] No magic numbers - all values in `constants.js`
 - [ ] No hardcoded file paths - all paths in constants
-- [ ] Image loading has error handlers (`onload`/`onerror`)
-- [ ] Image validation uses `img.complete && img.naturalWidth > 0`
+- [ ] Constants used only for semantically appropriate contexts
 - [ ] All console messages use proper grammar
 - [ ] No empty cleanup functions in `useEffect`
-- [ ] CSS gradient text has fallback `color` property
-- [ ] All constants use descriptive names
 - [ ] Code follows existing patterns in the project
+
+**React Best Practices:**
+- [ ] Use `onKeyDown` instead of deprecated `onKeyPress`
+- [ ] All icon-only buttons have `aria-label`
+- [ ] All inputs without visible labels have `aria-label`
+- [ ] All validation errors shown to users (no silent failures)
+
+**Error Handling:**
+- [ ] Image loading has error handlers (`onload`/`onerror`)
+- [ ] Image validation uses `img.complete && img.naturalWidth > 0`
+- [ ] Division/modulo operations protected against zero
+- [ ] Array access validated for bounds
+
+**Accessibility:**
+- [ ] CSS gradient text has fallback `color` property
+- [ ] All interactive elements keyboard accessible
+- [ ] Dynamic button states have dynamic `aria-label`
 
 ---
 
