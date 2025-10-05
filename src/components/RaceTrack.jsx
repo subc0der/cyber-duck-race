@@ -129,8 +129,8 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     const timeLeft = Math.max(0, RACE_CONSTANTS.RACE_DURATION - elapsed);
     const progress = (elapsed / RACE_CONSTANTS.RACE_DURATION) * 100;
 
-    const boxWidth = 200;
-    const boxHeight = 80;
+    const boxWidth = VISUAL_CONSTANTS.RACE_INFO_BOX_WIDTH;
+    const boxHeight = VISUAL_CONSTANTS.RACE_INFO_BOX_HEIGHT;
     const boxX = ctx.canvas.width - boxWidth - VISUAL_CONSTANTS.RACE_INFO_BOX_MARGIN;
     const boxY = VISUAL_CONSTANTS.RACE_INFO_BOX_MARGIN;
 
