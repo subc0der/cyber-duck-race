@@ -170,16 +170,19 @@ export const UI_CONSTANTS = {
   MAX_EVENT_NAME_LENGTH: 100,
 };
 
+// Audio file size limit constant for DRY principle
+const MAX_FILE_SIZE_MB = 150;
+
 export const AUDIO_CONSTANTS = {
   MASTER_VOLUME: 0.7,
   SFX_VOLUME: 0.8,
   MUSIC_VOLUME: 0.5,
   // Audio file size limits for uploaded background music
-  MAX_FILE_SIZE_MB: 150, // User-facing limit in megabytes
+  MAX_FILE_SIZE_MB: MAX_FILE_SIZE_MB, // User-facing limit in megabytes
   // MAX_FILE_SIZE_BYTES is derived from MAX_FILE_SIZE_MB for file validation
   // Formula: MB * 1024 (KB) * 1024 (Bytes) = Total Bytes
   // 150MB allows for high-quality audio files while preventing memory issues
-  MAX_FILE_SIZE_BYTES: 150 * 1024 * 1024, // 157,286,400 bytes
+  MAX_FILE_SIZE_BYTES: MAX_FILE_SIZE_MB * 1024 * 1024, // 157,286,400 bytes
   SOUND_EFFECTS: {
     COUNTDOWN: 'countdown.mp3',
     START: 'race-start.mp3',

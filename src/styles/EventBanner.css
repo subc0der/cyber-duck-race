@@ -229,6 +229,29 @@
   font-style: italic;
 }
 
+.audio-error-message {
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid #ff0000;
+  border-radius: 5px;
+  color: #ff6666;
+  font-size: 13px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .audio-volume-control {
   margin-top: 20px;
   padding-top: 20px;

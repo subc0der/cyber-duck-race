@@ -292,14 +292,149 @@ if (offset <= -scaledWidth) return 0;
 Before creating a PR, verify:
 
 - [ ] No magic numbers - all values in `constants.js`
+- [ ] Constants used semantically (not `CANVAS_ORIGIN` for array index)
 - [ ] No hardcoded file paths - all paths in constants
+- [ ] Derived constants computed from source (e.g., `MB * 1024 * 1024`)
 - [ ] Image loading has error handlers (`onload`/`onerror`)
 - [ ] Image validation uses `img.complete && img.naturalWidth > 0`
+- [ ] Function parameters validated (especially arrays/objects)
 - [ ] All console messages use proper grammar
+- [ ] No `alert()` - use inline error messages instead
 - [ ] No empty cleanup functions in `useEffect`
 - [ ] CSS gradient text has fallback `color` property
 - [ ] All constants use descriptive names
 - [ ] Code follows existing patterns in the project
+
+---
+
+## 11. Derived Constants (DRY Principle)
+
+### Rule: DERIVE CONSTANTS FROM SINGLE SOURCE
+When one constant is mathematically derived from another, compute it rather than hardcoding both values.
+
+#### ✅ Correct Pattern
+```javascript
+// Single source of truth for file size limit
+const MAX_FILE_SIZE_MB = 150;
+
+export const AUDIO_CONSTANTS = {
+  MAX_FILE_SIZE_MB: MAX_FILE_SIZE_MB,
+  // Derived from MAX_FILE_SIZE_MB - always in sync
+  MAX_FILE_SIZE_BYTES: MAX_FILE_SIZE_MB * 1024 * 1024,
+};
+```
+
+#### ❌ Incorrect Pattern
+```javascript
+// WRONG: Same value hardcoded twice - can get out of sync
+export const AUDIO_CONSTANTS = {
+  MAX_FILE_SIZE_MB: 150,
+  MAX_FILE_SIZE_BYTES: 150 * 1024 * 1024, // Hardcoded duplicate
+};
+```
+
+### Benefits
+- **Maintainability**: Change one value updates all derived values
+- **Consistency**: No risk of values getting out of sync
+- **Clarity**: Shows the relationship between constants
+
+---
+
+## 12. Input Validation
+
+### Rule: VALIDATE FUNCTION PARAMETERS
+Always validate input parameters, especially for arrays and objects with expected structure.
+
+#### ✅ Correct Pattern
+```javascript
+initializeDucks(participants = []) {
+  // Input validation: ensure participants is an array of objects with a 'name' property
+  const validParticipants = Array.isArray(participants) &&
+    participants.length > 0 &&
+    participants.every(p => p && typeof p === 'object' && typeof p.name === 'string');
+
+  const duckNames = validParticipants
+    ? participants.map(p => p.name)
+    : DUCK_CONSTANTS.DUCK_NAMES;
+
+  // Continue with validated data...
+}
+```
+
+#### ❌ Incorrect Pattern
+```javascript
+// WRONG: No validation - will crash if participants is invalid
+initializeDucks(participants = []) {
+  const duckNames = participants.length > 0
+    ? participants.map(p => p.name) // Runtime error if p.name doesn't exist
+    : DUCK_CONSTANTS.DUCK_NAMES;
+}
+```
+
+### Validation Checklist
+- Check `Array.isArray()` before array operations
+- Verify object properties exist before accessing them
+- Validate data types match expected values
+- Provide sensible fallbacks for invalid input
+
+---
+
+## 13. User-Facing Error Messages
+
+### Rule: NO ALERT() - USE INLINE ERROR MESSAGES
+Never use `alert()` for error messages. Implement inline error displays that match the app's design.
+
+#### ✅ Correct Pattern
+```javascript
+// Component state for error messages
+const [errorMessage, setErrorMessage] = useState('');
+
+const handleFileSelect = (e) => {
+  setErrorMessage(''); // Clear previous errors
+
+  if (file.size > MAX_SIZE) {
+    setErrorMessage('File too large. Please select a smaller file.');
+    setTimeout(() => setErrorMessage(''), 5000); // Auto-clear after 5s
+    return;
+  }
+};
+
+// In JSX
+{errorMessage && (
+  <div className="error-message">
+    ⚠️ {errorMessage}
+  </div>
+)}
+```
+
+```css
+/* Error message styling */
+.error-message {
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid #ff0000;
+  border-radius: 5px;
+  color: #ff6666;
+  animation: fadeIn 0.3s ease-in;
+}
+```
+
+#### ❌ Incorrect Pattern
+```javascript
+// WRONG: Disruptive alert() blocks user interaction
+if (file.size > MAX_SIZE) {
+  alert('File too large!'); // ❌ Poor UX, doesn't match app design
+  return;
+}
+```
+
+### Error Display Best Practices
+- **Inline placement**: Show errors near the relevant UI element
+- **Auto-dismiss**: Clear errors after 5 seconds (configurable)
+- **Themed styling**: Match error design to app's visual theme
+- **Accessibility**: Include icons and clear messaging
+- **Animation**: Smooth fade-in for better UX
 
 ---
 

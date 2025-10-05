@@ -51,7 +51,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
         return;
       }
 
-      ctx.clearRect(UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       backgroundOffset -= VISUAL_CONSTANTS.BACKGROUND_SCROLL_SPEED / UI_CONSTANTS.FRAME_RATE_DIVISOR;
       backgroundOffset = drawBackground(ctx, backgroundOffset);
@@ -92,7 +92,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       }
     } else {
       // Fallback gradient if image hasn't loaded yet
-      const gradient = ctx.createLinearGradient(UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, ctx.canvas.height);
+      const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
       gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_START, '#0a0a0a');
       gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_MIDDLE, '#1a0033');
       gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_END, '#0a0a0a');

@@ -14,7 +14,12 @@ export class RacePhysics {
   }
 
   initializeDucks(participants = []) {
-    const duckNames = participants.length > 0
+    // Input validation: ensure participants is an array of objects with a 'name' property
+    const validParticipants = Array.isArray(participants) &&
+      participants.length > 0 &&
+      participants.every(p => p && typeof p === 'object' && typeof p.name === 'string');
+
+    const duckNames = validParticipants
       ? participants.map(p => p.name)
       : DUCK_CONSTANTS.DUCK_NAMES;
 

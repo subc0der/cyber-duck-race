@@ -8,6 +8,7 @@ const EventBanner = () => {
   const [showAudioPanel, setShowAudioPanel] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [shouldRepeat, setShouldRepeat] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
   const fileInputRef = useRef(null);
   const audioRef = useRef(null);
   const audioPanelRef = useRef(null);
@@ -77,10 +78,14 @@ const EventBanner = () => {
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // Clear previous errors
+      setErrorMessage('');
+
       // Check file size
       if (file.size > AUDIO_CONSTANTS.MAX_FILE_SIZE_BYTES) {
-        alert(`File size exceeds ${AUDIO_CONSTANTS.MAX_FILE_SIZE_MB}MB limit. Please select a smaller file.`);
+        setErrorMessage(`File size exceeds ${AUDIO_CONSTANTS.MAX_FILE_SIZE_MB}MB limit. Please select a smaller file.`);
         e.target.value = ''; // Reset file input
+        setTimeout(() => setErrorMessage(''), 5000);
         return;
       }
 
@@ -93,8 +98,9 @@ const EventBanner = () => {
           audioRef.current.load();
         }
       } else {
-        alert('Please select an MP3, WAV, or FLAC file.');
+        setErrorMessage('Please select an MP3, WAV, or FLAC file.');
         e.target.value = ''; // Reset file input
+        setTimeout(() => setErrorMessage(''), 5000);
       }
     }
   };
@@ -242,6 +248,11 @@ const EventBanner = () => {
                 <div className="audio-supported-formats">
                   Supported: MP3, WAV, FLAC
                 </div>
+                {errorMessage && (
+                  <div className="audio-error-message">
+                    ⚠️ {errorMessage}
+                  </div>
+                )}
               </div>
             )}
 
