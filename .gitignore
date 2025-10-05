@@ -44,5 +44,6 @@ coverage/
 
 # Subcoder
 .subcoder/
+subcoder/
 HANDOFF_SUMMARY.md
 *HANDOFF*.md
