@@ -17,6 +17,7 @@ const EventBanner = () => {
     }
   }, [setAudioRef]);
 
+  // Attach audio event listeners once
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -36,6 +37,7 @@ const EventBanner = () => {
     };
   }, []);
 
+  // Update volume separately to avoid re-attaching listeners
   useEffect(() => {
     const audio = audioRef.current;
     if (audio) {

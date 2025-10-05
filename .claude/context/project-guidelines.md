@@ -139,6 +139,10 @@ Before creating a PR, verify:
 - [ ] Use `import.meta.env.DEV` in Vite apps, not `process.env.NODE_ENV`
 - [ ] Guard against division/modulo by zero in dynamic calculations
 - [ ] Use literal `0` instead of unrelated constants for clarity
+- [ ] Separate `useEffect` dependencies - don't mix unrelated concerns
+- [ ] Store timeout IDs in refs and clear them before setting new ones
+- [ ] Always cleanup timeouts on component unmount to prevent memory leaks
+- [ ] Remove unused variables to reduce noise and unnecessary computation
 
 ---
 

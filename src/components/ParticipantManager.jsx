@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRace } from '../contexts/RaceContext';
 import { DUCK_CONSTANTS, UI_CONSTANTS } from '../utils/constants';
 import '../styles/ParticipantManager.css';
@@ -7,15 +7,37 @@ const ParticipantManager = () => {
   const { participants, addParticipant, removeParticipant, clearParticipants } = useRace();
   const [inputValue, setInputValue] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const errorTimeoutRef = useRef(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (errorTimeoutRef.current) {
+        clearTimeout(errorTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleAddParticipant = () => {
     const result = addParticipant(inputValue);
     if (result.success) {
       setInputValue('');
       setErrorMessage('');
+      // Clear any pending timeout
+      if (errorTimeoutRef.current) {
+        clearTimeout(errorTimeoutRef.current);
+        errorTimeoutRef.current = null;
+      }
     } else {
       setErrorMessage(result.error);
-      setTimeout(() => setErrorMessage(''), 3000);
+      // Clear previous timeout before setting a new one
+      if (errorTimeoutRef.current) {
+        clearTimeout(errorTimeoutRef.current);
+      }
+      errorTimeoutRef.current = setTimeout(() => {
+        setErrorMessage('');
+        errorTimeoutRef.current = null;
+      }, 3000);
     }
   };
 
