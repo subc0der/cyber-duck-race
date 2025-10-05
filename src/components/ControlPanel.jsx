@@ -1,57 +1,19 @@
-import { useState, useRef, useEffect } from 'react';
 import { useRace } from '../contexts/RaceContext';
 import { UI_CONSTANTS } from '../utils/constants';
+import { useCountdown } from '../hooks/useCountdown';
 import '../styles/ControlPanel.css';
 
 const ControlPanel = ({ isRacing, onStartRace, onResetRace, onAudioStart }) => {
   const { participants } = useRace();
-  const [countdown, setCountdown] = useState(null);
-  const intervalRef = useRef(null);
-  const timeoutRef = useRef(null);
-
-  // Cleanup timers on unmount
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
+  const { countdown, isCountingDown, startCountdown, resetCountdown } = useCountdown(onStartRace, onAudioStart);
 
   const handleStartRace = () => {
-    // Clear any existing timers
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+    startCountdown();
+  };
 
-    let count = UI_CONSTANTS.COUNTDOWN_START_VALUE;
-    setCountdown(count);
-
-    intervalRef.current = setInterval(() => {
-      count--;
-      if (count === 1 && onAudioStart) {
-        onAudioStart();
-      }
-      if (count > 0) {
-        setCountdown(count);
-      } else {
-        setCountdown('GO!');
-        timeoutRef.current = setTimeout(() => {
-          setCountdown(null);
-          onStartRace();
-          intervalRef.current = null;
-          timeoutRef.current = null;
-        }, UI_CONSTANTS.COUNTDOWN_GO_DELAY);
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    }, UI_CONSTANTS.COUNTDOWN_INTERVAL);
+  const handleResetRace = () => {
+    resetCountdown();
+    onResetRace();
   };
 
   return (
@@ -71,14 +33,14 @@ const ControlPanel = ({ isRacing, onStartRace, onResetRace, onAudioStart }) => {
           <button
             className="btn btn-start"
             onClick={handleStartRace}
-            disabled={isRacing || countdown || participants.length === UI_CONSTANTS.PARTICIPANT_LIST_EMPTY}
+            disabled={isRacing || isCountingDown || participants.length === UI_CONSTANTS.PARTICIPANT_LIST_EMPTY}
           >
             {isRacing ? 'RACING...' : 'START RACE'}
           </button>
 
           <button
             className="btn btn-reset"
-            onClick={onResetRace}
+            onClick={handleResetRace}
             disabled={!isRacing}
           >
             RESET

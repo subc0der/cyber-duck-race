@@ -110,8 +110,8 @@ export const PHYSICS_CONSTANTS = {
   // POSITION_THRESHOLD_DISTANCE balances responsiveness and prevents jitter in close races.
   POSITION_THRESHOLD_DISTANCE: 50,
   // Relative positioning
-  LEADER_OFFSET: 200,
-  RELATIVE_POSITION_SCALE: 200,
+  LEADER_OFFSET: 200, // How far back from the leader the "center" of the view is for rendering.
+  RELATIVE_POSITION_SCALE: 200, // How much to scale relative positions for display. Affects the perceived "depth" of the race.
   // Winner boost mechanics
   WINNER_BOOST_START_PERCENT: 0.7,
   WINNER_BOOST_MULTIPLIER: 0.5,
@@ -174,8 +174,8 @@ export const AUDIO_CONSTANTS = {
   MASTER_VOLUME: 0.7,
   SFX_VOLUME: 0.8,
   MUSIC_VOLUME: 0.5,
-  MAX_FILE_SIZE_MB: 10,
-  MAX_FILE_SIZE_BYTES: 10 * 1024 * 1024, // 10MB
+  MAX_FILE_SIZE_MB: 150,
+  MAX_FILE_SIZE_BYTES: 150 * 1024 * 1024, // 150MB
   SOUND_EFFECTS: {
     COUNTDOWN: 'countdown.mp3',
     START: 'race-start.mp3',
