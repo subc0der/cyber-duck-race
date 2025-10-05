@@ -34,17 +34,17 @@ function AppContent() {
 
   const handleResetRace = useCallback(() => {
     resetRace();
-    if (audioRef) {
-      audioRef.pause();
-      audioRef.currentTime = 0;
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
     }
   }, [resetRace, audioRef]);
 
   const handleAudioStart = useCallback(() => {
-    if (audioFile && audioFile.url && audioRef) {
-      audioRef.src = audioFile.url;
-      audioRef.volume = audioVolume;
-      audioRef.play().catch((err) => {
+    if (audioFile && audioFile.url && audioRef.current) {
+      audioRef.current.src = audioFile.url;
+      audioRef.current.volume = audioVolume;
+      audioRef.current.play().catch((err) => {
         console.warn('Failed to play audio:', err);
       });
     }
