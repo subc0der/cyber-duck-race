@@ -9,19 +9,17 @@ const ParticipantManager = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleAddParticipant = () => {
-    if (inputValue.trim()) {
-      const result = addParticipant(inputValue);
-      if (result.success) {
-        setInputValue('');
-        setErrorMessage('');
-      } else {
-        setErrorMessage(result.error);
-        setTimeout(() => setErrorMessage(''), 3000);
-      }
+    const result = addParticipant(inputValue);
+    if (result.success) {
+      setInputValue('');
+      setErrorMessage('');
+    } else {
+      setErrorMessage(result.error);
+      setTimeout(() => setErrorMessage(''), 3000);
     }
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleAddParticipant();
     }
@@ -41,7 +39,7 @@ const ParticipantManager = () => {
           className="participant-input"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyDown}
           placeholder="Enter participant name"
           maxLength={UI_CONSTANTS.MAX_PARTICIPANT_NAME_LENGTH}
         />

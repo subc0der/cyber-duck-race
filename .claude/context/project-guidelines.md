@@ -96,11 +96,9 @@ Short description of change
 - Detailed bullet point 1
 - Detailed bullet point 2
 - Explains WHY the change was made
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>
 ```
+
+**Note**: Never include Claude Code attribution in commits as it causes confusion.
 
 ### Pull Requests
 1. Create PR with descriptive title
@@ -124,6 +122,19 @@ Before creating a PR, verify:
 - [ ] Code follows existing project patterns
 - [ ] App runs without errors (`npm run dev`)
 - [ ] All features tested manually
+
+### Accessibility Requirements
+- [ ] All icon-only buttons have `aria-label` attributes
+- [ ] Button labels match their `title` attributes
+- [ ] Form inputs have associated labels or `aria-label`
+- [ ] Interactive elements are keyboard accessible
+
+### React Best Practices
+- [ ] Use `onKeyDown` instead of deprecated `onKeyPress`
+- [ ] Proper cleanup in `useEffect` hooks (revoke blob URLs, remove listeners)
+- [ ] State validation provides user feedback (error messages)
+- [ ] No validation bypass in form handlers
+- [ ] Constants used appropriately (avoid misusing unrelated constants)
 
 ---
 
