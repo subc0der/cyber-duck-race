@@ -215,7 +215,7 @@ const EventBanner = () => {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept=".mp3,.wav,.flac,audio/mpeg,audio/wav,audio/flac"
+                  accept=".mp3,.wav,.flac,audio/mpeg,audio/mp3,audio/wav,audio/flac"
                   onChange={handleFileSelect}
                   className="audio-file-input"
                 />
