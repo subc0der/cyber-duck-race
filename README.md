@@ -227,6 +227,5 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ---
 
 <p align="center">
-  <strong>Built with 💜 using React, Vite, and a whole lot of neon</strong><br>
-  🤖 Developed with <a href="https://claude.com/claude-code">Claude Code</a>
+  <strong>Built using React, Vite, and a whole lot of neon</strong><br>
 </p>
