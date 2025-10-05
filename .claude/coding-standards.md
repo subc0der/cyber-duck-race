@@ -37,11 +37,37 @@ canvas.width = 800;
 - **Boolean conditions**: Threshold values, limits
 - **Configuration values**: Timeouts, intervals, sizes
 
-### Exceptions
-Only these are acceptable without extraction:
-- `-1`, `0`, `1` when used for array indexing or increment/decrement
-- `0` when initializing counters
-- Mathematical constants used in standard formulas (e.g., `Math.PI * 2`)
+### Exceptions - When Plain Numbers Are Better
+Only use plain numbers in these specific cases:
+- **Array indices**: `array[0]`, `array[1]` - NOT `array[FIRST_INDEX]`
+- **Loop counters**: `i++`, `i < length` - NOT `i += INCREMENT_BY_ONE`
+- **toFixed/toPrecision**: `value.toFixed(0)`, `value.toFixed(2)` - NOT `value.toFixed(ZERO_DECIMALS)`
+- **Math operations**: `Math.max(0, value)`, `Math.min(1, value)` when 0/1 are the natural min/max
+- **Boolean/null checks**: `if (x === 0)`, `if (x === null)` - NOT `if (x === ZERO_VALUE)`
+- **Mathematical constants**: `Math.PI * 2`, `Math.sqrt(2)`
+
+### ⚠️ CRITICAL: Use Constants ONLY When Semantically Meaningful
+**DON'T** reuse a constant just because it has the same numeric value!
+
+#### ❌ WRONG - Semantic Mismatch
+```javascript
+// BAD: CANVAS_ORIGIN means "canvas coordinate (0,0)", not "first array index"
+const file = e.target.files[UI_CONSTANTS.CANVAS_ORIGIN];  // ❌ WRONG
+const min = Math.max(UI_CONSTANTS.CANVAS_ORIGIN, value);   // ❌ WRONG
+progress.toFixed(UI_CONSTANTS.CANVAS_ORIGIN);              // ❌ WRONG
+```
+
+#### ✅ CORRECT - Right Tool for the Job
+```javascript
+// GOOD: Plain 0 when it's just a number
+const file = e.target.files[0];           // ✅ First file
+const min = Math.max(0, value);           // ✅ Minimum value
+progress.toFixed(0);                       // ✅ Zero decimal places
+
+// GOOD: CANVAS_ORIGIN when it means canvas coordinates
+ctx.clearRect(UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, w, h);  // ✅ Canvas origin point
+ctx.createLinearGradient(0, 0, 0, height); // ✅ or just use 0 directly
+```
 
 ---
 

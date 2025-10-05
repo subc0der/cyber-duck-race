@@ -127,7 +127,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
   };
 
   const drawRaceInfo = (ctx, elapsed) => {
-    const timeLeft = Math.max(UI_CONSTANTS.CANVAS_ORIGIN, RACE_CONSTANTS.RACE_DURATION - elapsed);
+    const timeLeft = Math.max(0, RACE_CONSTANTS.RACE_DURATION - elapsed);
     const progress = (elapsed / RACE_CONSTANTS.RACE_DURATION) * 100;
 
     const boxWidth = 200;
@@ -151,9 +151,9 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     const textY = boxY + VISUAL_CONSTANTS.RACE_INFO_BOX_PADDING + 20;
 
     ctx.fillText(`TIME: ${timeLeft.toFixed(1)}s`, textX, textY);
-    ctx.fillText(`PROGRESS: ${progress.toFixed(UI_CONSTANTS.CANVAS_ORIGIN)}%`, textX, textY + VISUAL_CONSTANTS.RACE_INFO_LINE_HEIGHT);
+    ctx.fillText(`PROGRESS: ${progress.toFixed(0)}%`, textX, textY + VISUAL_CONSTANTS.RACE_INFO_LINE_HEIGHT);
 
-    ctx.shadowBlur = UI_CONSTANTS.CANVAS_ORIGIN;
+    ctx.shadowBlur = 0;
   };
 
   return (

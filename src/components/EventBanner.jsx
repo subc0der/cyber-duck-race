@@ -75,7 +75,7 @@ const EventBanner = () => {
   };
 
   const handleFileSelect = (e) => {
-    const file = e.target.files[UI_CONSTANTS.CANVAS_ORIGIN];
+    const file = e.target.files[0];
     if (file) {
       // Check file size
       if (file.size > AUDIO_CONSTANTS.MAX_FILE_SIZE_BYTES) {
