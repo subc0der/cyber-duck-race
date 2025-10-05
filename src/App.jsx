@@ -1,42 +1,69 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import RaceTrack from './components/RaceTrack';
 import ControlPanel from './components/ControlPanel';
 import Leaderboard from './components/Leaderboard';
 import WinnerModal from './components/WinnerModal';
-import { RaceProvider } from './contexts/RaceContext';
+import ParticipantManager from './components/ParticipantManager';
+import EventBanner from './components/EventBanner';
+import ErrorBoundary from './components/ErrorBoundary';
+import { RaceProvider, useRace } from './contexts/RaceContext';
 import { UI_CONSTANTS } from './utils/constants';
 import './styles/App.css';
 
-function App() {
-  const [isRacing, setIsRacing] = useState(false);
-  const [winner, setWinner] = useState(null);
-  const [raceHistory, setRaceHistory] = useState([]);
+function AppContent() {
+  const {
+    isRacing,
+    winner,
+    raceHistory,
+    audioFile,
+    audioVolume,
+    audioRef,
+    startRace,
+    endRace,
+    resetRace,
+    closeWinnerModal
+  } = useRace();
 
   const handleRaceStart = useCallback(() => {
-    setIsRacing(true);
-    setWinner(null);
-  }, []);
+    startRace();
+  }, [startRace]);
 
   const handleRaceEnd = useCallback((winnerData) => {
-    setIsRacing(false);
-    setWinner(winnerData);
-    setRaceHistory((prev) => [...prev, winnerData]);
-  }, []);
+    endRace(winnerData);
+  }, [endRace]);
 
   const handleResetRace = useCallback(() => {
-    setIsRacing(false);
-    setWinner(null);
-  }, []);
+    resetRace();
+    if (audioRef) {
+      audioRef.pause();
+      audioRef.currentTime = 0;
+    }
+  }, [resetRace, audioRef]);
+
+  const handleAudioStart = useCallback(() => {
+    if (audioFile && audioFile.url && audioRef) {
+      audioRef.src = audioFile.url;
+      audioRef.volume = audioVolume;
+      audioRef.play().catch((err) => {
+        console.warn('Failed to play audio:', err);
+      });
+    }
+  }, [audioFile, audioVolume, audioRef]);
 
   return (
-    <RaceProvider>
-      <div className="app">
+    <div className="app">
+      <EventBanner />
+
         <div className="app-header">
           <h1 className="app-title">CYBER DUCK RACE</h1>
           <div className="app-subtitle">Welcome to Neo-Quackyo {UI_CONSTANTS.GAME_YEAR}</div>
         </div>
 
         <div className="app-content">
+          <div className="left-panel">
+            <ParticipantManager />
+          </div>
+
           <div className="main-panel">
             <RaceTrack
               isRacing={isRacing}
@@ -49,6 +76,7 @@ function App() {
               isRacing={isRacing}
               onStartRace={handleRaceStart}
               onResetRace={handleResetRace}
+              onAudioStart={handleAudioStart}
             />
             <Leaderboard
               raceHistory={raceHistory}
@@ -59,7 +87,7 @@ function App() {
         {winner && (
           <WinnerModal
             winner={winner}
-            onClose={() => setWinner(null)}
+            onClose={closeWinnerModal}
           />
         )}
 
@@ -69,7 +97,16 @@ function App() {
           </div>
         </div>
       </div>
-    </RaceProvider>
+  );
+}
+
+function App() {
+  return (
+    <ErrorBoundary>
+      <RaceProvider>
+        <AppContent />
+      </RaceProvider>
+    </ErrorBoundary>
   );
 }
 

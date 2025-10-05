@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { RACE_CONSTANTS, VISUAL_CONSTANTS, UI_CONSTANTS } from '../utils/constants';
 import { RacePhysics } from '../utils/racePhysics';
+import { useRace } from '../contexts/RaceContext';
 import '../styles/RaceTrack.css';
 
 const RaceTrack = ({ isRacing, onRaceEnd }) => {
+  const { participants } = useRace();
   const canvasRef = useRef(null);
   const animationFrameRef = useRef(null);
   const racePhysicsRef = useRef(null);
@@ -15,7 +17,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       racePhysicsRef.current = new RacePhysics();
     }
 
-    const initialDucks = racePhysicsRef.current.initializeDucks();
+    const initialDucks = racePhysicsRef.current.initializeDucks(participants);
     setDucks(initialDucks);
 
     // Load background image directly as a static asset
@@ -28,7 +30,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       backgroundImageRef.current = null;
     };
     img.src = VISUAL_CONSTANTS.BACKGROUND_IMAGE_PATH;
-  }, []);
+  }, [participants]);
 
   useEffect(() => {
     if (!isRacing || !canvasRef.current) return;
@@ -124,18 +126,33 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
   };
 
   const drawRaceInfo = (ctx, elapsed) => {
+    const timeLeft = Math.max(UI_CONSTANTS.CANVAS_ORIGIN, RACE_CONSTANTS.RACE_DURATION - elapsed);
+    const progress = (elapsed / RACE_CONSTANTS.RACE_DURATION) * 100;
+
+    const boxWidth = 200;
+    const boxHeight = 80;
+    const boxX = ctx.canvas.width - boxWidth - VISUAL_CONSTANTS.RACE_INFO_BOX_MARGIN;
+    const boxY = VISUAL_CONSTANTS.RACE_INFO_BOX_MARGIN;
+
+    ctx.fillStyle = VISUAL_CONSTANTS.RACE_INFO_BOX_BACKGROUND;
+    ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+    ctx.strokeStyle = '#00ffff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+
     ctx.fillStyle = '#00ffff';
-    ctx.font = 'bold 20px monospace';
+    ctx.font = 'bold 18px monospace';
     ctx.shadowColor = '#00ffff';
     ctx.shadowBlur = VISUAL_CONSTANTS.INFO_TEXT_GLOW_BLUR;
 
-    const timeLeft = Math.max(0, RACE_CONSTANTS.RACE_DURATION - elapsed);
-    ctx.fillText(`TIME: ${timeLeft.toFixed(1)}s`, VISUAL_CONSTANTS.TIME_DISPLAY_X, VISUAL_CONSTANTS.TIME_DISPLAY_Y);
+    const textX = boxX + VISUAL_CONSTANTS.RACE_INFO_BOX_PADDING;
+    const textY = boxY + VISUAL_CONSTANTS.RACE_INFO_BOX_PADDING + 20;
 
-    const progress = (elapsed / RACE_CONSTANTS.RACE_DURATION) * 100;
-    ctx.fillText(`PROGRESS: ${progress.toFixed(0)}%`, VISUAL_CONSTANTS.PROGRESS_DISPLAY_X, VISUAL_CONSTANTS.PROGRESS_DISPLAY_Y);
+    ctx.fillText(`TIME: ${timeLeft.toFixed(1)}s`, textX, textY);
+    ctx.fillText(`PROGRESS: ${progress.toFixed(UI_CONSTANTS.CANVAS_ORIGIN)}%`, textX, textY + VISUAL_CONSTANTS.RACE_INFO_LINE_HEIGHT);
 
-    ctx.shadowBlur = 0;
+    ctx.shadowBlur = UI_CONSTANTS.CANVAS_ORIGIN;
   };
 
   return (

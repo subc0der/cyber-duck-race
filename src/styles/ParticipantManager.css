@@ -1,0 +1,224 @@
+.participant-manager {
+  background: linear-gradient(135deg, #1a0033 0%, #0a0a0a 100%);
+  border: 2px solid #ff00ff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+  color: #ffffff;
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.participant-title {
+  font-size: 24px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #ff00ff, #9d00ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  margin: 0 0 20px 0;
+  text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+}
+
+.participant-input-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.participant-input {
+  flex: 1;
+  background: #0a0a0a;
+  border: 1px solid #ff00ff;
+  border-radius: 5px;
+  padding: 10px;
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.participant-input:focus {
+  border-color: #00ffff;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.participant-input::placeholder {
+  color: #666666;
+}
+
+.participant-add-btn {
+  background: linear-gradient(135deg, #ff00ff, #9d00ff);
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+}
+
+.participant-add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.6);
+}
+
+.participant-add-btn:active {
+  transform: translateY(0);
+}
+
+.participant-add-btn:disabled {
+  background: #333;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.5;
+}
+
+.participant-add-btn:disabled:hover {
+  transform: none;
+}
+
+.participant-error-message {
+  background: rgba(255, 0, 0, 0.2);
+  border: 1px solid #ff0000;
+  border-radius: 5px;
+  padding: 8px 12px;
+  color: #ff6666;
+  font-size: 12px;
+  margin-bottom: 10px;
+  text-align: center;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.participant-count {
+  text-align: center;
+  color: #00ffff;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+.participant-list {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  padding-right: 5px;
+}
+
+.participant-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.participant-list::-webkit-scrollbar-track {
+  background: #0a0a0a;
+  border-radius: 4px;
+}
+
+.participant-list::-webkit-scrollbar-thumb {
+  background: #ff00ff;
+  border-radius: 4px;
+}
+
+.participant-list::-webkit-scrollbar-thumb:hover {
+  background: #9d00ff;
+}
+
+.participant-empty {
+  text-align: center;
+  color: #666666;
+  padding: 20px;
+  font-style: italic;
+}
+
+.participant-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 0, 255, 0.1);
+  border: 1px solid #ff00ff;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.participant-item:hover {
+  background: rgba(255, 0, 255, 0.2);
+  border-color: #00ffff;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.participant-color-indicator {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px currentColor;
+  flex-shrink: 0;
+}
+
+.participant-name {
+  flex: 1;
+  color: #ffffff;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.participant-remove-btn {
+  background: transparent;
+  border: 1px solid #ff0099;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  color: #ff0099;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.participant-remove-btn:hover {
+  background: #ff0099;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 0, 153, 0.5);
+}
+
+.participant-clear-btn {
+  background: linear-gradient(135deg, #ff0099, #9d00ff);
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-shadow: 0 0 10px rgba(255, 0, 153, 0.3);
+}
+
+.participant-clear-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 0, 153, 0.6);
+}
+
+.participant-clear-btn:active {
+  transform: translateY(0);
+}

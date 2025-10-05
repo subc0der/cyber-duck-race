@@ -10,17 +10,19 @@
 
 ## 🎮 Overview
 
-**Cyber Duck Race** is a cyberpunk-themed web application where six cyber-enhanced ducks race across a scrolling neon cityscape. Built with React and rendered on HTML5 Canvas, the game features predetermined race outcomes using cryptographically secure random number generation, ensuring fair and unpredictable results.
+**Cyber Duck Race** is a cyberpunk-themed raffle winner selection tool. Add participant names, customize your event, and watch as cyber-enhanced ducks race across a scrolling neon cityscape to randomly select a winner. Built with React and rendered on HTML5 Canvas, the app uses cryptographically secure random number generation to ensure fair and unpredictable results.
 
 ### ✨ Features
 
+- 🎫 **Raffle Participant Management** - Add and manage participant names with visual duck assignment
+- 🏷️ **Custom Event Naming** - Personalize your raffle with custom event titles
 - 🌆 **Immersive Cyberpunk Aesthetic** - Scrolling cityscape background with neon glow effects
-- 🦆 **Six Unique Cyber Ducks** - NEON, CYBER, MATRIX, BLADE, GHOST, and CHROME
-- 🎲 **Crypto-Secure RNG** - Fair race outcomes using Web Crypto API with Math.random fallback
-- 📊 **Real-time Leaderboard** - Track race winners and statistics across sessions
+- 🦆 **Dynamic Duck Assignment** - Each participant gets a unique cyber duck with distinct color
+- 🎲 **Crypto-Secure RNG** - Fair winner selection using Web Crypto API with Math.random fallback
+- 📊 **Real-time Leaderboard** - Track raffle winners and statistics across sessions
 - 🎨 **Dynamic Canvas Rendering** - Smooth 60 FPS animation with scrolling backgrounds
 - ⚡ **Fast Development** - Built with Vite for lightning-fast HMR and builds
-- 🎯 **Predetermined Winners** - Sophisticated physics engine with dynamic speed multipliers
+- 🎯 **Fair Winner Selection** - Sophisticated physics engine ensures random, unbiased results
 
 ## 🚀 Quick Start
 
@@ -55,37 +57,40 @@ npm run build
 npm run preview
 ```
 
-## 🎯 How to Play
+## 🎯 How to Use
 
-1. **Start the Race** - Click the "START RACE" button in the control panel
-2. **Watch the Action** - Six cyber ducks race across the neon cityscape for 15 seconds
-3. **See the Winner** - A modal displays the winning duck with celebratory effects
-4. **Check the Leaderboard** - View race history and win counts
-5. **Race Again** - Click "RESET RACE" to start over
+1. **Add Participants** - Enter participant names in the Participant Manager panel
+2. **Set Event Name** - Customize your event with a title (optional)
+3. **Start the Raffle** - Click "START RACE" to begin the winner selection
+4. **Watch the Race** - Cyber ducks representing each participant race for 15 seconds
+5. **See the Winner** - A modal displays the winning participant with celebratory effects
+6. **Check the Leaderboard** - View raffle history and past winners
+7. **Run Another Raffle** - Click "RESET RACE" to start over
 
 ## 🏗️ Project Structure
 
 ```
 cyber-duck-race/
 ├── src/
-│   ├── components/          # React components
-│   │   ├── RaceTrack.jsx    # Canvas-based race rendering
-│   │   ├── Leaderboard.jsx  # Race history and statistics
-│   │   ├── ControlPanel.jsx # Race controls and status
-│   │   └── WinnerModal.jsx  # Winner celebration modal
-│   ├── contexts/            # React context providers
-│   │   └── RaceContext.jsx  # Global race state management
-│   ├── styles/              # Component-specific CSS
-│   ├── utils/               # Utilities and configuration
-│   │   ├── constants.js     # All configuration constants
-│   │   └── racePhysics.js   # Race physics engine
-│   └── App.jsx              # Main application component
-├── .claude/                 # Project documentation
+│   ├── components/              # React components
+│   │   ├── RaceTrack.jsx        # Canvas-based race rendering
+│   │   ├── ParticipantManager.jsx # Add/manage raffle participants
+│   │   ├── Leaderboard.jsx      # Raffle history and statistics
+│   │   ├── ControlPanel.jsx     # Race controls and status
+│   │   └── WinnerModal.jsx      # Winner celebration modal
+│   ├── contexts/                # React context providers
+│   │   └── RaceContext.jsx      # Global race state management
+│   ├── styles/                  # Component-specific CSS
+│   ├── utils/                   # Utilities and configuration
+│   │   ├── constants.js         # All configuration constants
+│   │   └── racePhysics.js       # Race physics engine
+│   └── App.jsx                  # Main application component
+├── .claude/                     # Project documentation
 │   ├── coding-standards.md
 │   ├── css-standards.md
 │   └── context/
-└── subcoder/                # Assets and resources
-    └── BG00.jpg             # Cyberpunk cityscape background
+└── subcoder/                    # Assets and resources
+    └── BG00.jpg                 # Cyberpunk cityscape background
 ```
 
 ## 🔧 Technology Stack
@@ -112,42 +117,51 @@ cyber-duck-race/
 - **Browser Compatibility**: CSS and JS fallbacks for older browsers
 - **Clean Code**: Passes GitHub Copilot reviews on first attempt
 
-## 🧪 Race Physics Engine
+## 🧪 Winner Selection Engine
 
-The game features a sophisticated physics engine (`racePhysics.js`) that:
+The app features a sophisticated physics engine (`racePhysics.js`) that ensures fair, random winner selection:
 
-- **Predetermines Winners**: Uses crypto-secure RNG to select winner before race starts
-- **Dynamic Speed Multipliers**: Changes every 2 seconds (0.6x - 1.4x range)
+- **Cryptographically Secure**: Uses Web Crypto API to randomly select winner before race starts
+- **Dynamic Speed Multipliers**: Speed changes every 2 seconds (0.6x - 1.4x range) for visual excitement
 - **Stage-Based Mechanics**: Different speed patterns for early/mid/late race stages
 - **Smooth Animation**: 60 FPS canvas rendering with position interpolation
 - **Scrolling Background**: Background moves at 300px/s while ducks stay centered
+- **Fair Selection**: No participant has any advantage; winner is truly random
 
 ### Race Constants
 
 ```javascript
-RACE_DURATION: 15,              // 15-second races
-SPEED_CHANGE_INTERVAL: 2000,    // Speed changes every 2 seconds
+RACE_DURATION: 15,              // 15-second raffle selection
+SPEED_CHANGE_INTERVAL: 2000,    // Speed changes every 2 seconds for visual variety
 MIN_SPEED_MULTIPLIER: 0.6,      // Minimum speed variation
 MAX_SPEED_MULTIPLIER: 1.4,      // Maximum speed variation
 ```
 
 ## 📊 Features in Detail
 
+### Participant Manager
+- Add participant names via text input
+- Visual duck color assignment
+- Remove individual participants or clear all
+- Input validation (no duplicates, no empty names)
+- Maximum 30 characters per name
+
 ### Leaderboard System
-- Persistent race history (session-based)
-- Win counts per duck
-- Total race statistics
-- Last race winner highlight
+- Persistent raffle history (session-based)
+- Win counts per participant
+- Total raffle statistics
+- Last raffle winner highlight
 
 ### Control Panel
-- Race countdown (3, 2, 1, GO!)
+- Raffle countdown (3, 2, 1, GO!)
 - Live race status indicator
 - Start/Reset controls with debouncing
 - Race progress display
+- Prevents starting without participants
 
 ### Winner Modal
 - Animated celebration screen
-- Duck name and color
+- Participant name and duck color
 - Finish time and speed stats
 - Neon-glow animations
 
@@ -184,26 +198,27 @@ This project follows strict coding standards to maintain quality:
 
 ## 🎯 Roadmap
 
-### Current Features (v1.0)
+### Current Features (v2.0)
 - [x] Canvas-based race rendering
-- [x] Six cyber ducks with unique colors
+- [x] Dynamic participant management
+- [x] Custom event naming
 - [x] Scrolling cyberpunk cityscape
 - [x] Crypto-secure winner selection
 - [x] Real-time leaderboard
 - [x] Winner celebration modal
+- [x] Dynamic duck count based on participants
 
 ### Planned Features (Future)
+- [ ] Custom event banner with editable text
 - [ ] Sound effects and background music
 - [ ] Mobile responsive design
-- [ ] Betting system (partially implemented)
-- [ ] Multiplayer support
 - [ ] Custom duck skins
-- [ ] Achievement system
 - [ ] Race replay feature
+- [ ] Export race results (CSV/PDF)
+- [ ] Persistent storage (save participants/history)
 
 ## 🐛 Known Issues
 
-- Betting panel removed in current version (to be reimplemented)
 - Audio constants defined but not yet implemented
 - Session-based leaderboard (doesn't persist across page reloads)
 

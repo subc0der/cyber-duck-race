@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useRace } from '../contexts/RaceContext';
 import { UI_CONSTANTS } from '../utils/constants';
 import '../styles/ControlPanel.css';
 
-const ControlPanel = ({ isRacing, onStartRace, onResetRace }) => {
+const ControlPanel = ({ isRacing, onStartRace, onResetRace, onAudioStart }) => {
+  const { participants } = useRace();
   const [countdown, setCountdown] = useState(null);
 
   const handleStartRace = () => {
@@ -11,6 +13,9 @@ const ControlPanel = ({ isRacing, onStartRace, onResetRace }) => {
 
     const countInterval = setInterval(() => {
       count--;
+      if (count === 1 && onAudioStart) {
+        onAudioStart();
+      }
       if (count > 0) {
         setCountdown(count);
       } else {
@@ -41,7 +46,7 @@ const ControlPanel = ({ isRacing, onStartRace, onResetRace }) => {
           <button
             className="btn btn-start"
             onClick={handleStartRace}
-            disabled={isRacing || countdown}
+            disabled={isRacing || countdown || participants.length === UI_CONSTANTS.PARTICIPANT_LIST_EMPTY}
           >
             {isRacing ? 'RACING...' : 'START RACE'}
           </button>
@@ -67,15 +72,15 @@ const ControlPanel = ({ isRacing, onStartRace, onResetRace }) => {
         <div className="race-info">
           <div className="info-item">
             <span className="info-label">MODE:</span>
-            <span className="info-value">CHAMPIONSHIP</span>
+            <span className="info-value">RAFFLE</span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">PARTICIPANTS:</span>
+            <span className="info-value">{participants.length}</span>
           </div>
           <div className="info-item">
             <span className="info-label">TRACK:</span>
             <span className="info-value">NEO-QUACKYO</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">WEATHER:</span>
-            <span className="info-value">CYBER RAIN</span>
           </div>
         </div>
       </div>

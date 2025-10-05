@@ -16,14 +16,19 @@ export const RaceProvider = ({ children }) => {
     isRacing: false,
     currentRace: null,
     raceHistory: [],
-    bets: [],
-    balance: UI_CONSTANTS.INITIAL_BALANCE,
+    participants: [],
+    eventName: '',
+    audioFile: null,
+    audioVolume: 0.5,
+    audioRef: null,
+    winner: null,
   });
 
   const startRace = useCallback(() => {
     setRaceState((prev) => ({
       ...prev,
       isRacing: true,
+      winner: null,
       currentRace: {
         startTime: Date.now(),
         ducks: [],
@@ -35,6 +40,7 @@ export const RaceProvider = ({ children }) => {
     setRaceState((prev) => ({
       ...prev,
       isRacing: false,
+      winner,
       currentRace: null,
       raceHistory: [...prev.raceHistory, {
         winner,
@@ -43,26 +49,93 @@ export const RaceProvider = ({ children }) => {
     }));
   }, []);
 
-  const placeBet = useCallback((duck, amount) => {
-    setRaceState((prev) => {
-      if (prev.balance < amount) return prev;
+  const addParticipant = useCallback((name) => {
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+      return { success: false, error: 'Name cannot be empty' };
+    }
 
+    let result = { success: false };
+
+    setRaceState((prev) => {
+      if (prev.participants.length >= UI_CONSTANTS.MAX_PARTICIPANTS) {
+        result = { success: false, error: `Maximum ${UI_CONSTANTS.MAX_PARTICIPANTS} participants allowed` };
+        return prev;
+      }
+
+      if (prev.participants.some((p) => p.name === trimmedName)) {
+        result = { success: false, error: 'Participant already exists' };
+        return prev;
+      }
+
+      result = { success: true };
       return {
         ...prev,
-        balance: prev.balance - amount,
-        bets: [...prev.bets, {
-          duck,
-          amount,
-          timestamp: Date.now(),
+        participants: [...prev.participants, {
+          id: Date.now(),
+          name: trimmedName,
         }],
       };
     });
+
+    return result;
   }, []);
 
-  const clearBets = useCallback(() => {
+  const removeParticipant = useCallback((id) => {
     setRaceState((prev) => ({
       ...prev,
-      bets: [],
+      participants: prev.participants.filter((p) => p.id !== id),
+    }));
+  }, []);
+
+  const clearParticipants = useCallback(() => {
+    setRaceState((prev) => ({
+      ...prev,
+      participants: [],
+    }));
+  }, []);
+
+  const setEventName = useCallback((name) => {
+    setRaceState((prev) => ({
+      ...prev,
+      eventName: name,
+    }));
+  }, []);
+
+  const setAudioFile = useCallback((file) => {
+    setRaceState((prev) => ({
+      ...prev,
+      audioFile: file,
+    }));
+  }, []);
+
+  const setAudioVolume = useCallback((volume) => {
+    setRaceState((prev) => ({
+      ...prev,
+      audioVolume: volume,
+    }));
+  }, []);
+
+  const setAudioRef = useCallback((ref) => {
+    setRaceState((prev) => ({
+      ...prev,
+      audioRef: ref,
+    }));
+  }, []);
+
+  const resetRace = useCallback(() => {
+    setRaceState((prev) => ({
+      ...prev,
+      isRacing: false,
+      winner: null,
+      currentRace: null,
+    }));
+  }, []);
+
+  const closeWinnerModal = useCallback(() => {
+    setRaceState((prev) => ({
+      ...prev,
+      winner: null,
     }));
   }, []);
 
@@ -70,8 +143,15 @@ export const RaceProvider = ({ children }) => {
     ...raceState,
     startRace,
     endRace,
-    placeBet,
-    clearBets,
+    resetRace,
+    closeWinnerModal,
+    addParticipant,
+    removeParticipant,
+    clearParticipants,
+    setEventName,
+    setAudioFile,
+    setAudioVolume,
+    setAudioRef,
   };
 
   return (

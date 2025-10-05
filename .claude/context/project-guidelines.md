@@ -1,7 +1,7 @@
 # Project Guidelines - Cyber Duck Race
 
 ## Overview
-This is a cyberpunk-themed duck racing game built with React and Vite. The project emphasizes code quality, maintainability, and passing automated code reviews on the first attempt.
+This is a cyberpunk-themed raffle winner selection tool built with React and Vite. Users add participant names, and cyber ducks race to randomly select a winner. The project emphasizes code quality, maintainability, and passing automated code reviews on the first attempt.
 
 ---
 
@@ -22,18 +22,19 @@ See `.claude/coding-standards.md` for complete details.
 
 ```
 src/
-├── components/          # React components
-│   ├── RaceTrack.jsx   # Canvas-based race rendering
-│   ├── Leaderboard.jsx # Race history display
-│   ├── ControlPanel.jsx # Race controls
-│   └── WinnerModal.jsx # Winner celebration
-├── contexts/           # React context providers
-│   └── RaceContext.jsx # Global race state
-├── styles/             # Component-specific CSS
-├── utils/              # Utilities and configuration
-│   ├── constants.js    # ALL constants go here
-│   └── racePhysics.js  # Race mechanics
-└── App.jsx             # Main application
+├── components/              # React components
+│   ├── RaceTrack.jsx        # Canvas-based race rendering
+│   ├── ParticipantManager.jsx # Participant add/remove UI
+│   ├── Leaderboard.jsx      # Raffle history display
+│   ├── ControlPanel.jsx     # Race controls
+│   └── WinnerModal.jsx      # Winner celebration
+├── contexts/                # React context providers
+│   └── RaceContext.jsx      # Global race state & participants
+├── styles/                  # Component-specific CSS
+├── utils/                   # Utilities and configuration
+│   ├── constants.js         # ALL constants go here
+│   └── racePhysics.js       # Winner selection mechanics
+└── App.jsx                  # Main application
 
 .claude/
 ├── coding-standards.md      # General coding standards
@@ -50,10 +51,10 @@ All constants must be in `src/utils/constants.js`, organized by category:
 
 - **RACE_CONSTANTS**: Race mechanics (duration, speed, thresholds)
 - **VISUAL_CONSTANTS**: Rendering (canvas size, colors, spacing, **image paths**)
-- **DUCK_CONSTANTS**: Duck properties (names, colors, positioning)
+- **DUCK_CONSTANTS**: Duck properties (default names, colors, positioning)
 - **PHYSICS_CONSTANTS**: Physics simulation parameters
 - **ANIMATION_CONSTANTS**: Frame rates, timing
-- **UI_CONSTANTS**: UI behavior, layouts, limits
+- **UI_CONSTANTS**: UI behavior, layouts, limits, participant management
 - **AUDIO_CONSTANTS**: Sound files, volumes
 - **THEME_CONSTANTS**: Colors, shadows, animations
 
@@ -130,10 +131,17 @@ Before creating a PR, verify:
 
 ### Manual Testing Checklist
 - [ ] App starts: `npm run dev` → http://localhost:3000
-- [ ] Race starts when "START RACE" clicked
+- [ ] Can add participant names
+- [ ] Cannot add duplicate or empty names
+- [ ] Can remove participants individually
+- [ ] Can clear all participants
+- [ ] Cannot start race with 0 participants
+- [ ] Race starts when "START RACE" clicked with participants
+- [ ] Correct number of ducks match participant count
+- [ ] Participant names displayed on ducks
 - [ ] Ducks move across screen with scrolling background
 - [ ] Winner selected at end (15s)
-- [ ] Winner modal displays correctly
+- [ ] Winner modal displays participant name
 - [ ] Leaderboard updates with winner
 - [ ] Reset button clears race state
 - [ ] No console errors or warnings
@@ -176,12 +184,13 @@ Before creating a PR, verify:
 
 ## Future Enhancements (Optional)
 
+- Custom event banner with editable text
 - Unit tests for RacePhysics class
 - E2E tests with Cypress/Playwright
 - Sound effects (constants already defined)
 - Mobile responsiveness
-- Multiplayer support
-- Betting system (partially implemented)
+- Export race results (CSV/PDF)
+- Persistent storage for participants and history
 
 ---
 

@@ -33,7 +33,7 @@ const Leaderboard = ({ raceHistory }) => {
           <div className="leaderboard-list">
             <div className="leaderboard-header-row">
               <span className="rank-header">RANK</span>
-              <span className="name-header">DUCK</span>
+              <span className="name-header">PARTICIPANT</span>
               <span className="wins-header">WINS</span>
             </div>
             {leaderboardData.map((duck, index) => (
@@ -52,10 +52,10 @@ const Leaderboard = ({ raceHistory }) => {
         )}
 
         <div className="stats-section">
-          <h3 className="section-title">RACE STATS</h3>
+          <h3 className="section-title">RAFFLE STATS</h3>
           <div className="stats-grid">
             <div className="stat-item">
-              <span className="stat-label">TOTAL RACES</span>
+              <span className="stat-label">TOTAL RAFFLES</span>
               <span className="stat-value">{raceHistory.length}</span>
             </div>
             <div className="stat-item">
