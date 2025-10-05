@@ -450,7 +450,136 @@ this.predeterminedWinner = randomValue % duckNames.length;
 
 ---
 
-## 15. Quick Checklist Before Committing
+## 15. React Refs Best Practices
+
+### Rule: ALWAYS ACCESS DOM ELEMENTS VIA .current
+**React refs must use `.current` to access the underlying DOM element or value.**
+
+#### ✅ Correct Pattern
+```javascript
+const audioRef = useRef(null);
+
+// Always check ref.current exists before using
+if (audioRef.current) {
+  audioRef.current.pause();
+  audioRef.current.currentTime = 0;
+}
+
+// Guard in conditional
+if (audioFile && audioFile.url && audioRef.current) {
+  audioRef.current.src = audioFile.url;
+  audioRef.current.play();
+}
+```
+
+#### ❌ Incorrect Pattern
+```javascript
+const audioRef = useRef(null);
+
+// WRONG: Accessing ref directly without .current
+if (audioRef) {
+  audioRef.pause();  // This will throw - audioRef is the ref object, not the element
+  audioRef.currentTime = 0;
+}
+```
+
+### When to Use Refs vs State
+
+**Use useRef when:**
+- Storing DOM element references
+- Storing mutable values that don't trigger re-renders (timers, intervals)
+- Storing previous values across renders
+
+**Use useState when:**
+- Value changes should trigger re-renders
+- Value is displayed in UI
+- Value affects component logic/rendering
+
+#### ✅ Correct: Ref for DOM Element
+```javascript
+// In Context/Provider
+const audioRef = useRef(null);
+
+// Expose ref directly (not in state)
+const value = {
+  ...raceState,
+  audioRef,  // Pass the ref object itself
+  // ...
+};
+
+// In Component
+const { audioRef } = useRace();
+
+// Access via .current
+if (audioRef.current) {
+  audioRef.current.volume = 0.5;
+}
+```
+
+#### ❌ Incorrect: DOM Element in State
+```javascript
+// WRONG: Never store DOM elements in state
+const [audioRef, setAudioRef] = useState(null);
+
+// This causes unnecessary re-renders and isn't serializable
+setAudioRef(audioElement);
+```
+
+### Countdown/Timer Patterns
+
+**Always clean up timers properly:**
+
+```javascript
+const intervalRef = useRef(null);
+const timeoutRef = useRef(null);
+
+useEffect(() => {
+  // Cleanup on unmount
+  return () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  };
+}, []);
+
+// When starting new timer, clear old one first
+const startTimer = () => {
+  if (intervalRef.current) clearInterval(intervalRef.current);
+
+  intervalRef.current = setInterval(() => {
+    // timer logic
+  }, 1000);
+};
+```
+
+### Countdown Sequence Best Practice
+
+**Show: 3, 2, 1, GO! (no zero)**
+
+```javascript
+// ✅ Correct: Skip 0, go straight to GO!
+if (count > 0) {
+  setCountdown(count);
+} else {
+  // count === 0, show GO! immediately
+  clearInterval(intervalRef.current);
+  setCountdown('GO!');
+}
+```
+
+```javascript
+// ❌ Incorrect: Shows 3, 2, 1, 0, GO!
+if (count > 0) {
+  setCountdown(count);
+} else if (count === 0) {
+  setCountdown(0);  // Extra tick showing 0
+} else {
+  setCountdown('GO!');
+}
+```
+
+---
+
+## 16. Quick Checklist Before Committing
 
 Before creating a PR, verify:
 
@@ -467,6 +596,10 @@ Before creating a PR, verify:
 - [ ] All icon-only buttons have `aria-label`
 - [ ] All inputs without visible labels have `aria-label`
 - [ ] All validation errors shown to users (no silent failures)
+- [ ] Refs accessed via `.current` (never access ref object directly)
+- [ ] DOM elements stored in refs, not state
+- [ ] Timers/intervals cleaned up in useEffect return
+- [ ] Countdown shows 3, 2, 1, GO! (no zero tick)
 
 **Error Handling:**
 - [ ] Image loading has error handlers (`onload`/`onerror`)

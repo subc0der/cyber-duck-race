@@ -41,9 +41,8 @@ export const useCountdown = (onCountdownEnd, onAudioStart) => {
 
       if (count > 0) {
         setCountdown(count);
-      } else if (count === 0) {
-        setCountdown(0);
       } else {
+        // Stop at 0 and show GO! immediately
         clearInterval(intervalRef.current);
         intervalRef.current = null;
         setCountdown('GO!');
