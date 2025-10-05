@@ -47,3 +47,14 @@ coverage/
 subcoder/
 HANDOFF_SUMMARY.md
 *HANDOFF*.md
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# PowerShell scripts (utility/temp files)
+*.ps1
+
+# Review and prompt files
+*REVIEW*.md
+*PROMPT*.md
+CLAUDE.md

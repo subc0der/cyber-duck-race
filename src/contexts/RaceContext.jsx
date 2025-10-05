@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { UI_CONSTANTS } from '../utils/constants';
 
 const RaceContext = createContext();
@@ -22,7 +22,10 @@ export const RaceProvider = ({ children }) => {
     audioVolume: 0.5,
     audioRef: null,
     winner: null,
+    countdown: null,
   });
+
+  const countdownIntervalRef = useRef(null);
 
   const startRace = useCallback(() => {
     setRaceState((prev) => ({
@@ -124,12 +127,20 @@ export const RaceProvider = ({ children }) => {
   }, []);
 
   const resetRace = useCallback(() => {
-    setRaceState((prev) => ({
-      ...prev,
-      isRacing: false,
-      winner: null,
-      currentRace: null,
-    }));
+    setRaceState((prev) => {
+      // Reset audio if it exists
+      if (prev.audioRef) {
+        prev.audioRef.pause();
+        prev.audioRef.currentTime = 0;
+      }
+
+      return {
+        ...prev,
+        isRacing: false,
+        winner: null,
+        currentRace: null,
+      };
+    });
   }, []);
 
   const closeWinnerModal = useCallback(() => {
@@ -137,6 +148,45 @@ export const RaceProvider = ({ children }) => {
       ...prev,
       winner: null,
     }));
+  }, []);
+
+  const startCountdown = useCallback((onComplete, onAudioStart) => {
+    // Clear any existing countdown
+    if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
+    }
+
+    let count = UI_CONSTANTS.COUNTDOWN_START_VALUE;
+    setRaceState((prev) => ({ ...prev, countdown: count }));
+
+    countdownIntervalRef.current = setInterval(() => {
+      count--;
+      if (count === 1 && onAudioStart) {
+        onAudioStart();
+      }
+      if (count > 0) {
+        setRaceState((prev) => ({ ...prev, countdown: count }));
+      } else {
+        setRaceState((prev) => ({ ...prev, countdown: 'GO!' }));
+        setTimeout(() => {
+          setRaceState((prev) => ({ ...prev, countdown: null }));
+          if (onComplete) onComplete();
+        }, UI_CONSTANTS.COUNTDOWN_GO_DELAY);
+        if (countdownIntervalRef.current) {
+          clearInterval(countdownIntervalRef.current);
+          countdownIntervalRef.current = null;
+        }
+      }
+    }, UI_CONSTANTS.COUNTDOWN_INTERVAL);
+  }, []);
+
+  // Cleanup countdown interval on unmount
+  useEffect(() => {
+    return () => {
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+      }
+    };
   }, []);
 
   const value = {
@@ -152,6 +202,7 @@ export const RaceProvider = ({ children }) => {
     setAudioFile,
     setAudioVolume,
     setAudioRef,
+    startCountdown,
   };
 
   return (

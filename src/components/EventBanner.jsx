@@ -10,6 +10,7 @@ const EventBanner = () => {
   const [shouldRepeat, setShouldRepeat] = useState(true);
   const fileInputRef = useRef(null);
   const audioRef = useRef(null);
+  const audioPanelRef = useRef(null);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -37,6 +38,26 @@ const EventBanner = () => {
       audio.removeEventListener('ended', handleEnded);
     };
   }, [audioVolume]);
+
+  // Click outside to close audio panel
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showAudioPanel && audioPanelRef.current && !audioPanelRef.current.contains(event.target)) {
+        // Check if the click is not on the toggle button
+        if (!event.target.closest('.audio-toggle-btn-inline')) {
+          setShowAudioPanel(false);
+        }
+      }
+    };
+
+    if (showAudioPanel) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showAudioPanel]);
 
   // Cleanup blob URL to prevent memory leaks
   useEffect(() => {
@@ -151,7 +172,7 @@ const EventBanner = () => {
       </div>
 
       {showAudioPanel && (
-        <div className="audio-upload-panel-banner">
+        <div ref={audioPanelRef} className="audio-upload-panel-banner">
           <div className="audio-panel-header">
             <h3 className="audio-panel-title">Background Music</h3>
             <button

@@ -24,22 +24,6 @@ function AppContent() {
     closeWinnerModal
   } = useRace();
 
-  const handleRaceStart = useCallback(() => {
-    startRace();
-  }, [startRace]);
-
-  const handleRaceEnd = useCallback((winnerData) => {
-    endRace(winnerData);
-  }, [endRace]);
-
-  const handleResetRace = useCallback(() => {
-    resetRace();
-    if (audioRef) {
-      audioRef.pause();
-      audioRef.currentTime = 0;
-    }
-  }, [resetRace, audioRef]);
-
   const handleAudioStart = useCallback(() => {
     if (audioFile && audioFile.url && audioRef) {
       audioRef.src = audioFile.url;
@@ -61,23 +45,23 @@ function AppContent() {
 
         <div className="app-content">
           <div className="left-panel">
+            <ControlPanel
+              isRacing={isRacing}
+              onStartRace={startRace}
+              onResetRace={resetRace}
+              onAudioStart={handleAudioStart}
+            />
             <ParticipantManager />
           </div>
 
           <div className="main-panel">
             <RaceTrack
               isRacing={isRacing}
-              onRaceEnd={handleRaceEnd}
+              onRaceEnd={endRace}
             />
           </div>
 
           <div className="side-panel">
-            <ControlPanel
-              isRacing={isRacing}
-              onStartRace={handleRaceStart}
-              onResetRace={handleResetRace}
-              onAudioStart={handleAudioStart}
-            />
             <Leaderboard
               raceHistory={raceHistory}
             />

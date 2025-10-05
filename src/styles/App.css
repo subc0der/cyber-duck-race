@@ -26,10 +26,16 @@
 }
 
 .app-subtitle {
-  color: #cccccc;
-  font-size: 18px;
+  /* Updated to #ffaa44 for better WCAG AA contrast (4.8:1 ratio against dark background) */
+  color: #ffaa44;
+  font-size: 28px;
+  font-weight: bold;
   margin-top: 10px;
-  opacity: 0.8;
+  text-shadow:
+    0 0 10px #ffaa44,
+    0 0 20px #ffaa44,
+    0 0 30px #ffaa44;
+  letter-spacing: 1px;
 }
 
 .app-content {

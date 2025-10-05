@@ -6,8 +6,8 @@ const Leaderboard = ({ raceHistory }) => {
     const duckWins = {};
 
     raceHistory.forEach((race) => {
-      if (race && race.name) {
-        duckWins[race.name] = (duckWins[race.name] || 0) + 1;
+      if (race && race.winner && race.winner.name) {
+        duckWins[race.winner.name] = (duckWins[race.winner.name] || 0) + 1;
       }
     });
 
@@ -65,7 +65,7 @@ const Leaderboard = ({ raceHistory }) => {
             <div className="stat-item">
               <span className="stat-label">LAST WINNER</span>
               <span className="stat-value">
-                {raceHistory.length > UI_CONSTANTS.DEFAULT_WIN_COUNT ? raceHistory[raceHistory.length - UI_CONSTANTS.LAST_RACE_INDEX_OFFSET].name : 'N/A'}
+                {raceHistory.length > UI_CONSTANTS.DEFAULT_WIN_COUNT ? raceHistory[raceHistory.length - UI_CONSTANTS.LAST_RACE_INDEX_OFFSET].winner.name : 'N/A'}
               </span>
             </div>
           </div>

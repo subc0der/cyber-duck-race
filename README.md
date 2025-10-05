@@ -6,7 +6,7 @@
 [![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.3.4-646CFF?logo=vite)](https://vitejs.dev/)
 
-![Cyber Duck Race Banner](subcoder/BG00.jpg)
+![Cyber Duck Race Banner](./public/assets/CyberDuckRaceBG01.jpg)
 
 ## 🎮 Overview
 

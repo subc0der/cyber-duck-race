@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { RACE_CONSTANTS, VISUAL_CONSTANTS, UI_CONSTANTS } from '../utils/constants';
 import { RacePhysics } from '../utils/racePhysics';
 import { useRace } from '../contexts/RaceContext';
+import CountdownOverlay from './CountdownOverlay';
 import '../styles/RaceTrack.css';
 
 const RaceTrack = ({ isRacing, onRaceEnd }) => {
@@ -166,6 +167,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       <div className="track-overlay">
         <div className="track-grid"></div>
       </div>
+      <CountdownOverlay />
     </div>
   );
 };

@@ -1,0 +1,70 @@
+.countdown-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.countdown-box {
+  background: rgba(0, 0, 0, 0.85);
+  border: 3px solid #00ffff;
+  border-radius: 12px;
+  padding: 60px 120px;
+  box-shadow:
+    0 0 40px rgba(0, 255, 255, 0.8),
+    inset 0 0 40px rgba(0, 255, 255, 0.2);
+}
+
+.countdown-number {
+  font-size: 200px;
+  font-weight: bold;
+  color: #00ffff;
+  display: block;
+  line-height: 1;
+  /* Use filter for better performance than multiple text-shadows */
+  filter: drop-shadow(0 0 20px #00ffff)
+          drop-shadow(0 0 40px #00ffff);
+}
+
+/* Animations only for users who haven't disabled motion */
+@media (prefers-reduced-motion: no-preference) {
+  .countdown-box {
+    animation: countdown-pulse 1s ease-in-out;
+  }
+
+  .countdown-number {
+    animation: countdown-glow 1s ease-in-out;
+  }
+
+  @keyframes countdown-pulse {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes countdown-glow {
+    0%, 100% {
+      filter: drop-shadow(0 0 20px #00ffff)
+              drop-shadow(0 0 40px #00ffff);
+    }
+    50% {
+      filter: drop-shadow(0 0 30px #00ffff)
+              drop-shadow(0 0 60px #00ffff)
+              drop-shadow(0 0 90px #00ffff);
+    }
+  }
+}
+
+/* Static version for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .countdown-box,
+  .countdown-number {
+    animation: none;
+  }
+}
