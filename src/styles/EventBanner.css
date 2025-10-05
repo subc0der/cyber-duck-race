@@ -2,8 +2,8 @@
   width: 100%;
   padding: 20px;
   background: linear-gradient(135deg, #1a0033 0%, #0a0a0a 100%);
-  border-bottom: 2px solid #ff00ff;
-  box-shadow: 0 4px 20px rgba(255, 0, 255, 0.3);
+  border-bottom: 2px solid #00ffff;
+  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3);
   position: relative;
 }
 

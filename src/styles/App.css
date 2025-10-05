@@ -26,10 +26,16 @@
 }
 
 .app-subtitle {
-  color: #cccccc;
-  font-size: 18px;
+  font-size: 32px;
+  font-weight: bold;
   margin-top: 10px;
-  opacity: 0.8;
+  color: #ffa500;
+  background: linear-gradient(90deg, #ffb347, #ff8c00, #ffa500);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(255, 165, 0, 0.8), 0 0 40px rgba(255, 165, 0, 0.5);
+  filter: drop-shadow(0 0 15px rgba(255, 140, 0, 0.7));
 }
 
 .app-content {

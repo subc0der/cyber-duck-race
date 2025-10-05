@@ -1,9 +1,9 @@
 .participant-manager {
   background: linear-gradient(135deg, #1a0033 0%, #0a0a0a 100%);
-  border: 2px solid #ff00ff;
+  border: 2px solid #00ffff;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
   color: #ffffff;
   max-height: 500px;
   display: flex;
