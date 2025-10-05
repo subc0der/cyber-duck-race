@@ -91,9 +91,7 @@ const EventBanner = () => {
       audioRef.current.currentTime = 0;
       audioRef.current.src = '';
     }
-    if (audioFile && audioFile.url) {
-      URL.revokeObjectURL(audioFile.url);
-    }
+    // Blob URL cleanup is handled by useEffect cleanup
     setAudioFile(null);
     setIsPlaying(false);
   };
