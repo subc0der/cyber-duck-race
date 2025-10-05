@@ -152,6 +152,7 @@ const EventBanner = () => {
           onChange={handleChange}
           placeholder="Enter Event Name (Optional)"
           maxLength={UI_CONSTANTS.MAX_EVENT_NAME_LENGTH}
+          aria-label="Event name"
         />
       </div>
 

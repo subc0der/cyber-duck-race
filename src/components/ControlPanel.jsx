@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRace } from '../contexts/RaceContext';
 import { UI_CONSTANTS } from '../utils/constants';
 import '../styles/ControlPanel.css';
@@ -6,12 +6,34 @@ import '../styles/ControlPanel.css';
 const ControlPanel = ({ isRacing, onStartRace, onResetRace, onAudioStart }) => {
   const { participants } = useRace();
   const [countdown, setCountdown] = useState(null);
+  const intervalRef = useRef(null);
+  const timeoutRef = useRef(null);
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleStartRace = () => {
+    // Clear any existing timers
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
     let count = UI_CONSTANTS.COUNTDOWN_START_VALUE;
     setCountdown(count);
 
-    const countInterval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       count--;
       if (count === 1 && onAudioStart) {
         onAudioStart();
@@ -20,11 +42,14 @@ const ControlPanel = ({ isRacing, onStartRace, onResetRace, onAudioStart }) => {
         setCountdown(count);
       } else {
         setCountdown('GO!');
-        setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
           setCountdown(null);
           onStartRace();
+          intervalRef.current = null;
+          timeoutRef.current = null;
         }, UI_CONSTANTS.COUNTDOWN_GO_DELAY);
-        clearInterval(countInterval);
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     }, UI_CONSTANTS.COUNTDOWN_INTERVAL);
   };

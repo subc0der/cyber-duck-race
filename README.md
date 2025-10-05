@@ -201,18 +201,19 @@ This project follows strict coding standards to maintain quality:
 ### Current Features (v2.0)
 - [x] Canvas-based race rendering
 - [x] Dynamic participant management
-- [x] Custom event naming
+- [x] Custom event naming with editable banner
+- [x] Background music with full playback controls
 - [x] Scrolling cyberpunk cityscape
 - [x] Crypto-secure winner selection
 - [x] Real-time leaderboard
 - [x] Winner celebration modal
 - [x] Dynamic duck count based on participants
+- [x] React Error Boundary for production stability
 
 ### Planned Features (Future)
-- [ ] Custom event banner with editable text
-- [ ] Sound effects and background music
+- [ ] Sound effects (countdown, race start, winner)
 - [ ] Mobile responsive design
-- [ ] Custom duck skins
+- [ ] Custom duck skins/images
 - [ ] Race replay feature
 - [ ] Export race results (CSV/PDF)
 - [ ] Persistent storage (save participants/history)
