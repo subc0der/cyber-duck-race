@@ -1,5 +1,7 @@
 # CSS Coding Standards
 
+> **Note**: For general coding standards including magic numbers, file paths, and error handling, see `coding-standards.md`
+
 ## Browser Compatibility
 
 ### Gradient Text with `background-clip: text`

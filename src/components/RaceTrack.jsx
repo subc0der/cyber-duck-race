@@ -7,6 +7,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
   const canvasRef = useRef(null);
   const animationFrameRef = useRef(null);
   const racePhysicsRef = useRef(null);
+  const backgroundImageRef = useRef(null);
   const [ducks, setDucks] = useState([]);
 
   useEffect(() => {
@@ -16,6 +17,17 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
     const initialDucks = racePhysicsRef.current.initializeDucks();
     setDucks(initialDucks);
+
+    // Load background image directly as a static asset
+    const img = new window.Image();
+    img.onload = () => {
+      backgroundImageRef.current = img;
+    };
+    img.onerror = () => {
+      console.warn('Failed to load background image, using fallback gradient');
+      backgroundImageRef.current = null;
+    };
+    img.src = VISUAL_CONSTANTS.BACKGROUND_IMAGE_PATH;
   }, []);
 
   useEffect(() => {
@@ -39,10 +51,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       ctx.clearRect(UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, canvas.width, canvas.height);
 
       backgroundOffset -= VISUAL_CONSTANTS.BACKGROUND_SCROLL_SPEED / UI_CONSTANTS.FRAME_RATE_DIVISOR;
-      if (backgroundOffset <= -canvas.width) {
-        backgroundOffset = UI_CONSTANTS.INITIAL_BACKGROUND_OFFSET;
-      }
-      drawBackground(ctx, backgroundOffset);
+      backgroundOffset = drawBackground(ctx, backgroundOffset);
 
       const updatedDucks = racePhysicsRef.current.updateDuckPositions(elapsed);
       drawDucks(ctx, updatedDucks);
@@ -63,27 +72,32 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
   }, [isRacing, onRaceEnd]);
 
   const drawBackground = (ctx, offset) => {
-    const gradient = ctx.createLinearGradient(UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, ctx.canvas.height);
-    gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_START, '#0a0a0a');
-    gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_MIDDLE, '#1a0033');
-    gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_END, '#0a0a0a');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(VISUAL_CONSTANTS.BACKGROUND_RECT_ORIGIN, VISUAL_CONSTANTS.BACKGROUND_RECT_ORIGIN, ctx.canvas.width, ctx.canvas.height);
+    const img = backgroundImageRef.current;
 
-    ctx.strokeStyle = '#00ffff';
-    ctx.lineWidth = VISUAL_CONSTANTS.BACKGROUND_LINE_WIDTH;
-    ctx.shadowColor = '#00ffff';
-    ctx.shadowBlur = VISUAL_CONSTANTS.BACKGROUND_GLOW_BLUR;
+    if (img && img.complete && img.naturalWidth > 0) {
+      // Calculate scaling to fit canvas height while maintaining aspect ratio
+      const scale = ctx.canvas.height / img.height;
+      const scaledWidth = img.width * scale;
 
-    for (let i = 0; i < VISUAL_CONSTANTS.BACKGROUND_GRID_LINES; i++) {
-      const x = (i * VISUAL_CONSTANTS.BACKGROUND_GRID_SPACING + offset) % ctx.canvas.width;
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, ctx.canvas.height);
-      ctx.stroke();
+      // Draw the image twice to create seamless scrolling effect
+      ctx.drawImage(img, offset, 0, scaledWidth, ctx.canvas.height);
+      ctx.drawImage(img, offset + scaledWidth, 0, scaledWidth, ctx.canvas.height);
+
+      // If we've scrolled past one full image width, reset offset
+      if (offset <= -scaledWidth) {
+        return 0;
+      }
+    } else {
+      // Fallback gradient if image hasn't loaded yet
+      const gradient = ctx.createLinearGradient(UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, ctx.canvas.height);
+      gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_START, '#0a0a0a');
+      gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_MIDDLE, '#1a0033');
+      gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_END, '#0a0a0a');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(VISUAL_CONSTANTS.BACKGROUND_RECT_ORIGIN, VISUAL_CONSTANTS.BACKGROUND_RECT_ORIGIN, ctx.canvas.width, ctx.canvas.height);
     }
 
-    ctx.shadowBlur = 0;
+    return offset;
   };
 
   const drawDucks = (ctx, duckList) => {
