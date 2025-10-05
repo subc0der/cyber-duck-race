@@ -29,13 +29,18 @@ const EventBanner = () => {
     audio.addEventListener('pause', handlePause);
     audio.addEventListener('ended', handleEnded);
 
-    audio.volume = audioVolume;
-
     return () => {
       audio.removeEventListener('play', handlePlay);
       audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('ended', handleEnded);
     };
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.volume = audioVolume;
+    }
   }, [audioVolume]);
 
   // Cleanup blob URL to prevent memory leaks
