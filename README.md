@@ -219,7 +219,6 @@ This project follows strict coding standards to maintain quality:
 
 ## 🐛 Known Issues
 
-- Audio constants defined but not yet implemented
 - Session-based leaderboard (doesn't persist across page reloads)
 
 ## 📝 License

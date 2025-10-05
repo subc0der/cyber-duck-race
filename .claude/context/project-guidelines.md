@@ -135,6 +135,10 @@ Before creating a PR, verify:
 - [ ] State validation provides user feedback (error messages)
 - [ ] No validation bypass in form handlers
 - [ ] Constants used appropriately (avoid misusing unrelated constants)
+- [ ] Audio state managed by event listeners, not manual setState after play()
+- [ ] Use `import.meta.env.DEV` in Vite apps, not `process.env.NODE_ENV`
+- [ ] Guard against division/modulo by zero in dynamic calculations
+- [ ] Use literal `0` instead of unrelated constants for clarity
 
 ---
 

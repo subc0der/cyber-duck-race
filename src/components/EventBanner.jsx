@@ -96,12 +96,10 @@ const EventBanner = () => {
 
     if (isPlaying) {
       audioRef.current.pause();
-      setIsPlaying(false);
     } else {
       audioRef.current.play().catch((err) => {
         console.warn('Failed to play audio:', err);
       });
-      setIsPlaying(true);
     }
   };
 
@@ -109,7 +107,6 @@ const EventBanner = () => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
-      setIsPlaying(false);
     }
   };
 

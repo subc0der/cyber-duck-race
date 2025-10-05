@@ -36,7 +36,7 @@ export class RacePhysics {
       console.warn('Crypto API is unavailable, using fallback random generator.');
       randomValue = Math.floor(Math.random() * 0xFFFFFFFF);
     }
-    this.predeterminedWinner = randomValue % duckNames.length;
+    this.predeterminedWinner = duckNames.length > 0 ? (randomValue % duckNames.length) : 0;
 
     const calculatedLaneHeight = VISUAL_CONSTANTS.CANVAS_HEIGHT / (duckNames.length || 1);
     const laneHeight = Math.min(calculatedLaneHeight, DUCK_CONSTANTS.MAX_LANE_HEIGHT);

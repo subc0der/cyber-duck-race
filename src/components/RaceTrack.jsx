@@ -50,7 +50,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
         return;
       }
 
-      ctx.clearRect(UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       backgroundOffset -= VISUAL_CONSTANTS.BACKGROUND_SCROLL_SPEED / UI_CONSTANTS.FRAME_RATE_DIVISOR;
       backgroundOffset = drawBackground(ctx, backgroundOffset);
@@ -91,7 +91,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       }
     } else {
       // Fallback gradient if image hasn't loaded yet
-      const gradient = ctx.createLinearGradient(UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, UI_CONSTANTS.CANVAS_ORIGIN, ctx.canvas.height);
+      const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
       gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_START, '#0a0a0a');
       gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_MIDDLE, '#1a0033');
       gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_END, '#0a0a0a');
@@ -126,7 +126,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
   };
 
   const drawRaceInfo = (ctx, elapsed) => {
-    const timeLeft = Math.max(UI_CONSTANTS.CANVAS_ORIGIN, RACE_CONSTANTS.RACE_DURATION - elapsed);
+    const timeLeft = Math.max(0, RACE_CONSTANTS.RACE_DURATION - elapsed);
     const progress = (elapsed / RACE_CONSTANTS.RACE_DURATION) * 100;
 
     const boxWidth = 200;
@@ -150,9 +150,9 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     const textY = boxY + VISUAL_CONSTANTS.RACE_INFO_BOX_PADDING + 20;
 
     ctx.fillText(`TIME: ${timeLeft.toFixed(1)}s`, textX, textY);
-    ctx.fillText(`PROGRESS: ${progress.toFixed(UI_CONSTANTS.CANVAS_ORIGIN)}%`, textX, textY + VISUAL_CONSTANTS.RACE_INFO_LINE_HEIGHT);
+    ctx.fillText(`PROGRESS: ${progress.toFixed(0)}%`, textX, textY + VISUAL_CONSTANTS.RACE_INFO_LINE_HEIGHT);
 
-    ctx.shadowBlur = UI_CONSTANTS.CANVAS_ORIGIN;
+    ctx.shadowBlur = 0;
   };
 
   return (

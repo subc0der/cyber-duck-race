@@ -42,6 +42,7 @@ const ParticipantManager = () => {
           onKeyDown={handleKeyDown}
           placeholder="Enter participant name"
           maxLength={UI_CONSTANTS.MAX_PARTICIPANT_NAME_LENGTH}
+          aria-label="Participant name"
         />
         <button
           className="participant-add-btn"
