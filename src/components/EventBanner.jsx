@@ -8,7 +8,18 @@ const EventBanner = () => {
   const [showAudioPanel, setShowAudioPanel] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [shouldRepeat, setShouldRepeat] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
   const fileInputRef = useRef(null);
+  const errorTimeoutRef = useRef(null);
+
+  // Cleanup error timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (errorTimeoutRef.current) {
+        clearTimeout(errorTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Attach audio event listeners once
   useEffect(() => {
@@ -49,6 +60,17 @@ const EventBanner = () => {
     };
   }, [audioFile]);
 
+  const showError = (message) => {
+    setErrorMessage(message);
+    if (errorTimeoutRef.current) {
+      clearTimeout(errorTimeoutRef.current);
+    }
+    errorTimeoutRef.current = setTimeout(() => {
+      setErrorMessage('');
+      errorTimeoutRef.current = null;
+    }, 3000);
+  };
+
   const handleChange = (e) => {
     setEventName(e.target.value);
   };
@@ -58,7 +80,7 @@ const EventBanner = () => {
     if (file) {
       // Check file size
       if (file.size > AUDIO_CONSTANTS.MAX_FILE_SIZE_BYTES) {
-        alert(`File size exceeds ${AUDIO_CONSTANTS.MAX_FILE_SIZE_MB}MB limit. Please select a smaller file.`);
+        showError(`File size exceeds ${AUDIO_CONSTANTS.MAX_FILE_SIZE_MB}MB limit. Please select a smaller file.`);
         e.target.value = ''; // Reset file input
         return;
       }
@@ -72,7 +94,7 @@ const EventBanner = () => {
           audioRef.current.load();
         }
       } else {
-        alert('Please select an MP3, WAV, or FLAC file.');
+        showError('Please select an MP3, WAV, or FLAC file.');
         e.target.value = ''; // Reset file input
       }
     }
@@ -161,6 +183,12 @@ const EventBanner = () => {
           </div>
 
           <div className="audio-panel-body">
+            {errorMessage && (
+              <div className="audio-error-message">
+                {errorMessage}
+              </div>
+            )}
+
             {audioFile ? (
               <div className="audio-file-info">
                 <div className="audio-file-name">
