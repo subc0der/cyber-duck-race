@@ -4,18 +4,11 @@ import { UI_CONSTANTS, AUDIO_CONSTANTS } from '../utils/constants';
 import '../styles/EventBanner.css';
 
 const EventBanner = () => {
-  const { eventName, setEventName, audioFile, setAudioFile, audioVolume, setAudioVolume, setAudioRef } = useRace();
+  const { eventName, setEventName, audioFile, setAudioFile, audioVolume, setAudioVolume, audioRef } = useRace();
   const [showAudioPanel, setShowAudioPanel] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [shouldRepeat, setShouldRepeat] = useState(true);
   const fileInputRef = useRef(null);
-  const audioRef = useRef(null);
-
-  useEffect(() => {
-    if (audioRef.current) {
-      setAudioRef(audioRef.current);
-    }
-  }, [setAudioRef]);
 
   // Attach audio event listeners once
   useEffect(() => {

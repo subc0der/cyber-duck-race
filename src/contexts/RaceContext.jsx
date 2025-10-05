@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useRef } from 'react';
 import { UI_CONSTANTS } from '../utils/constants';
 
 const RaceContext = createContext();
@@ -12,6 +12,8 @@ export const useRace = () => {
 };
 
 export const RaceProvider = ({ children }) => {
+  const audioRef = useRef(null);
+
   const [raceState, setRaceState] = useState({
     isRacing: false,
     currentRace: null,
@@ -20,7 +22,6 @@ export const RaceProvider = ({ children }) => {
     eventName: '',
     audioFile: null,
     audioVolume: 0.5,
-    audioRef: null,
     winner: null,
   });
 
@@ -55,31 +56,28 @@ export const RaceProvider = ({ children }) => {
       return { success: false, error: 'Name cannot be empty' };
     }
 
-    let result = { success: false };
+    // Compute validation synchronously before setState
+    const currentParticipants = raceState.participants;
 
-    setRaceState((prev) => {
-      if (prev.participants.length >= UI_CONSTANTS.MAX_PARTICIPANTS) {
-        result = { success: false, error: `Maximum ${UI_CONSTANTS.MAX_PARTICIPANTS} participants allowed` };
-        return prev;
-      }
+    if (currentParticipants.length >= UI_CONSTANTS.MAX_PARTICIPANTS) {
+      return { success: false, error: `Maximum ${UI_CONSTANTS.MAX_PARTICIPANTS} participants allowed` };
+    }
 
-      if (prev.participants.some((p) => p.name === trimmedName)) {
-        result = { success: false, error: 'Participant already exists' };
-        return prev;
-      }
+    if (currentParticipants.some((p) => p.name === trimmedName)) {
+      return { success: false, error: 'Participant already exists' };
+    }
 
-      result = { success: true };
-      return {
-        ...prev,
-        participants: [...prev.participants, {
-          id: Date.now(),
-          name: trimmedName,
-        }],
-      };
-    });
+    // Only update state if validation passed
+    setRaceState((prev) => ({
+      ...prev,
+      participants: [...prev.participants, {
+        id: Date.now(),
+        name: trimmedName,
+      }],
+    }));
 
-    return result;
-  }, []);
+    return { success: true };
+  }, [raceState.participants]);
 
   const removeParticipant = useCallback((id) => {
     setRaceState((prev) => ({
@@ -116,13 +114,6 @@ export const RaceProvider = ({ children }) => {
     }));
   }, []);
 
-  const setAudioRef = useCallback((ref) => {
-    setRaceState((prev) => ({
-      ...prev,
-      audioRef: ref,
-    }));
-  }, []);
-
   const resetRace = useCallback(() => {
     setRaceState((prev) => ({
       ...prev,
@@ -141,6 +132,7 @@ export const RaceProvider = ({ children }) => {
 
   const value = {
     ...raceState,
+    audioRef,
     startRace,
     endRace,
     resetRace,
@@ -151,7 +143,6 @@ export const RaceProvider = ({ children }) => {
     setEventName,
     setAudioFile,
     setAudioVolume,
-    setAudioRef,
   };
 
   return (

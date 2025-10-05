@@ -66,7 +66,7 @@ const Leaderboard = ({ raceHistory }) => {
             <div className="stat-item">
               <span className="stat-label">LAST WINNER</span>
               <span className="stat-value">
-                {raceHistory.length > 0 ? raceHistory[raceHistory.length - 1].name : 'N/A'}
+                {raceHistory.length > 0 ? (raceHistory[raceHistory.length - 1].winner?.name || raceHistory[raceHistory.length - 1].name) : 'N/A'}
               </span>
             </div>
           </div>

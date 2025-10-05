@@ -65,6 +65,13 @@ const ParticipantManager = () => {
           placeholder="Enter participant name"
           maxLength={UI_CONSTANTS.MAX_PARTICIPANT_NAME_LENGTH}
           aria-label="Participant name"
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck="false"
+          data-1p-ignore
+          data-lpignore="true"
+          data-form-type="other"
         />
         <button
           className="participant-add-btn"
