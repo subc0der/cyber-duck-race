@@ -186,7 +186,6 @@ export class RacePhysics {
 
     const positions = this.ducks.map(d => d.position);
     const maxPosition = Math.max(...positions);
-    const minPosition = Math.min(...positions);
     const avgPosition = positions.reduce((a, b) => a + b, 0) / positions.length;
 
     // Rubber-banding: help stragglers catch up, slow down leaders
