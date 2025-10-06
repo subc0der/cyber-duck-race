@@ -15,6 +15,7 @@ const ControlPanel = ({ isRacing, onStartRace, onResetRace, onAudioStart }) => {
         className="btn btn-start"
         onClick={handleStartRace}
         disabled={isRacing || countdown || participants.length === UI_CONSTANTS.PARTICIPANT_LIST_EMPTY}
+        aria-label={isRacing ? 'Race in progress' : 'Start the race'}
       >
         {isRacing ? 'RACING...' : 'START RACE'}
       </button>
@@ -23,6 +24,7 @@ const ControlPanel = ({ isRacing, onStartRace, onResetRace, onAudioStart }) => {
         className="btn btn-reset"
         onClick={onResetRace}
         disabled={!isRacing}
+        aria-label="Reset the race"
       >
         RESET
       </button>

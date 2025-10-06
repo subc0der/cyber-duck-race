@@ -82,6 +82,73 @@ const duckNames = validParticipants
 
 ---
 
+### GitHub Copilot PR #4 Follow-up Review (Oct 5, 2025)
+
+#### Issue: Incomplete Input Validation
+**Finding**: Initial validation in `racePhysics.js` checked basic structure but missed edge cases:
+- Arrays passed as objects (arrays are objects in JS)
+- Missing property checks using hasOwnProperty
+- Empty string names after trimming
+
+**Enhanced Solution**:
+```javascript
+const validParticipants = Array.isArray(participants) &&
+  participants.length > 0 &&
+  participants.every(p =>
+    p &&
+    typeof p === 'object' &&
+    !Array.isArray(p) &&  // Ensure not an array
+    Object.prototype.hasOwnProperty.call(p, 'name') &&  // Safe property check
+    typeof p.name === 'string' &&
+    p.name.trim().length > 0  // Non-empty after trim
+  );
+```
+
+**Lesson**: Comprehensive validation requires checking:
+1. Array type explicitly (`!Array.isArray()` for object checks)
+2. Safe property existence (`Object.prototype.hasOwnProperty.call()`)
+3. Value validity (non-empty strings, trimmed)
+
+---
+
+#### Issue: Missing ARIA Labels for Accessibility
+**Finding**: Buttons with only emoji or icon content lacked `aria-label` attributes, making them inaccessible to screen readers.
+
+**Examples Fixed**:
+```javascript
+// ❌ BEFORE - Icon-only button, no context for screen readers
+<button onClick={handleClose}>×</button>
+
+// ✅ AFTER - Descriptive aria-label
+<button onClick={handleClose} aria-label="Close audio controls panel">×</button>
+
+// ❌ BEFORE - Emoji button, unclear purpose
+<button onClick={handlePlayPause}>{isPlaying ? '⏸️' : '▶️'}</button>
+
+// ✅ AFTER - Dynamic aria-label matching state
+<button
+  onClick={handlePlayPause}
+  aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
+>
+  {isPlaying ? '⏸️' : '▶️'}
+</button>
+```
+
+**Lesson**:
+- **All buttons need aria-labels**, especially:
+  - Icon/emoji-only buttons (×, 🔊, ▶️, ⏸️, etc.)
+  - Buttons with dynamic states (play/pause, on/off)
+- **Make aria-labels descriptive**: "Close audio controls panel" not just "Close"
+- **Use dynamic aria-labels** for state-dependent buttons
+
+**Files Updated**:
+- EventBanner.jsx: 5 buttons (toggle, close, play/pause, stop, repeat)
+- ControlPanel.jsx: 2 buttons (start race, reset)
+- ParticipantManager.jsx: 2 buttons (add, clear all)
+- WinnerModal.jsx: 1 button (close)
+
+---
+
 ## Quick Reference
 
 ### When to Create New Context Files

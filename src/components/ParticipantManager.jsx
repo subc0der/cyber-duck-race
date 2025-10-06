@@ -49,6 +49,7 @@ const ParticipantManager = () => {
           className="participant-add-btn"
           onClick={handleAddParticipant}
           disabled={participants.length >= UI_CONSTANTS.MAX_PARTICIPANTS}
+          aria-label="Add participant to raffle"
         >
           Add
         </button>
@@ -91,6 +92,7 @@ const ParticipantManager = () => {
         <button
           className="participant-clear-btn"
           onClick={clearParticipants}
+          aria-label="Clear all participants from raffle"
         >
           Clear All
         </button>

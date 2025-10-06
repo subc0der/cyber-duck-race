@@ -17,7 +17,14 @@ export class RacePhysics {
     // Input validation: ensure participants is an array of objects with a 'name' property
     const validParticipants = Array.isArray(participants) &&
       participants.length > 0 &&
-      participants.every(p => p && typeof p === 'object' && typeof p.name === 'string');
+      participants.every(p =>
+        p &&
+        typeof p === 'object' &&
+        !Array.isArray(p) &&
+        Object.prototype.hasOwnProperty.call(p, 'name') &&
+        typeof p.name === 'string' &&
+        p.name.trim().length > 0
+      );
 
     const duckNames = validParticipants
       ? participants.map(p => p.name)

@@ -48,7 +48,7 @@ const WinnerModal = ({ winner, onClose }) => {
               <span className="stat-value">{winner.avgSpeed || UI_CONSTANTS.DEFAULT_SPEED}px/s</span>
             </div>
           </div>
-          <button className="btn btn-close" onClick={onClose}>
+          <button className="btn btn-close" onClick={onClose} aria-label="Close winner modal">
             CLOSE
           </button>
         </div>

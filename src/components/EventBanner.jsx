@@ -163,6 +163,7 @@ const EventBanner = () => {
           className="audio-toggle-btn-inline"
           onClick={() => setShowAudioPanel(!showAudioPanel)}
           title="Audio Controls"
+          aria-label="Toggle audio controls panel"
         >
           🔊
         </button>
@@ -184,6 +185,7 @@ const EventBanner = () => {
             <button
               className="audio-close-btn"
               onClick={() => setShowAudioPanel(false)}
+              aria-label="Close audio controls panel"
             >
               ×
             </button>
@@ -201,6 +203,7 @@ const EventBanner = () => {
                     className="audio-control-btn"
                     onClick={handlePlayPause}
                     title={isPlaying ? 'Pause' : 'Play'}
+                    aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
                   >
                     {isPlaying ? '⏸️' : '▶️'}
                   </button>
@@ -208,6 +211,7 @@ const EventBanner = () => {
                     className="audio-control-btn"
                     onClick={handleStop}
                     title="Stop"
+                    aria-label="Stop audio"
                   >
                     ⏹️
                   </button>
@@ -215,6 +219,7 @@ const EventBanner = () => {
                     className={`audio-control-btn ${shouldRepeat ? 'active' : ''}`}
                     onClick={handleRepeatToggle}
                     title={shouldRepeat ? 'Repeat On' : 'Repeat Off'}
+                    aria-label={shouldRepeat ? 'Disable repeat' : 'Enable repeat'}
                   >
                     🔁
                   </button>
