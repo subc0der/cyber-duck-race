@@ -236,7 +236,7 @@
   border: 1px solid #ff0000;
   border-radius: 5px;
   color: #ff6666;
-  font-size: 0.8125rem;
+  font-size: var(--font-size-xs);
   text-align: center;
   animation: fadeIn 0.3s ease-in;
 }
