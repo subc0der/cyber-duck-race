@@ -22,7 +22,7 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: gradient 3s linear infinite;
-  text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
 }
 
 .app-subtitle {
@@ -32,9 +32,8 @@
   font-weight: bold;
   margin-top: 10px;
   text-shadow:
-    0 0 10px #ffaa44,
-    0 0 20px #ffaa44,
-    0 0 30px #ffaa44;
+    0 0 5px rgba(255, 170, 68, 0.4),
+    0 0 10px rgba(255, 170, 68, 0.3);
   letter-spacing: 1px;
 }
 
