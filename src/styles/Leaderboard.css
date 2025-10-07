@@ -15,7 +15,7 @@
 }
 
 .races-count {
-  font-size: 18px;
+  font-size: var(--font-size-text-fluid-lg);
   font-weight: bold;
   opacity: 0.9;
 }

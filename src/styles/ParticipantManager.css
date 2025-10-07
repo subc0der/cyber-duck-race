@@ -55,7 +55,7 @@
   border-radius: 5px;
   padding: 10px 20px;
   color: #ffffff;
-  font-size: 28px;
+  font-size: var(--font-size-button-lg);
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -174,7 +174,7 @@
 .participant-name {
   flex: 1;
   color: #ffffff;
-  font-size: 18px;
+  font-size: var(--font-size-text-lg);
   font-weight: bold;
   overflow: hidden;
   text-overflow: ellipsis;
