@@ -22,7 +22,7 @@
 }
 
 .countdown-number {
-  font-size: 200px;
+  font-size: var(--font-size-countdown);
   font-weight: bold;
   color: #00ffff;
   display: block;

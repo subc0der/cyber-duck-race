@@ -1,9 +1,16 @@
 :root {
-  /* Font size scale - using rem for accessibility and fluid sizing for responsiveness */
-  --font-size-button: clamp(1.25rem, 1.2vw + 1rem, 1.5rem); /* ~20-24px fluid */
-  --font-size-button-lg: clamp(1.5rem, 1.6vw + 1.1rem, 1.75rem); /* ~24-28px fluid */
-  --font-size-text-lg: 1.125rem; /* 18px */
-  --font-size-text-fluid-lg: clamp(1rem, 0.8vw + 0.9rem, 1.125rem); /* ~16-18px fluid */
+  /* Font size scale - using rem for accessibility (scales with user preferences) */
+  --font-size-xs: 0.75rem;      /* 12px - small labels */
+  --font-size-sm: 0.875rem;     /* 14px - body text */
+  --font-size-base: 1rem;       /* 16px - base */
+  --font-size-md: 1.125rem;     /* 18px - medium text */
+  --font-size-lg: 1.25rem;      /* 20px - large text */
+  --font-size-xl: 1.5rem;       /* 24px - buttons, headings */
+  --font-size-2xl: 1.75rem;     /* 28px - large buttons */
+  --font-size-3xl: 2.25rem;     /* 36px - large headings */
+  --font-size-4xl: 3rem;        /* 48px - titles */
+  --font-size-5xl: 3.75rem;     /* 60px - icons */
+  --font-size-countdown: 12.5rem; /* 200px - countdown display */
 }
 
 * {

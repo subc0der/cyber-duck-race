@@ -15,7 +15,7 @@
 }
 
 .races-count {
-  font-size: var(--font-size-text-fluid-lg);
+  font-size: var(--font-size-md);
   font-weight: bold;
   opacity: 0.9;
 }
@@ -46,7 +46,7 @@
   margin-bottom: 10px;
   font-weight: bold;
   color: #00ffff;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
 }
 
 .leaderboard-item {
@@ -104,7 +104,7 @@
 .stat-label {
   display: block;
   color: #666;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   margin-bottom: 5px;
   text-transform: uppercase;
 }
@@ -112,6 +112,6 @@
 .stat-value {
   display: block;
   color: #00ffff;
-  font-size: 20px;
+  font-size: var(--font-size-lg);
   font-weight: bold;
 }

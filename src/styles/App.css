@@ -14,7 +14,7 @@
 }
 
 .app-title {
-  font-size: 48px;
+  font-size: var(--font-size-4xl);
   color: #00ffff; /* Fallback for browsers without background-clip support */
   background: linear-gradient(90deg, #00ffff, #ff00ff, #9d00ff, #00ffff);
   background-size: 200% auto;
@@ -28,7 +28,7 @@
 .app-subtitle {
   /* Updated to #ffaa44 for better WCAG AA contrast (4.8:1 ratio against dark background) */
   color: #ffaa44;
-  font-size: 28px;
+  font-size: var(--font-size-2xl);
   font-weight: bold;
   margin-top: 10px;
   text-shadow:
@@ -75,7 +75,7 @@
 .footer-text {
   color: #00ffff;
   opacity: 0.7;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
 }
 
 @keyframes gradient {
