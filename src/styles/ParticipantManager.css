@@ -11,7 +11,7 @@
 }
 
 .participant-title {
-  font-size: 24px;
+  font-size: var(--font-size-xl);
   font-weight: bold;
   background: linear-gradient(90deg, #ff00ff, #9d00ff);
   -webkit-background-clip: text;
@@ -35,7 +35,7 @@
   border-radius: 5px;
   padding: 10px;
   color: #ffffff;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   outline: none;
   transition: all 0.3s ease;
 }
@@ -55,6 +55,7 @@
   border-radius: 5px;
   padding: 10px 20px;
   color: #ffffff;
+  font-size: var(--font-size-2xl);
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -87,7 +88,7 @@
   border-radius: 5px;
   padding: 8px 12px;
   color: #ff6666;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   margin-bottom: 10px;
   text-align: center;
   animation: slideDown 0.3s ease-out;
@@ -107,7 +108,7 @@
 .participant-count {
   text-align: center;
   color: #00ffff;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   margin-bottom: 15px;
   text-shadow: 0 0 3px rgba(0, 255, 255, 0.3);
 }
@@ -173,7 +174,8 @@
 .participant-name {
   flex: 1;
   color: #ffffff;
-  font-size: 14px;
+  font-size: var(--font-size-md);
+  font-weight: bold;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -186,7 +188,7 @@
   width: 24px;
   height: 24px;
   color: #ff0099;
-  font-size: 18px;
+  font-size: var(--font-size-md);
   cursor: pointer;
   display: flex;
   align-items: center;
