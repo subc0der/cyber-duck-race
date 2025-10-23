@@ -58,9 +58,9 @@ export class RacePhysics {
       hasFinished: false,
       finishTime: null,
       // Random characteristics for each duck
-      baseSpeedFactor: 0.85 + Math.random() * 0.3, // Random base speed (0.85-1.15x)
-      acceleration: 0.08 + Math.random() * 0.04, // How quickly they speed up (0.08-0.12)
-      stamina: 0.7 + Math.random() * 0.3, // Affects late-race performance (0.7-1.0)
+      baseSpeedFactor: PHYSICS_CONSTANTS.BASE_SPEED_FACTOR_MIN + Math.random() * (PHYSICS_CONSTANTS.BASE_SPEED_FACTOR_MAX - PHYSICS_CONSTANTS.BASE_SPEED_FACTOR_MIN), // Random base speed (0.85-1.15x)
+      acceleration: PHYSICS_CONSTANTS.ACCELERATION_MIN + Math.random() * (PHYSICS_CONSTANTS.ACCELERATION_MAX - PHYSICS_CONSTANTS.ACCELERATION_MIN), // How quickly they speed up (0.08-0.12)
+      stamina: PHYSICS_CONSTANTS.STAMINA_MIN + Math.random() * (PHYSICS_CONSTANTS.STAMINA_MAX - PHYSICS_CONSTANTS.STAMINA_MIN), // Affects late-race performance (0.7-1.0)
       lastSpeedChange: Date.now(),
       finalSprintBoost: null, // Will be set if duck gets final sprint surge
     }));
@@ -125,8 +125,8 @@ export class RacePhysics {
     const progressPercent = elapsedSeconds / RACE_CONSTANTS.RACE_DURATION;
     const now = Date.now();
 
-    // Final sprint zone: last 1-2 seconds (87%-93% of race)
-    const isFinalSprint = progressPercent >= 0.87 && progressPercent <= 0.93;
+    // Final sprint zone: last 1-2 seconds (configurable via RACE_CONSTANTS)
+    const isFinalSprint = progressPercent >= RACE_CONSTANTS.FINAL_SPRINT_START && progressPercent <= RACE_CONSTANTS.FINAL_SPRINT_END;
 
     // Trigger final sprint surge once per race
     if (isFinalSprint && !this.finalSprintTriggered) {
@@ -137,18 +137,18 @@ export class RacePhysics {
     this.ducks.forEach(duck => {
       // Random speed changes every 1-3 seconds to simulate realistic racing
       const timeSinceLastChange = now - duck.lastSpeedChange;
-      const shouldChangeSpeed = timeSinceLastChange > 1000 + Math.random() * 2000;
+      const shouldChangeSpeed = timeSinceLastChange > RACE_CONSTANTS.SPEED_CHANGE_MIN_INTERVAL_MS + Math.random() * RACE_CONSTANTS.SPEED_CHANGE_MAX_INTERVAL_MS;
 
       if (shouldChangeSpeed) {
         // Base speed influenced by duck's unique characteristics
         let newSpeed = duck.baseSpeedFactor;
 
         // Add random burst or slowdown (±40% for more dramatic variation)
-        newSpeed *= (0.7 + Math.random() * 0.8);
+        newSpeed *= (PHYSICS_CONSTANTS.SPEED_BURST_MIN + Math.random() * PHYSICS_CONSTANTS.SPEED_BURST_RANGE);
 
         // Late race: stamina becomes a factor
-        if (progressPercent > 0.6) {
-          const staminaEffect = duck.stamina * (0.7 + Math.random() * 0.6);
+        if (progressPercent > PHYSICS_CONSTANTS.LATE_RACE_THRESHOLD) {
+          const staminaEffect = duck.stamina * (PHYSICS_CONSTANTS.STAMINA_EFFECT_MIN + Math.random() * PHYSICS_CONSTANTS.STAMINA_EFFECT_RANGE);
           newSpeed *= staminaEffect;
         }
 
@@ -182,7 +182,7 @@ export class RacePhysics {
     if (surgeCandidates.length > 0) {
       const luckyDuck = surgeCandidates[Math.floor(Math.random() * surgeCandidates.length)];
       // Give them a massive speed boost (1.5x-2.0x) for final sprint
-      luckyDuck.finalSprintBoost = 1.5 + Math.random() * 0.5;
+      luckyDuck.finalSprintBoost = PHYSICS_CONSTANTS.FINAL_SPRINT_BOOST_MIN + Math.random() * PHYSICS_CONSTANTS.FINAL_SPRINT_BOOST_RANGE;
     }
   }
 

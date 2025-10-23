@@ -7,6 +7,12 @@ export const RACE_CONSTANTS = {
   FINISH_LINE_X: 4500,
   DUCK_START_X: 80,
   DUCK_SPACING: 80,
+  // Final sprint timing (triggers dramatic surge in last 1-2 seconds)
+  FINAL_SPRINT_START: 0.87, // 87% of race (13 seconds into 15s race)
+  FINAL_SPRINT_END: 0.93, // 93% of race (14 seconds into 15s race)
+  // Speed change timing for realistic racing dynamics
+  SPEED_CHANGE_MIN_INTERVAL_MS: 1000, // Minimum 1 second between speed changes
+  SPEED_CHANGE_MAX_INTERVAL_MS: 2000, // Maximum 3 seconds (1s + random 2s)
 };
 
 export const VISUAL_CONSTANTS = {
@@ -74,6 +80,23 @@ export const PHYSICS_CONSTANTS = {
   RUBBER_BAND_CATCH_UP_FACTOR: 1.05, // 5% speed boost for stragglers
   RUBBER_BAND_LEAD_PENALTY_FACTOR: 0.95, // 5% speed reduction for leaders
   RUBBER_BAND_RANDOM_VARIANCE: 0.1, // ±5% random variance for natural movement
+  // Duck characteristic ranges (random per duck for fair racing)
+  BASE_SPEED_FACTOR_MIN: 0.85, // Slowest possible base speed multiplier
+  BASE_SPEED_FACTOR_MAX: 1.15, // Fastest possible base speed multiplier (0.85 + 0.3)
+  ACCELERATION_MIN: 0.08, // Slowest acceleration rate
+  ACCELERATION_MAX: 0.12, // Fastest acceleration rate (0.08 + 0.04)
+  STAMINA_MIN: 0.7, // Lowest stamina (tires easily)
+  STAMINA_MAX: 1.0, // Highest stamina (0.7 + 0.3)
+  // Speed variation for dramatic racing
+  SPEED_BURST_MIN: 0.7, // Minimum speed multiplier for bursts/slowdowns
+  SPEED_BURST_RANGE: 0.8, // Range for dramatic ±40% variation (0.7 + 0.8 = 1.5)
+  // Late race stamina effects
+  LATE_RACE_THRESHOLD: 0.6, // 60% of race when stamina becomes a factor
+  STAMINA_EFFECT_MIN: 0.7, // Minimum stamina multiplier effect
+  STAMINA_EFFECT_RANGE: 0.6, // Range for stamina effect (0.7 + 0.6 = 1.3)
+  // Final sprint surge boost
+  FINAL_SPRINT_BOOST_MIN: 1.5, // Minimum boost for final sprint surge
+  FINAL_SPRINT_BOOST_RANGE: 0.5, // Range for boost (1.5 + 0.5 = 2.0)
 };
 
 export const ANIMATION_CONSTANTS = {
@@ -81,6 +104,11 @@ export const ANIMATION_CONSTANTS = {
   FRAME_TIME: 1000 / 60,
   SMOOTHING_FACTOR: 0.1,
   INTERPOLATION_STEPS: 5,
+};
+
+export const ACCESSIBILITY_CONSTANTS = {
+  // ARIA live region announcement frequency for screen readers
+  ANNOUNCEMENT_INTERVAL_MS: 3000, // Update screen readers every 3 seconds during race
 };
 
 export const UI_CONSTANTS = {

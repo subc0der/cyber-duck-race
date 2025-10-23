@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { RACE_CONSTANTS, VISUAL_CONSTANTS, UI_CONSTANTS } from '../utils/constants';
+import { RACE_CONSTANTS, VISUAL_CONSTANTS, UI_CONSTANTS, ACCESSIBILITY_CONSTANTS } from '../utils/constants';
 import { RacePhysics } from '../utils/racePhysics';
 import { useRace } from '../contexts/RaceContext';
 import CountdownOverlay from './CountdownOverlay';
@@ -85,8 +85,8 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       const updatedDucks = racePhysicsRef.current.updateDuckPositions(elapsed);
       drawDucks(ctx, updatedDucks);
 
-      // Update ARIA announcement every 3 seconds for accessibility
-      if (currentTime - lastAnnouncementTimeRef.current > 3000) {
+      // Update ARIA announcement for accessibility
+      if (currentTime - lastAnnouncementTimeRef.current > ACCESSIBILITY_CONSTANTS.ANNOUNCEMENT_INTERVAL_MS) {
         updateAriaAnnouncement(updatedDucks, elapsed);
         lastAnnouncementTimeRef.current = currentTime;
       }
