@@ -1,71 +1,71 @@
-import { UI_CONSTANTS } from '../utils/constants';
+import { UI_CONSTANTS, RACE_CONSTANTS } from '../utils/constants';
 import '../styles/Leaderboard.css';
 
 const Leaderboard = ({ raceHistory }) => {
-  const getLeaderboardData = () => {
-    const duckWins = {};
+  // Get the most recent race (current race results)
+  const currentRace = raceHistory.length > 0 ? raceHistory[raceHistory.length - 1] : null;
 
-    raceHistory.forEach((race) => {
-      if (race && race.winner && race.winner.name) {
-        duckWins[race.winner.name] = (duckWins[race.winner.name] || 0) + 1;
-      }
-    });
+  const getTopFinishers = () => {
+    if (!currentRace) return [];
 
-    return Object.entries(duckWins)
-      .map(([name, wins]) => ({ name, wins }))
-      .sort((a, b) => b.wins - a.wins)
-      .slice(0, UI_CONSTANTS.MAX_LEADERBOARD_ENTRIES);
+    const finishers = [];
+    if (currentRace.first) finishers.push({ place: 1, ...currentRace.first });
+    if (currentRace.second) finishers.push({ place: 2, ...currentRace.second });
+    if (currentRace.third) finishers.push({ place: 3, ...currentRace.third });
+
+    return finishers;
   };
 
-  const leaderboardData = getLeaderboardData();
+  const topFinishers = getTopFinishers();
 
   return (
     <div className="leaderboard">
       <div className="leaderboard-header">
-        <h2 className="panel-title">LEADERBOARD</h2>
-        <span className="races-count">Total Races: {raceHistory.length}</span>
+        <h2 className="panel-title">RACE RESULTS</h2>
+        <span className="races-count">Current Race</span>
       </div>
 
       <div className="leaderboard-body">
-        {leaderboardData.length === 0 ? (
-          <div className="no-races">No races completed yet</div>
+        {topFinishers.length === 0 ? (
+          <div className="no-races">Race not completed yet</div>
         ) : (
           <div className="leaderboard-list">
             <div className="leaderboard-header-row">
-              <span className="rank-header">RANK</span>
+              <span className="rank-header">PLACE</span>
               <span className="name-header">PARTICIPANT</span>
-              <span className="wins-header">WINS</span>
+              <span className="wins-header">POSITION</span>
             </div>
-            {leaderboardData.map((duck, index) => (
-              <div key={index} className="leaderboard-item">
+            {topFinishers.map((finisher, index) => (
+              <div key={index} className="leaderboard-item" style={{borderLeft: `4px solid ${finisher.color}`}}>
                 <span className="rank">
-                  {index === UI_CONSTANTS.RANK_FIRST_PLACE && '🏆'}
-                  {index === UI_CONSTANTS.RANK_SECOND_PLACE && '🥈'}
-                  {index === UI_CONSTANTS.RANK_THIRD_PLACE && '🥉'}
-                  {index > UI_CONSTANTS.RANK_THIRD_PLACE && `#${index + UI_CONSTANTS.RANK_DISPLAY_OFFSET}`}
+                  {finisher.place === 1 && '🏆 1st'}
+                  {finisher.place === 2 && '🥈 2nd'}
+                  {finisher.place === 3 && '🥉 3rd'}
                 </span>
-                <span className="name">{duck.name}</span>
-                <span className="wins">{duck.wins}</span>
+                <span className="name">{finisher.name}</span>
+                <span className="wins">{Math.round(finisher.position)}</span>
               </div>
             ))}
           </div>
         )}
 
         <div className="stats-section">
-          <h3 className="section-title">RAFFLE STATS</h3>
+          <h3 className="section-title">RACE INFO</h3>
           <div className="stats-grid">
             <div className="stat-item">
-              <span className="stat-label">TOTAL RAFFLES</span>
-              <span className="stat-value">{raceHistory.length}</span>
+              <span className="stat-label">RACE DURATION</span>
+              <span className="stat-value">{RACE_CONSTANTS.RACE_DURATION}s</span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">UNIQUE WINNERS</span>
-              <span className="stat-value">{leaderboardData.length}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">LAST WINNER</span>
+              <span className="stat-label">1ST PLACE</span>
               <span className="stat-value">
-                {raceHistory.length > UI_CONSTANTS.DEFAULT_WIN_COUNT ? raceHistory[raceHistory.length - UI_CONSTANTS.LAST_RACE_INDEX_OFFSET].winner.name : 'N/A'}
+                {currentRace && currentRace.first ? currentRace.first.name : 'N/A'}
+              </span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">PARTICIPANTS</span>
+              <span className="stat-value">
+                {currentRace ? topFinishers.length : 0}
               </span>
             </div>
           </div>

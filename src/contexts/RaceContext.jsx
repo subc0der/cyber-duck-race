@@ -39,16 +39,18 @@ export const RaceProvider = ({ children }) => {
     }));
   }, []);
 
-  const endRace = useCallback((winner) => {
+  const endRace = useCallback((winners) => {
     setRaceState((prev) => ({
       ...prev,
       isRacing: false,
-      winner,
+      winner: winners.first, // Keep for WinnerModal compatibility
       currentRace: null,
-      raceHistory: [...prev.raceHistory, {
-        winner,
+      raceHistory: [{
+        first: winners.first,
+        second: winners.second,
+        third: winners.third,
         timestamp: Date.now(),
-      }],
+      }], // Replace previous history (clear between races)
     }));
   }, []);
 

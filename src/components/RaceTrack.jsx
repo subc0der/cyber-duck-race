@@ -6,20 +6,18 @@ import CountdownOverlay from './CountdownOverlay';
 import '../styles/RaceTrack.css';
 
 const RaceTrack = ({ isRacing, onRaceEnd }) => {
-  const { participants } = useRace();
+  const { participants, countdown } = useRace();
   const canvasRef = useRef(null);
   const animationFrameRef = useRef(null);
   const racePhysicsRef = useRef(null);
   const backgroundImageRef = useRef(null);
   const [ducks, setDucks] = useState([]);
 
+  // Initialize race physics and load background image on mount
   useEffect(() => {
     if (!racePhysicsRef.current) {
       racePhysicsRef.current = new RacePhysics();
     }
-
-    const initialDucks = racePhysicsRef.current.initializeDucks(participants);
-    setDucks(initialDucks);
 
     // Load background image directly as a static asset
     const img = new window.Image();
@@ -31,7 +29,27 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       backgroundImageRef.current = null;
     };
     img.src = VISUAL_CONSTANTS.BACKGROUND_IMAGE_PATH;
-  }, [participants]);
+  }, []);
+
+  // Reset ducks when participants change or countdown starts
+  useEffect(() => {
+    if (!racePhysicsRef.current) return;
+
+    const initialDucks = racePhysicsRef.current.initializeDucks(participants);
+    setDucks(initialDucks);
+  }, [participants, countdown]);
+
+  // Draw initial duck positions when not racing
+  useEffect(() => {
+    if (isRacing || !canvasRef.current || ducks.length === 0) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground(ctx, 0);
+    drawDucks(ctx, ducks);
+  }, [ducks, isRacing]);
 
   useEffect(() => {
     if (!isRacing || !canvasRef.current) return;
@@ -46,8 +64,8 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       const elapsed = (currentTime - startTime) / UI_CONSTANTS.MILLISECONDS_TO_SECONDS;
 
       if (elapsed >= RACE_CONSTANTS.RACE_DURATION) {
-        const winner = racePhysicsRef.current.determineWinner();
-        onRaceEnd(winner);
+        const winners = racePhysicsRef.current.determineWinners();
+        onRaceEnd(winners);
         return;
       }
 
@@ -119,8 +137,8 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       ctx.fill();
 
       ctx.fillStyle = duck.color;
-      ctx.font = 'bold 12px monospace';
-      ctx.fillText(duck.name, duck.displayX - VISUAL_CONSTANTS.DUCK_NAME_OFFSET_X, duck.y - VISUAL_CONSTANTS.DUCK_NAME_OFFSET_Y);
+      ctx.font = 'bold 24px monospace';
+      ctx.fillText(duck.name, duck.displayX + VISUAL_CONSTANTS.DUCK_NAME_OFFSET_X, duck.y + VISUAL_CONSTANTS.DUCK_NAME_OFFSET_Y);
 
       ctx.shadowBlur = 0;
     });
