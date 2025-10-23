@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { UI_CONSTANTS } from '../utils/constants';
 
 const RaceContext = createContext();
@@ -60,31 +60,25 @@ export const RaceProvider = ({ children }) => {
       return { success: false, error: 'Name cannot be empty' };
     }
 
-    let result = { success: false };
+    // Validate before updating state to avoid side effects in updater
+    if (raceState.participants.length >= UI_CONSTANTS.MAX_PARTICIPANTS) {
+      return { success: false, error: `Maximum ${UI_CONSTANTS.MAX_PARTICIPANTS} participants allowed` };
+    }
 
-    setRaceState((prev) => {
-      if (prev.participants.length >= UI_CONSTANTS.MAX_PARTICIPANTS) {
-        result = { success: false, error: `Maximum ${UI_CONSTANTS.MAX_PARTICIPANTS} participants allowed` };
-        return prev;
-      }
+    if (raceState.participants.some((p) => p.name === trimmedName)) {
+      return { success: false, error: 'Participant already exists' };
+    }
 
-      if (prev.participants.some((p) => p.name === trimmedName)) {
-        result = { success: false, error: 'Participant already exists' };
-        return prev;
-      }
+    setRaceState((prev) => ({
+      ...prev,
+      participants: [...prev.participants, {
+        id: Date.now(),
+        name: trimmedName,
+      }],
+    }));
 
-      result = { success: true };
-      return {
-        ...prev,
-        participants: [...prev.participants, {
-          id: Date.now(),
-          name: trimmedName,
-        }],
-      };
-    });
-
-    return result;
-  }, []);
+    return { success: true };
+  }, [raceState.participants]);
 
   const removeParticipant = useCallback((id) => {
     setRaceState((prev) => ({
@@ -191,7 +185,7 @@ export const RaceProvider = ({ children }) => {
     };
   }, []);
 
-  const value = {
+  const value = useMemo(() => ({
     ...raceState,
     startRace,
     endRace,
@@ -205,7 +199,21 @@ export const RaceProvider = ({ children }) => {
     setAudioVolume,
     setAudioRef,
     startCountdown,
-  };
+  }), [
+    raceState,
+    startRace,
+    endRace,
+    resetRace,
+    closeWinnerModal,
+    addParticipant,
+    removeParticipant,
+    clearParticipants,
+    setEventName,
+    setAudioFile,
+    setAudioVolume,
+    setAudioRef,
+    startCountdown,
+  ]);
 
   return (
     <RaceContext.Provider value={value}>

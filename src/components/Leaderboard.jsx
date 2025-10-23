@@ -1,7 +1,9 @@
+import { useRace } from '../contexts/RaceContext';
 import { UI_CONSTANTS, RACE_CONSTANTS } from '../utils/constants';
 import '../styles/Leaderboard.css';
 
 const Leaderboard = ({ raceHistory }) => {
+  const { participants } = useRace();
   // Get the most recent race (current race results)
   const currentRace = raceHistory.length > 0 ? raceHistory[raceHistory.length - 1] : null;
 
@@ -35,8 +37,8 @@ const Leaderboard = ({ raceHistory }) => {
               <span className="name-header">PARTICIPANT</span>
               <span className="wins-header">POSITION</span>
             </div>
-            {topFinishers.map((finisher, index) => (
-              <div key={index} className="leaderboard-item" style={{borderLeft: `4px solid ${finisher.color}`}}>
+            {topFinishers.map((finisher) => (
+              <div key={finisher.id} className="leaderboard-item" style={{borderLeft: `4px solid ${finisher.color}`}}>
                 <span className="rank">
                   {finisher.place === 1 && '🏆 1st'}
                   {finisher.place === 2 && '🥈 2nd'}
@@ -65,7 +67,7 @@ const Leaderboard = ({ raceHistory }) => {
             <div className="stat-item">
               <span className="stat-label">PARTICIPANTS</span>
               <span className="stat-value">
-                {currentRace ? topFinishers.length : 0}
+                {participants.length}
               </span>
             </div>
           </div>

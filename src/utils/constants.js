@@ -7,26 +7,6 @@ export const RACE_CONSTANTS = {
   FINISH_LINE_X: 4500,
   DUCK_START_X: 80,
   DUCK_SPACING: 80,
-  // Race progression stages
-  EARLY_RACE_THRESHOLD: 0.3,
-  MID_RACE_THRESHOLD: 0.6,
-  LATE_RACE_THRESHOLD: 0.85,
-  ENDGAME_THRESHOLD: 0.8,
-  // Winner speed modifiers by stage
-  EARLY_RACE_BASE_SPEED: 0.8,
-  EARLY_RACE_VARIANCE: 0.4,
-  MID_RACE_BASE_SPEED: 0.9,
-  MID_RACE_VARIANCE: 0.3,
-  LATE_RACE_BASE_SPEED: 1.1,
-  LATE_RACE_VARIANCE: 0.2,
-  FINAL_RACE_BASE_SPEED: 1.3,
-  FINAL_RACE_VARIANCE: 0.1,
-  // Non-winner speed modifiers
-  LOSER_BASE_SPEED: 0.7,
-  LOSER_SPEED_RANGE: 0.6,
-  LOSER_VARIANCE_MULTIPLIER: 0.3,
-  ENDGAME_SLOWDOWN_CHANCE: 0.3,
-  ENDGAME_SLOWDOWN_FACTOR: 0.85,
 };
 
 export const VISUAL_CONSTANTS = {
@@ -106,18 +86,10 @@ export const PHYSICS_CONSTANTS = {
   MAX_POSITION_CHANGE: 30,
   SPEED_VARIANCE: 0.2,
   POSITION_UPDATE_RATE: 60,
-  CATCH_UP_BONUS: 1.2,
-  LEAD_PENALTY: 0.9,
   // Position thresholds
-  // Minimum distance (in pixels) for catch-up mechanics and collision checks.
+  // Minimum distance (in pixels) for minimal rubber-banding adjustments.
   // POSITION_THRESHOLD_DISTANCE balances responsiveness and prevents jitter in close races.
   POSITION_THRESHOLD_DISTANCE: 50,
-  // Relative positioning
-  LEADER_OFFSET: 200,
-  RELATIVE_POSITION_SCALE: 200,
-  // Winner boost mechanics
-  WINNER_BOOST_START_PERCENT: 0.7,
-  WINNER_BOOST_MULTIPLIER: 0.5,
 };
 
 export const ANIMATION_CONSTANTS = {

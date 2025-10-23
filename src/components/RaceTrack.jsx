@@ -76,7 +76,6 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       const updatedDucks = racePhysicsRef.current.updateDuckPositions(elapsed);
       drawDucks(ctx, updatedDucks);
-      setDucks(updatedDucks);
 
       drawRaceInfo(ctx, elapsed);
 

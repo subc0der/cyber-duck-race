@@ -183,7 +183,6 @@ export class RacePhysics {
       const luckyDuck = surgeCandidates[Math.floor(Math.random() * surgeCandidates.length)];
       // Give them a massive speed boost (1.5x-2.0x) for final sprint
       luckyDuck.finalSprintBoost = 1.5 + Math.random() * 0.5;
-      console.log(`🏁 Final sprint surge: ${luckyDuck.name} gets a boost!`);
     }
   }
 
