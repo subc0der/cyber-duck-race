@@ -206,13 +206,13 @@ export class RacePhysics {
 
     // Minimal rubber-banding: very slight adjustments for visual balance
     if (duck.position < avgPosition - PHYSICS_CONSTANTS.POSITION_THRESHOLD_DISTANCE * 2) {
-      adjustment *= 1.05; // 5% boost for ducks far behind
+      adjustment *= PHYSICS_CONSTANTS.RUBBER_BAND_CATCH_UP_FACTOR;
     } else if (duck.position > avgPosition + PHYSICS_CONSTANTS.POSITION_THRESHOLD_DISTANCE * 2) {
-      adjustment *= 0.95; // 5% penalty for ducks far ahead
+      adjustment *= PHYSICS_CONSTANTS.RUBBER_BAND_LEAD_PENALTY_FACTOR;
     }
 
     // Small random variance for natural movement
-    const randomFactor = 1 + (Math.random() - 0.5) * 0.1; // ±5% variance
+    const randomFactor = 1 + (Math.random() - 0.5) * PHYSICS_CONSTANTS.RUBBER_BAND_RANDOM_VARIANCE;
     adjustment *= randomFactor;
 
     return adjustment;

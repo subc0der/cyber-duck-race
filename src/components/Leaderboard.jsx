@@ -2,8 +2,8 @@ import { useRace } from '../contexts/RaceContext';
 import { UI_CONSTANTS, RACE_CONSTANTS } from '../utils/constants';
 import '../styles/Leaderboard.css';
 
-const Leaderboard = ({ raceHistory }) => {
-  const { participants } = useRace();
+const Leaderboard = () => {
+  const { participants, raceHistory } = useRace();
   // Get the most recent race (current race results)
   const currentRace = raceHistory.length > 0 ? raceHistory[raceHistory.length - 1] : null;
 

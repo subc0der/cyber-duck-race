@@ -12,18 +12,10 @@ export const RACE_CONSTANTS = {
 export const VISUAL_CONSTANTS = {
   BACKGROUND_SCROLL_SPEED: 300,
   DUCK_CENTER_ZONE_MIN: 80,
-  DUCK_CENTER_ZONE_MAX: 400,
-  DUCK_FORWARD_MOVEMENT: 20,
-  DUCK_BACKWARD_MOVEMENT: 15,
   CANVAS_WIDTH: 800,
   CANVAS_HEIGHT: 600,
-  TRACK_LANES: 6,
   // Background rendering
   BACKGROUND_IMAGE_PATH: '/assets/race-background.jpg',
-  BACKGROUND_GRID_LINES: 20,
-  BACKGROUND_GRID_SPACING: 60,
-  BACKGROUND_LINE_WIDTH: 2,
-  BACKGROUND_GLOW_BLUR: 10,
   BACKGROUND_RECT_ORIGIN: 0,
   // Duck rendering
   DUCK_WIDTH: 25,
@@ -31,53 +23,41 @@ export const VISUAL_CONSTANTS = {
   DUCK_EYE_SIZE: 3,
   DUCK_EYE_OFFSET_X: 8,
   DUCK_EYE_OFFSET_Y: 5,
+  DUCK_EYE_COLOR: '#ffffff',
   DUCK_NAME_OFFSET_X: 35,
   DUCK_NAME_OFFSET_Y: 5,
+  DUCK_NAME_FONT: 'bold 24px monospace',
   DUCK_GLOW_BLUR: 15,
   // UI positioning
-  TIME_DISPLAY_X: 20,
-  TIME_DISPLAY_Y: 40,
-  PROGRESS_DISPLAY_X: 20,
-  PROGRESS_DISPLAY_Y: 70,
   INFO_TEXT_GLOW_BLUR: 5,
   // Race info box
+  RACE_INFO_BOX_WIDTH: 200,
+  RACE_INFO_BOX_HEIGHT: 80,
   RACE_INFO_BOX_PADDING: 15,
   RACE_INFO_BOX_MARGIN: 20,
   RACE_INFO_BOX_BACKGROUND: 'rgba(10, 10, 10, 0.8)',
-  RACE_INFO_BOX_BORDER_RADIUS: 10,
+  RACE_INFO_BOX_BORDER_COLOR: '#00ffff',
+  RACE_INFO_BOX_BORDER_WIDTH: 2,
+  RACE_INFO_BOX_TEXT_COLOR: '#00ffff',
+  RACE_INFO_BOX_FONT: 'bold 18px monospace',
   RACE_INFO_LINE_HEIGHT: 30,
 };
 
 export const DUCK_CONSTANTS = {
   DUCK_NAMES: ['NEON', 'CYBER', 'MATRIX', 'BLADE', 'GHOST', 'CHROME'],
   DUCK_COLORS: ['#00ffff', '#ff00ff', '#9d00ff', '#ffff00', '#00ff00', '#ff0099'],
-  DUCK_SIZE: {
-    WIDTH: 50,
-    HEIGHT: 40,
-  },
-  // Duck positioning
-  DUCK_INITIAL_Y: 150,
-  DUCKS_PER_ROW: 2,
-  DUCK_ROW_SPACING: 80,
-  DUCK_HORIZONTAL_SPACING: 100,
   // Duck movement
   DUCK_VERTICAL_MOVEMENT_CHANCE: 0.02,
   DUCK_VERTICAL_VARIANCE: 4,
-  DUCK_MIN_Y: 100,
-  DUCK_MAX_Y: 500,
   // Lane-based positioning - evenly spread across bottom half
   LANE_PADDING: 10,
   MAX_LANE_HEIGHT: 80,
-  MIN_PARTICIPANTS_FOR_FULL_SPREAD: 6,
   // Vertical positioning - bottom half of screen (top half = 0.5)
   RACE_AREA_TOP_FRACTION: 0.5,
   RACE_AREA_BOTTOM_PADDING: 20,
   // Display bounds (max = 3/4 of canvas width = 600px)
   DUCK_MIN_DISPLAY_X: 50,
   DUCK_MAX_DISPLAY_X: 600,
-  // Duck variance
-  DUCK_SPEED_VARIANCE_RANGE: 0.2,
-  DUCK_SPEED_VARIANCE_OFFSET: 0.1,
 };
 
 export const PHYSICS_CONSTANTS = {
@@ -90,6 +70,10 @@ export const PHYSICS_CONSTANTS = {
   // Minimum distance (in pixels) for minimal rubber-banding adjustments.
   // POSITION_THRESHOLD_DISTANCE balances responsiveness and prevents jitter in close races.
   POSITION_THRESHOLD_DISTANCE: 50,
+  // Rubber-banding factors for minimal race balance
+  RUBBER_BAND_CATCH_UP_FACTOR: 1.05, // 5% speed boost for stragglers
+  RUBBER_BAND_LEAD_PENALTY_FACTOR: 0.95, // 5% speed reduction for leaders
+  RUBBER_BAND_RANDOM_VARIANCE: 0.1, // ±5% random variance for natural movement
 };
 
 export const ANIMATION_CONSTANTS = {
