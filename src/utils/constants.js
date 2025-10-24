@@ -35,7 +35,7 @@ export const VISUAL_CONSTANTS = {
   DUCK_NAME_FONT: 'bold 24px monospace',
   DUCK_GLOW_BLUR: 15,
   // Thrust trail VFX
-  TRAIL_LENGTH: 120, // Length of trail behind duck in pixels (increased for more dramatic effect)
+  TRAIL_LENGTH: 120, // Length of trail behind duck in pixels (chosen for dramatic effect)
   TRAIL_WIDTH_START: 20, // Width at duck (thickest part)
   TRAIL_WIDTH_END: 4, // Width at trail end (thinnest part)
   TRAIL_WIDTH_DUCK_SCALE: 0.7, // Scale factor for trail width at duck position

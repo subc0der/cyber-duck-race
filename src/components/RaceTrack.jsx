@@ -162,8 +162,11 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       const trailLength = VISUAL_CONSTANTS.TRAIL_LENGTH * speedFactor;
       const brightnessBoost = speedFactor * pulseIntensity;
 
-      // Use gradient for smooth beam effect
-      const rgb = hexToRgb(duck.color);
+      // Cache RGB conversion to avoid redundant computation on every frame
+      if (!duck.rgbColor) {
+        duck.rgbColor = hexToRgb(duck.color);
+      }
+      const rgb = duck.rgbColor;
       const gradient = ctx.createLinearGradient(
         duck.displayX,
         duck.y,
