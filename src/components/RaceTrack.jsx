@@ -226,9 +226,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
         height={VISUAL_CONSTANTS.CANVAS_HEIGHT}
         className="race-canvas"
       />
-      <div className="track-overlay">
-        <div className="track-grid"></div>
-      </div>
+      <div className="track-overlay"></div>
       <CountdownOverlay />
     </div>
   );

@@ -30,22 +30,6 @@
   );
 }
 
-.track-grid {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image:
-    repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(0, 255, 255, 0.1) 50px),
-    repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(0, 255, 255, 0.05) 50px);
-  animation: grid-move 2s linear infinite;
-}
-
-@keyframes grid-move {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50px); }
-}
 
 /* Screen reader only - visually hidden but accessible to assistive technologies */
 .sr-only {
