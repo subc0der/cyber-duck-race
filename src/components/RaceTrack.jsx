@@ -6,6 +6,20 @@ import CountdownOverlay from './CountdownOverlay';
 import raceBackgroundImg from '../assets/race-background.jpg';
 import '../styles/RaceTrack.css';
 
+/**
+ * Converts a hex color string to RGB object
+ * @param {string} hex - Hex color string (e.g., "#00ffff")
+ * @returns {{r: number, g: number, b: number}} RGB color object
+ */
+const hexToRgb = (hex) => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : { r: 0, g: 255, b: 255 }; // Fallback to cyan
+};
+
 const RaceTrack = ({ isRacing, onRaceEnd }) => {
   const { participants, countdown } = useRace();
   const canvasRef = useRef(null);
@@ -57,7 +71,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground(ctx, 0);
-    drawDucks(ctx, ducks, null); // Pass null to disable trails
+    drawDucks(ctx, ducks, false); // Disable trails at start line
   }, [ducks, isRacing]);
 
   useEffect(() => {
@@ -84,7 +98,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       backgroundOffset = drawBackground(ctx, backgroundOffset);
 
       const updatedDucks = racePhysicsRef.current.updateDuckPositions(elapsed);
-      drawDucks(ctx, updatedDucks, currentTime);
+      drawDucks(ctx, updatedDucks, true, currentTime); // Enable trails during racing
 
       // Update ARIA announcement for accessibility
       if (currentTime - lastAnnouncementTimeRef.current > ACCESSIBILITY_CONSTANTS.ANNOUNCEMENT_INTERVAL_MS) {
@@ -203,9 +217,9 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     });
   };
 
-  const drawDucks = (ctx, duckList, currentTime = null) => {
-    // Only draw thrust trails when currentTime is provided (during racing)
-    if (currentTime !== null) {
+  const drawDucks = (ctx, duckList, shouldDrawTrails = false, currentTime = null) => {
+    // Draw thrust trails when explicitly enabled and currentTime is provided (during racing)
+    if (shouldDrawTrails && currentTime !== null) {
       drawThrustTrails(ctx, duckList, currentTime);
     }
 
@@ -229,16 +243,6 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       ctx.shadowBlur = 0;
     });
-  };
-
-  // Helper function to convert hex color to RGB
-  const hexToRgb = (hex) => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : { r: 0, g: 255, b: 255 }; // Fallback to cyan
   };
 
   const drawRaceInfo = (ctx, elapsed) => {
