@@ -93,7 +93,7 @@ export const PHYSICS_CONSTANTS = {
   // Late race stamina effects
   LATE_RACE_THRESHOLD: 0.6, // 60% of race when stamina becomes a factor
   STAMINA_EFFECT_MIN: 0.7, // Minimum stamina multiplier effect
-  STAMINA_EFFECT_RANGE: 0.6, // Range: 0.6 (1.3 - 0.7)
+  STAMINA_EFFECT_RANGE: 0.6, // Range for stamina effect (0.7 + 0.6 = 1.3)
   // Final sprint surge boost
   FINAL_SPRINT_BOOST_MIN: 1.5, // Minimum boost for final sprint surge
   FINAL_SPRINT_BOOST_RANGE: 0.5, // Range: 0.5 (2.0 - 1.5)

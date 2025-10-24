@@ -13,6 +13,15 @@ import {
  */
 const randomInRange = (min, max) => min + Math.random() * (max - min);
 
+/**
+ * Generates a random number from a base value plus a range [base, base + range).
+ * Convenience wrapper for the common pattern of MIN + random * RANGE.
+ * @param {number} base - Base/minimum value
+ * @param {number} range - Range to add to base
+ * @returns {number} Random number from base to base + range
+ */
+const randomInRangeFromBase = (base, range) => base + Math.random() * range;
+
 export class RacePhysics {
   constructor() {
     this.ducks = [];
@@ -70,6 +79,7 @@ export class RacePhysics {
       acceleration: randomInRange(PHYSICS_CONSTANTS.ACCELERATION_MIN, PHYSICS_CONSTANTS.ACCELERATION_MAX), // How quickly they speed up (0.08-0.12)
       stamina: randomInRange(PHYSICS_CONSTANTS.STAMINA_MIN, PHYSICS_CONSTANTS.STAMINA_MAX), // Affects late-race performance (0.7-1.0)
       lastSpeedChange: Date.now(),
+      nextSpeedChangeTime: Date.now() + randomInRangeFromBase(RACE_CONSTANTS.SPEED_CHANGE_MIN_INTERVAL_MS, RACE_CONSTANTS.SPEED_CHANGE_MAX_INTERVAL_MS), // Precalculated next change time for performance
       finalSprintBoost: null, // Will be set if duck gets final sprint surge
     }));
 
@@ -144,19 +154,19 @@ export class RacePhysics {
 
     this.ducks.forEach(duck => {
       // Random speed changes every 1-3 seconds to simulate realistic racing
-      const timeSinceLastChange = now - duck.lastSpeedChange;
-      const shouldChangeSpeed = timeSinceLastChange > randomInRange(RACE_CONSTANTS.SPEED_CHANGE_MIN_INTERVAL_MS, RACE_CONSTANTS.SPEED_CHANGE_MIN_INTERVAL_MS + RACE_CONSTANTS.SPEED_CHANGE_MAX_INTERVAL_MS);
+      // Performance: Use precalculated nextSpeedChangeTime instead of calculating every frame
+      const shouldChangeSpeed = now >= duck.nextSpeedChangeTime;
 
       if (shouldChangeSpeed) {
         // Base speed influenced by duck's unique characteristics
         let newSpeed = duck.baseSpeedFactor;
 
         // Add random burst or slowdown (dramatic variation)
-        newSpeed *= randomInRange(PHYSICS_CONSTANTS.SPEED_BURST_MIN, PHYSICS_CONSTANTS.SPEED_BURST_MIN + PHYSICS_CONSTANTS.SPEED_BURST_RANGE);
+        newSpeed *= randomInRangeFromBase(PHYSICS_CONSTANTS.SPEED_BURST_MIN, PHYSICS_CONSTANTS.SPEED_BURST_RANGE);
 
         // Late race: stamina becomes a factor
         if (progressPercent > PHYSICS_CONSTANTS.LATE_RACE_THRESHOLD) {
-          const staminaEffect = duck.stamina * randomInRange(PHYSICS_CONSTANTS.STAMINA_EFFECT_MIN, PHYSICS_CONSTANTS.STAMINA_EFFECT_MIN + PHYSICS_CONSTANTS.STAMINA_EFFECT_RANGE);
+          const staminaEffect = duck.stamina * randomInRangeFromBase(PHYSICS_CONSTANTS.STAMINA_EFFECT_MIN, PHYSICS_CONSTANTS.STAMINA_EFFECT_RANGE);
           newSpeed *= staminaEffect;
         }
 
@@ -171,6 +181,8 @@ export class RacePhysics {
         );
 
         duck.lastSpeedChange = now;
+        // Precalculate next speed change time for performance
+        duck.nextSpeedChangeTime = now + randomInRangeFromBase(RACE_CONSTANTS.SPEED_CHANGE_MIN_INTERVAL_MS, RACE_CONSTANTS.SPEED_CHANGE_MAX_INTERVAL_MS);
       }
     });
   }
@@ -190,7 +202,7 @@ export class RacePhysics {
     if (surgeCandidates.length > 0) {
       const luckyDuck = surgeCandidates[Math.floor(Math.random() * surgeCandidates.length)];
       // Give them a massive speed boost (1.5x-2.0x) for final sprint
-      luckyDuck.finalSprintBoost = randomInRange(PHYSICS_CONSTANTS.FINAL_SPRINT_BOOST_MIN, PHYSICS_CONSTANTS.FINAL_SPRINT_BOOST_MIN + PHYSICS_CONSTANTS.FINAL_SPRINT_BOOST_RANGE);
+      luckyDuck.finalSprintBoost = randomInRangeFromBase(PHYSICS_CONSTANTS.FINAL_SPRINT_BOOST_MIN, PHYSICS_CONSTANTS.FINAL_SPRINT_BOOST_RANGE);
     }
   }
 

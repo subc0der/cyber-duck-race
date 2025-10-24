@@ -60,25 +60,34 @@ export const RaceProvider = ({ children }) => {
       return { success: false, error: 'Name cannot be empty' };
     }
 
-    // Validate before updating state to avoid side effects in updater
-    if (raceState.participants.length >= UI_CONSTANTS.MAX_PARTICIPANTS) {
-      return { success: false, error: `Maximum ${UI_CONSTANTS.MAX_PARTICIPANTS} participants allowed` };
-    }
+    // Use ref to capture validation result from within setState
+    let validationResult = { success: false };
 
-    if (raceState.participants.some((p) => p.name === trimmedName)) {
-      return { success: false, error: 'Participant already exists' };
-    }
+    setRaceState((prev) => {
+      // Perform all validation within updater to avoid external dependencies
+      if (prev.participants.length >= UI_CONSTANTS.MAX_PARTICIPANTS) {
+        validationResult = { success: false, error: `Maximum ${UI_CONSTANTS.MAX_PARTICIPANTS} participants allowed` };
+        return prev; // No state change
+      }
 
-    setRaceState((prev) => ({
-      ...prev,
-      participants: [...prev.participants, {
-        id: Date.now(),
-        name: trimmedName,
-      }],
-    }));
+      if (prev.participants.some((p) => p.name === trimmedName)) {
+        validationResult = { success: false, error: 'Participant already exists' };
+        return prev; // No state change
+      }
 
-    return { success: true };
-  }, [raceState.participants]);
+      // Validation passed, update state
+      validationResult = { success: true };
+      return {
+        ...prev,
+        participants: [...prev.participants, {
+          id: Date.now(),
+          name: trimmedName,
+        }],
+      };
+    });
+
+    return validationResult;
+  }, []); // No dependencies - all state accessed through updater function
 
   const removeParticipant = useCallback((id) => {
     setRaceState((prev) => ({

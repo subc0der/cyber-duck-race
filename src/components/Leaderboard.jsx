@@ -38,7 +38,7 @@ const Leaderboard = () => {
               <span className="wins-header">POSITION</span>
             </div>
             {topFinishers.map((finisher) => (
-              <div key={finisher.id} className="leaderboard-item" style={{borderLeft: `4px solid ${finisher.color}`}}>
+              <div key={finisher.id} className="leaderboard-item" style={{ borderLeft: `4px solid ${finisher.color}` }}>
                 <span className="rank">
                   {finisher.place === 1 && '🏆 1st'}
                   {finisher.place === 2 && '🥈 2nd'}
