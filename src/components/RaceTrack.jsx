@@ -1,25 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
-import { RACE_CONSTANTS, VISUAL_CONSTANTS, UI_CONSTANTS } from '../utils/constants';
+import { RACE_CONSTANTS, VISUAL_CONSTANTS, UI_CONSTANTS, ACCESSIBILITY_CONSTANTS } from '../utils/constants';
 import { RacePhysics } from '../utils/racePhysics';
 import { useRace } from '../contexts/RaceContext';
 import CountdownOverlay from './CountdownOverlay';
 import '../styles/RaceTrack.css';
 
 const RaceTrack = ({ isRacing, onRaceEnd }) => {
-  const { participants } = useRace();
+  const { participants, countdown } = useRace();
   const canvasRef = useRef(null);
   const animationFrameRef = useRef(null);
   const racePhysicsRef = useRef(null);
   const backgroundImageRef = useRef(null);
   const [ducks, setDucks] = useState([]);
+  const [ariaAnnouncement, setAriaAnnouncement] = useState('');
+  const lastAnnouncementTimeRef = useRef(0);
 
+  // Initialize race physics and load background image on mount
   useEffect(() => {
     if (!racePhysicsRef.current) {
       racePhysicsRef.current = new RacePhysics();
     }
-
-    const initialDucks = racePhysicsRef.current.initializeDucks(participants);
-    setDucks(initialDucks);
 
     // Load background image directly as a static asset
     const img = new window.Image();
@@ -31,7 +31,33 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       backgroundImageRef.current = null;
     };
     img.src = VISUAL_CONSTANTS.BACKGROUND_IMAGE_PATH;
-  }, [participants]);
+
+    // Cleanup event listeners to prevent memory leaks
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, []);
+
+  // Reset ducks when participants change or countdown starts
+  useEffect(() => {
+    if (!racePhysicsRef.current) return;
+
+    const initialDucks = racePhysicsRef.current.initializeDucks(participants);
+    setDucks(initialDucks);
+  }, [participants, countdown]);
+
+  // Draw initial duck positions when not racing
+  useEffect(() => {
+    if (isRacing || !canvasRef.current || ducks.length === 0) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground(ctx, 0);
+    drawDucks(ctx, ducks);
+  }, [ducks, isRacing]);
 
   useEffect(() => {
     if (!isRacing || !canvasRef.current) return;
@@ -46,8 +72,8 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       const elapsed = (currentTime - startTime) / UI_CONSTANTS.MILLISECONDS_TO_SECONDS;
 
       if (elapsed >= RACE_CONSTANTS.RACE_DURATION) {
-        const winner = racePhysicsRef.current.determineWinner();
-        onRaceEnd(winner);
+        const winners = racePhysicsRef.current.determineWinners();
+        onRaceEnd(winners);
         return;
       }
 
@@ -58,7 +84,12 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       const updatedDucks = racePhysicsRef.current.updateDuckPositions(elapsed);
       drawDucks(ctx, updatedDucks);
-      setDucks(updatedDucks);
+
+      // Update ARIA announcement for accessibility
+      if (currentTime - lastAnnouncementTimeRef.current > ACCESSIBILITY_CONSTANTS.ANNOUNCEMENT_INTERVAL_MS) {
+        updateAriaAnnouncement(updatedDucks, elapsed);
+        lastAnnouncementTimeRef.current = currentTime;
+      }
 
       drawRaceInfo(ctx, elapsed);
 
@@ -113,14 +144,14 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       ctx.ellipse(duck.displayX, duck.y, VISUAL_CONSTANTS.DUCK_WIDTH, VISUAL_CONSTANTS.DUCK_HEIGHT, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = VISUAL_CONSTANTS.DUCK_EYE_COLOR;
       ctx.beginPath();
       ctx.arc(duck.displayX - VISUAL_CONSTANTS.DUCK_EYE_OFFSET_X, duck.y - VISUAL_CONSTANTS.DUCK_EYE_OFFSET_Y, VISUAL_CONSTANTS.DUCK_EYE_SIZE, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.fillStyle = duck.color;
-      ctx.font = 'bold 12px monospace';
-      ctx.fillText(duck.name, duck.displayX - VISUAL_CONSTANTS.DUCK_NAME_OFFSET_X, duck.y - VISUAL_CONSTANTS.DUCK_NAME_OFFSET_Y);
+      ctx.font = VISUAL_CONSTANTS.DUCK_NAME_FONT;
+      ctx.fillText(duck.name, duck.displayX + VISUAL_CONSTANTS.DUCK_NAME_OFFSET_X, duck.y + VISUAL_CONSTANTS.DUCK_NAME_OFFSET_Y);
 
       ctx.shadowBlur = 0;
     });
@@ -130,25 +161,25 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     const timeLeft = Math.max(0, RACE_CONSTANTS.RACE_DURATION - elapsed);
     const progress = (elapsed / RACE_CONSTANTS.RACE_DURATION) * 100;
 
-    const boxWidth = 200;
-    const boxHeight = 80;
+    const boxWidth = VISUAL_CONSTANTS.RACE_INFO_BOX_WIDTH;
+    const boxHeight = VISUAL_CONSTANTS.RACE_INFO_BOX_HEIGHT;
     const boxX = ctx.canvas.width - boxWidth - VISUAL_CONSTANTS.RACE_INFO_BOX_MARGIN;
     const boxY = VISUAL_CONSTANTS.RACE_INFO_BOX_MARGIN;
 
     ctx.fillStyle = VISUAL_CONSTANTS.RACE_INFO_BOX_BACKGROUND;
     ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
 
-    ctx.strokeStyle = '#00ffff';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = VISUAL_CONSTANTS.RACE_INFO_BOX_BORDER_COLOR;
+    ctx.lineWidth = VISUAL_CONSTANTS.RACE_INFO_BOX_BORDER_WIDTH;
     ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
 
-    ctx.fillStyle = '#00ffff';
-    ctx.font = 'bold 18px monospace';
-    ctx.shadowColor = '#00ffff';
+    ctx.fillStyle = VISUAL_CONSTANTS.RACE_INFO_BOX_TEXT_COLOR;
+    ctx.font = VISUAL_CONSTANTS.RACE_INFO_BOX_FONT;
+    ctx.shadowColor = VISUAL_CONSTANTS.RACE_INFO_BOX_TEXT_COLOR;
     ctx.shadowBlur = VISUAL_CONSTANTS.INFO_TEXT_GLOW_BLUR;
 
     const textX = boxX + VISUAL_CONSTANTS.RACE_INFO_BOX_PADDING;
-    const textY = boxY + VISUAL_CONSTANTS.RACE_INFO_BOX_PADDING + 20;
+    const textY = boxY + VISUAL_CONSTANTS.RACE_INFO_BOX_PADDING + VISUAL_CONSTANTS.RACE_INFO_TEXT_BASELINE_OFFSET;
 
     ctx.fillText(`TIME: ${timeLeft.toFixed(1)}s`, textX, textY);
     ctx.fillText(`PROGRESS: ${progress.toFixed(0)}%`, textX, textY + VISUAL_CONSTANTS.RACE_INFO_LINE_HEIGHT);
@@ -156,8 +187,38 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     ctx.shadowBlur = 0;
   };
 
+  const updateAriaAnnouncement = (duckList, elapsed) => {
+    // Sort ducks by position to find leaders
+    const sortedDucks = [...duckList].sort((a, b) => b.position - a.position);
+    const leader = sortedDucks[0];
+    const second = sortedDucks[1];
+    const progress = Math.round((elapsed / RACE_CONSTANTS.RACE_DURATION) * 100);
+
+    // Create announcement based on race progress
+    const announcement = `Race ${progress}% complete. ${leader.name} is in first place.${second ? ' ' + second.name + ' is in second place.' : ''}`;
+    setAriaAnnouncement(announcement);
+  };
+
+  // Update announcement when race ends
+  useEffect(() => {
+    if (!isRacing && ariaAnnouncement) {
+      // Clear announcement after race ends
+      setAriaAnnouncement('');
+      lastAnnouncementTimeRef.current = 0;
+    }
+  }, [isRacing, ariaAnnouncement]);
+
   return (
     <div className="race-track">
+      {/* ARIA live region for screen reader accessibility */}
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {ariaAnnouncement}
+      </div>
       <canvas
         ref={canvasRef}
         width={VISUAL_CONSTANTS.CANVAS_WIDTH}

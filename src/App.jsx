@@ -14,7 +14,6 @@ function AppContent() {
   const {
     isRacing,
     winner,
-    raceHistory,
     audioFile,
     audioVolume,
     audioRef,
@@ -62,9 +61,7 @@ function AppContent() {
           </div>
 
           <div className="side-panel">
-            <Leaderboard
-              raceHistory={raceHistory}
-            />
+            <Leaderboard />
           </div>
         </div>
 

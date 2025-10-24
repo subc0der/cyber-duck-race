@@ -1,49 +1,27 @@
 export const RACE_CONSTANTS = {
   RACE_DURATION: 15,
   SPEED_CHANGE_INTERVAL: 2000,
-  MIN_SPEED_MULTIPLIER: 0.6,
-  MAX_SPEED_MULTIPLIER: 1.4,
-  BASE_SPEED: 50,
-  FINISH_LINE_X: 10000,
-  DUCK_START_X: 200,
+  MIN_SPEED_MULTIPLIER: 0.4,
+  MAX_SPEED_MULTIPLIER: 2.0,
+  BASE_SPEED: 100,
+  FINISH_LINE_X: 4500,
+  DUCK_START_X: 80,
   DUCK_SPACING: 80,
-  // Race progression stages
-  EARLY_RACE_THRESHOLD: 0.3,
-  MID_RACE_THRESHOLD: 0.6,
-  LATE_RACE_THRESHOLD: 0.85,
-  ENDGAME_THRESHOLD: 0.8,
-  // Winner speed modifiers by stage
-  EARLY_RACE_BASE_SPEED: 0.8,
-  EARLY_RACE_VARIANCE: 0.4,
-  MID_RACE_BASE_SPEED: 0.9,
-  MID_RACE_VARIANCE: 0.3,
-  LATE_RACE_BASE_SPEED: 1.1,
-  LATE_RACE_VARIANCE: 0.2,
-  FINAL_RACE_BASE_SPEED: 1.3,
-  FINAL_RACE_VARIANCE: 0.1,
-  // Non-winner speed modifiers
-  LOSER_BASE_SPEED: 0.7,
-  LOSER_SPEED_RANGE: 0.6,
-  LOSER_VARIANCE_MULTIPLIER: 0.3,
-  ENDGAME_SLOWDOWN_CHANCE: 0.3,
-  ENDGAME_SLOWDOWN_FACTOR: 0.85,
+  // Final sprint timing (triggers dramatic surge in last 1-2 seconds)
+  FINAL_SPRINT_START: 0.87, // 87% of race (13 seconds into 15s race)
+  FINAL_SPRINT_END: 0.93, // 93% of race (14 seconds into 15s race)
+  // Speed change timing for realistic racing dynamics
+  SPEED_CHANGE_MIN_INTERVAL_MS: 1000, // Minimum 1 second between speed changes
+  SPEED_CHANGE_MAX_INTERVAL_MS: 2000, // Random additional interval up to 2 seconds (total interval: 1s to 3s)
 };
 
 export const VISUAL_CONSTANTS = {
   BACKGROUND_SCROLL_SPEED: 300,
-  DUCK_CENTER_ZONE_MIN: 200,
-  DUCK_CENTER_ZONE_MAX: 400,
-  DUCK_FORWARD_MOVEMENT: 20,
-  DUCK_BACKWARD_MOVEMENT: 15,
+  DUCK_CENTER_ZONE_MIN: 80,
   CANVAS_WIDTH: 800,
   CANVAS_HEIGHT: 600,
-  TRACK_LANES: 6,
   // Background rendering
   BACKGROUND_IMAGE_PATH: '/assets/race-background.jpg',
-  BACKGROUND_GRID_LINES: 20,
-  BACKGROUND_GRID_SPACING: 60,
-  BACKGROUND_LINE_WIDTH: 2,
-  BACKGROUND_GLOW_BLUR: 10,
   BACKGROUND_RECT_ORIGIN: 0,
   // Duck rendering
   DUCK_WIDTH: 25,
@@ -51,50 +29,42 @@ export const VISUAL_CONSTANTS = {
   DUCK_EYE_SIZE: 3,
   DUCK_EYE_OFFSET_X: 8,
   DUCK_EYE_OFFSET_Y: 5,
-  DUCK_NAME_OFFSET_X: 20,
-  DUCK_NAME_OFFSET_Y: 30,
+  DUCK_EYE_COLOR: '#ffffff',
+  DUCK_NAME_OFFSET_X: 35,
+  DUCK_NAME_OFFSET_Y: 5,
+  DUCK_NAME_FONT: 'bold 24px monospace',
   DUCK_GLOW_BLUR: 15,
   // UI positioning
-  TIME_DISPLAY_X: 20,
-  TIME_DISPLAY_Y: 40,
-  PROGRESS_DISPLAY_X: 20,
-  PROGRESS_DISPLAY_Y: 70,
   INFO_TEXT_GLOW_BLUR: 5,
   // Race info box
+  RACE_INFO_BOX_WIDTH: 200,
+  RACE_INFO_BOX_HEIGHT: 80,
   RACE_INFO_BOX_PADDING: 15,
   RACE_INFO_BOX_MARGIN: 20,
   RACE_INFO_BOX_BACKGROUND: 'rgba(10, 10, 10, 0.8)',
-  RACE_INFO_BOX_BORDER_RADIUS: 10,
+  RACE_INFO_BOX_BORDER_COLOR: '#00ffff',
+  RACE_INFO_BOX_BORDER_WIDTH: 2,
+  RACE_INFO_BOX_TEXT_COLOR: '#00ffff',
+  RACE_INFO_BOX_FONT: 'bold 18px monospace',
   RACE_INFO_LINE_HEIGHT: 30,
+  RACE_INFO_TEXT_BASELINE_OFFSET: 20,
 };
 
 export const DUCK_CONSTANTS = {
   DUCK_NAMES: ['NEON', 'CYBER', 'MATRIX', 'BLADE', 'GHOST', 'CHROME'],
   DUCK_COLORS: ['#00ffff', '#ff00ff', '#9d00ff', '#ffff00', '#00ff00', '#ff0099'],
-  DUCK_SIZE: {
-    WIDTH: 50,
-    HEIGHT: 40,
-  },
-  // Duck positioning
-  DUCK_INITIAL_Y: 150,
-  DUCKS_PER_ROW: 2,
-  DUCK_ROW_SPACING: 80,
-  DUCK_HORIZONTAL_SPACING: 100,
   // Duck movement
   DUCK_VERTICAL_MOVEMENT_CHANCE: 0.02,
   DUCK_VERTICAL_VARIANCE: 4,
-  DUCK_MIN_Y: 100,
-  DUCK_MAX_Y: 500,
-  // Lane-based positioning
-  LANE_PADDING: 20,
-  MAX_LANE_HEIGHT: 100,
-  MIN_PARTICIPANTS_FOR_FULL_SPREAD: 6,
-  // Display bounds
+  // Lane-based positioning - evenly spread across bottom half
+  LANE_PADDING: 10,
+  MAX_LANE_HEIGHT: 80,
+  // Vertical positioning - bottom half of screen (top half = 0.5)
+  RACE_AREA_TOP_FRACTION: 0.5,
+  RACE_AREA_BOTTOM_PADDING: 20,
+  // Display bounds (max = 3/4 of canvas width = 600px)
   DUCK_MIN_DISPLAY_X: 50,
-  DUCK_MAX_DISPLAY_X: 750,
-  // Duck variance
-  DUCK_SPEED_VARIANCE_RANGE: 0.2,
-  DUCK_SPEED_VARIANCE_OFFSET: 0.1,
+  DUCK_MAX_DISPLAY_X: 600,
 };
 
 export const PHYSICS_CONSTANTS = {
@@ -103,18 +73,31 @@ export const PHYSICS_CONSTANTS = {
   MAX_POSITION_CHANGE: 30,
   SPEED_VARIANCE: 0.2,
   POSITION_UPDATE_RATE: 60,
-  CATCH_UP_BONUS: 1.2,
-  LEAD_PENALTY: 0.9,
   // Position thresholds
-  // Minimum distance (in pixels) for catch-up mechanics and collision checks.
+  // Minimum distance (in pixels) for minimal rubber-banding adjustments.
   // POSITION_THRESHOLD_DISTANCE balances responsiveness and prevents jitter in close races.
   POSITION_THRESHOLD_DISTANCE: 50,
-  // Relative positioning
-  LEADER_OFFSET: 200,
-  RELATIVE_POSITION_SCALE: 200,
-  // Winner boost mechanics
-  WINNER_BOOST_START_PERCENT: 0.7,
-  WINNER_BOOST_MULTIPLIER: 0.5,
+  // Rubber-banding factors for minimal race balance
+  RUBBER_BAND_CATCH_UP_FACTOR: 1.05, // 5% speed boost for stragglers
+  RUBBER_BAND_LEAD_PENALTY_FACTOR: 0.95, // 5% speed reduction for leaders
+  RUBBER_BAND_RANDOM_VARIANCE: 0.1, // ±5% random variance for natural movement
+  // Duck characteristic ranges (random per duck for fair racing)
+  BASE_SPEED_FACTOR_MIN: 0.85, // Slowest possible base speed multiplier
+  BASE_SPEED_FACTOR_MAX: 1.15, // Fastest possible base speed multiplier - Range: 0.3 (1.15 - 0.85)
+  ACCELERATION_MIN: 0.08, // Slowest acceleration rate
+  ACCELERATION_MAX: 0.12, // Fastest acceleration rate - Range: 0.04 (0.12 - 0.08)
+  STAMINA_MIN: 0.7, // Lowest stamina (tires easily)
+  STAMINA_MAX: 1.0, // Highest stamina - Range: 0.3 (1.0 - 0.7)
+  // Speed variation for dramatic racing
+  SPEED_BURST_MIN: 0.7, // Minimum speed multiplier for bursts/slowdowns
+  SPEED_BURST_RANGE: 0.8, // Range for dramatic -30% to +50% variation (0.7 + 0.8 = 1.5)
+  // Late race stamina effects
+  LATE_RACE_THRESHOLD: 0.6, // 60% of race when stamina becomes a factor
+  STAMINA_EFFECT_MIN: 0.7, // Minimum stamina multiplier effect
+  STAMINA_EFFECT_RANGE: 0.6, // Range for stamina effect (0.7 + 0.6 = 1.3)
+  // Final sprint surge boost
+  FINAL_SPRINT_BOOST_MIN: 1.5, // Minimum boost for final sprint surge
+  FINAL_SPRINT_BOOST_RANGE: 0.5, // Range: 0.5 (2.0 - 1.5)
 };
 
 export const ANIMATION_CONSTANTS = {
@@ -124,11 +107,17 @@ export const ANIMATION_CONSTANTS = {
   INTERPOLATION_STEPS: 5,
 };
 
+export const ACCESSIBILITY_CONSTANTS = {
+  // ARIA live region announcement frequency for screen readers
+  ANNOUNCEMENT_INTERVAL_MS: 3000, // Update screen readers every 3 seconds during race
+};
+
 export const UI_CONSTANTS = {
   MODAL_ANIMATION_DURATION: 300,
   COUNTDOWN_DURATION: 3000,
   WINNER_DISPLAY_DURATION: 5000,
   NOTIFICATION_DURATION: 3000,
+  ERROR_MESSAGE_DURATION: 5000,
   BUTTON_DEBOUNCE: 500,
   // Countdown
   COUNTDOWN_START_VALUE: 3,

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { UI_CONSTANTS } from '../utils/constants';
 
 const RaceContext = createContext();
@@ -15,7 +15,7 @@ export const RaceProvider = ({ children }) => {
   const [raceState, setRaceState] = useState({
     isRacing: false,
     currentRace: null,
-    raceHistory: [],
+    currentRaceResult: null,
     participants: [],
     eventName: '',
     audioFile: null,
@@ -39,16 +39,18 @@ export const RaceProvider = ({ children }) => {
     }));
   }, []);
 
-  const endRace = useCallback((winner) => {
+  const endRace = useCallback((winners) => {
     setRaceState((prev) => ({
       ...prev,
       isRacing: false,
-      winner,
+      winner: winners.first, // Keep for WinnerModal compatibility
       currentRace: null,
-      raceHistory: [...prev.raceHistory, {
-        winner,
+      currentRaceResult: {
+        first: winners.first,
+        second: winners.second,
+        third: winners.third,
         timestamp: Date.now(),
-      }],
+      },
     }));
   }, []);
 
@@ -58,20 +60,23 @@ export const RaceProvider = ({ children }) => {
       return { success: false, error: 'Name cannot be empty' };
     }
 
-    let result = { success: false };
+    // Use ref to capture validation result from within setState
+    let validationResult = { success: false };
 
     setRaceState((prev) => {
+      // Perform all validation within updater to avoid external dependencies
       if (prev.participants.length >= UI_CONSTANTS.MAX_PARTICIPANTS) {
-        result = { success: false, error: `Maximum ${UI_CONSTANTS.MAX_PARTICIPANTS} participants allowed` };
-        return prev;
+        validationResult = { success: false, error: `Maximum ${UI_CONSTANTS.MAX_PARTICIPANTS} participants allowed` };
+        return prev; // No state change
       }
 
       if (prev.participants.some((p) => p.name === trimmedName)) {
-        result = { success: false, error: 'Participant already exists' };
-        return prev;
+        validationResult = { success: false, error: 'Participant already exists' };
+        return prev; // No state change
       }
 
-      result = { success: true };
+      // Validation passed, update state
+      validationResult = { success: true };
       return {
         ...prev,
         participants: [...prev.participants, {
@@ -81,8 +86,8 @@ export const RaceProvider = ({ children }) => {
       };
     });
 
-    return result;
-  }, []);
+    return validationResult;
+  }, []); // No dependencies - all state accessed through updater function
 
   const removeParticipant = useCallback((id) => {
     setRaceState((prev) => ({
@@ -189,7 +194,7 @@ export const RaceProvider = ({ children }) => {
     };
   }, []);
 
-  const value = {
+  const value = useMemo(() => ({
     ...raceState,
     startRace,
     endRace,
@@ -203,7 +208,21 @@ export const RaceProvider = ({ children }) => {
     setAudioVolume,
     setAudioRef,
     startCountdown,
-  };
+  }), [
+    raceState,
+    startRace,
+    endRace,
+    resetRace,
+    closeWinnerModal,
+    addParticipant,
+    removeParticipant,
+    clearParticipants,
+    setEventName,
+    setAudioFile,
+    setAudioVolume,
+    setAudioRef,
+    startCountdown,
+  ]);
 
   return (
     <RaceContext.Provider value={value}>
