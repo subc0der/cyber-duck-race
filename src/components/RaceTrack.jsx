@@ -59,6 +59,10 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
   useEffect(() => {
     if (!racePhysicsRef.current) return;
 
+    // Clear RGB cache when participants change to prevent unbounded growth
+    // Duck colors are limited (6 colors from DUCK_CONSTANTS), but clearing ensures fresh state
+    rgbCacheRef.current.clear();
+
     const initialDucks = racePhysicsRef.current.initializeDucks(participants);
     setDucks(initialDucks);
   }, [participants, countdown]);
