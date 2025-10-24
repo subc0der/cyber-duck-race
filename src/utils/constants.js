@@ -36,11 +36,17 @@ export const VISUAL_CONSTANTS = {
   DUCK_GLOW_BLUR: 15,
   // Thrust trail VFX
   TRAIL_LENGTH: 120, // Length of trail behind duck in pixels (increased for more dramatic effect)
-  TRAIL_SEGMENTS: 8, // Number of segments for smooth fade effect
+  TRAIL_SEGMENTS: 8, // Reserved for future optimizations: Number of segments for smooth fade effect (not currently used)
   TRAIL_WIDTH_START: 20, // Width at duck (thickest part)
   TRAIL_WIDTH_END: 4, // Width at trail end (thinnest part)
+  TRAIL_WIDTH_DUCK_SCALE: 0.7, // Scale factor for trail width at duck position
   TRAIL_OPACITY_START: 0.6, // Opacity at duck
   TRAIL_OPACITY_END: 0, // Opacity at trail end (fully transparent)
+  TRAIL_PULSE_FREQUENCY: 3, // Pulse frequency in Hz for trail animation
+  TRAIL_PULSE_MIN: 0.85, // Minimum pulse intensity (0-1 range)
+  TRAIL_PULSE_AMPLITUDE: 0.15, // Pulse amplitude variation (0-1 range)
+  TRAIL_CURVE_CONTROL_POINT: 0.3, // Bezier curve control point multiplier for concave shape
+  TRAIL_GLOW_INTENSITY: 0.8, // Shadow blur intensity multiplier for trail glow effect
   // UI positioning
   INFO_TEXT_GLOW_BLUR: 5,
   // Race info box

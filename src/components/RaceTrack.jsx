@@ -154,10 +154,9 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       // Use speedMultiplier to modulate trail intensity (0.5x to 2.5x range)
       const speedFactor = Math.max(0.3, Math.min(2.0, duck.speedMultiplier || 1));
 
-      // Add subtle pulsing animation (reduced from 0-1 to 0.85-1.0 for less flash)
-      const pulseFrequency = 3;
-      const pulsePhase = (currentTime / 1000) * pulseFrequency * Math.PI * 2;
-      const pulseIntensity = 0.85 + (Math.sin(pulsePhase) * 0.15); // Oscillates 0.85-1.0 (subtle)
+      // Add subtle pulsing animation for energy beam effect
+      const pulsePhase = (currentTime / 1000) * VISUAL_CONSTANTS.TRAIL_PULSE_FREQUENCY * Math.PI * 2;
+      const pulseIntensity = VISUAL_CONSTANTS.TRAIL_PULSE_MIN + (Math.sin(pulsePhase) * VISUAL_CONSTANTS.TRAIL_PULSE_AMPLITUDE);
 
       // Modulate trail length and brightness based on speed
       const trailLength = VISUAL_CONSTANTS.TRAIL_LENGTH * speedFactor;
@@ -181,10 +180,10 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       ctx.fillStyle = gradient;
       ctx.shadowColor = duck.color;
-      ctx.shadowBlur = VISUAL_CONSTANTS.DUCK_GLOW_BLUR * brightnessBoost * 0.8;
+      ctx.shadowBlur = VISUAL_CONSTANTS.DUCK_GLOW_BLUR * brightnessBoost * VISUAL_CONSTANTS.TRAIL_GLOW_INTENSITY;
 
       // Draw concave cone shape (wider at duck, curved inward, narrower at tail)
-      const heightAtDuck = VISUAL_CONSTANTS.TRAIL_WIDTH_START * speedFactor * 0.7;
+      const heightAtDuck = VISUAL_CONSTANTS.TRAIL_WIDTH_START * speedFactor * VISUAL_CONSTANTS.TRAIL_WIDTH_DUCK_SCALE;
       const heightAtTail = VISUAL_CONSTANTS.TRAIL_WIDTH_END * speedFactor;
 
       ctx.beginPath();
@@ -193,10 +192,10 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       // Curve inward to tail top (concave curve)
       ctx.quadraticCurveTo(
-        duck.displayX - trailLength * 0.3, // Control point X (30% back)
-        duck.y - heightAtDuck * 0.3, // Control point Y (curves inward)
-        duck.displayX - trailLength, // End point X
-        duck.y - heightAtTail / 2 // End point Y
+        duck.displayX - trailLength * VISUAL_CONSTANTS.TRAIL_CURVE_CONTROL_POINT,
+        duck.y - heightAtDuck * VISUAL_CONSTANTS.TRAIL_CURVE_CONTROL_POINT,
+        duck.displayX - trailLength,
+        duck.y - heightAtTail / 2
       );
 
       // Bottom tail point
@@ -204,10 +203,10 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       // Curve inward back to duck bottom (concave curve)
       ctx.quadraticCurveTo(
-        duck.displayX - trailLength * 0.3, // Control point X (30% back)
-        duck.y + heightAtDuck * 0.3, // Control point Y (curves inward)
-        duck.displayX, // End point X
-        duck.y + heightAtDuck / 2 // End point Y (bottom of duck)
+        duck.displayX - trailLength * VISUAL_CONSTANTS.TRAIL_CURVE_CONTROL_POINT,
+        duck.y + heightAtDuck * VISUAL_CONSTANTS.TRAIL_CURVE_CONTROL_POINT,
+        duck.displayX,
+        duck.y + heightAtDuck / 2
       );
 
       ctx.closePath();
