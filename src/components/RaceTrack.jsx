@@ -26,6 +26,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
   const animationFrameRef = useRef(null);
   const racePhysicsRef = useRef(null);
   const backgroundImageRef = useRef(null);
+  const rgbCacheRef = useRef(new Map()); // Cache for RGB conversions to avoid repeated calculations
   const [ducks, setDucks] = useState([]);
   const [ariaAnnouncement, setAriaAnnouncement] = useState('');
   const lastAnnouncementTimeRef = useRef(0);
@@ -162,11 +163,12 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       const trailLength = VISUAL_CONSTANTS.TRAIL_LENGTH * speedFactor;
       const brightnessBoost = speedFactor * pulseIntensity;
 
-      // Cache RGB conversion to avoid redundant computation on every frame
-      if (!duck.rgbColor) {
-        duck.rgbColor = hexToRgb(duck.color);
+      // Cache RGB conversion using Map to avoid mutating duck objects
+      const cache = rgbCacheRef.current;
+      if (!cache.has(duck.color)) {
+        cache.set(duck.color, hexToRgb(duck.color));
       }
-      const rgb = duck.rgbColor;
+      const rgb = cache.get(duck.color);
       const gradient = ctx.createLinearGradient(
         duck.displayX,
         duck.y,
