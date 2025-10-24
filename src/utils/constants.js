@@ -47,6 +47,7 @@ export const VISUAL_CONSTANTS = {
   RACE_INFO_BOX_TEXT_COLOR: '#00ffff',
   RACE_INFO_BOX_FONT: 'bold 18px monospace',
   RACE_INFO_LINE_HEIGHT: 30,
+  RACE_INFO_TEXT_BASELINE_OFFSET: 20,
 };
 
 export const DUCK_CONSTANTS = {

@@ -179,7 +179,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     ctx.shadowBlur = VISUAL_CONSTANTS.INFO_TEXT_GLOW_BLUR;
 
     const textX = boxX + VISUAL_CONSTANTS.RACE_INFO_BOX_PADDING;
-    const textY = boxY + VISUAL_CONSTANTS.RACE_INFO_BOX_PADDING + 20;
+    const textY = boxY + VISUAL_CONSTANTS.RACE_INFO_BOX_PADDING + VISUAL_CONSTANTS.RACE_INFO_TEXT_BASELINE_OFFSET;
 
     ctx.fillText(`TIME: ${timeLeft.toFixed(1)}s`, textX, textY);
     ctx.fillText(`PROGRESS: ${progress.toFixed(0)}%`, textX, textY + VISUAL_CONSTANTS.RACE_INFO_LINE_HEIGHT);
