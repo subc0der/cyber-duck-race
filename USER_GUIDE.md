@@ -2,6 +2,8 @@
 
 **Welcome to Cyber Duck Race 2099!** This is a fun, cyberpunk-themed raffle tool that helps you randomly select winners from a list of participants. It's perfect for giveaways, contests, team selections, and any event where you need to pick a winner fairly.
 
+**🚀 Try it now:** [https://subc0der.github.io/cyber-duck-race/](https://subc0der.github.io/cyber-duck-race/) - No installation required!
+
 ## 📋 Table of Contents
 
 1. [What Is This?](#what-is-this)
@@ -30,9 +32,15 @@
 
 ### Opening the Application
 
+**Option 1: Use the Live Website (Easiest)**
 1. Open your web browser (Chrome, Firefox, Edge, or Safari)
-2. Navigate to: **http://localhost:3000** (or the URL provided by your developer)
-3. You'll see the Cyber Duck Race interface with a cyberpunk theme
+2. Navigate to: **[https://subc0der.github.io/cyber-duck-race/](https://subc0der.github.io/cyber-duck-race/)**
+3. You'll see the Cyber Duck Race interface with a cyberpunk theme - ready to use!
+
+**Option 2: Run Locally (For Developers)**
+1. Open your web browser
+2. Navigate to: **http://localhost:3000** (after running `npm run dev`)
+3. You'll see the Cyber Duck Race interface
 
 ### The Main Screen
 

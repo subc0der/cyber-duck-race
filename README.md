@@ -8,6 +8,12 @@
 
 ![Cyber Duck Race Banner](./public/assets/CyberDuckRaceBG01.jpg)
 
+## 🌐 Live Demo
+
+**🚀 Try it now (no installation needed!):** [https://subc0der.github.io/cyber-duck-race/](https://subc0der.github.io/cyber-duck-race/)
+
+Just click the link above to use the app instantly in your browser. Perfect for raffles, giveaways, and team selections!
+
 ## 🎮 Overview
 
 **Cyber Duck Race** is a cyberpunk-themed raffle winner selection tool. Add participant names, customize your event, and watch as cyber-enhanced ducks race across a scrolling neon cityscape to randomly select a winner. Built with React and rendered on HTML5 Canvas, the app uses cryptographically secure random number generation to ensure fair and unpredictable results.
@@ -28,12 +34,20 @@
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### For End Users (No Installation)
+
+**Just want to use it?** Visit the live demo: [https://subc0der.github.io/cyber-duck-race/](https://subc0der.github.io/cyber-duck-race/)
+
+No downloads, no setup - just click and go! See [USER_GUIDE.md](USER_GUIDE.md) for detailed instructions.
+
+### For Developers
+
+#### Prerequisites
 
 - **Node.js** (v16 or higher)
 - **npm** or **yarn**
 
-### Installation
+#### Installation
 
 ```bash
 # Clone the repository
@@ -49,7 +63,7 @@ npm run dev
 
 Visit **http://localhost:3000** to see the race in action!
 
-### Build for Production
+#### Build for Production
 
 ```bash
 # Create optimized production build
@@ -57,6 +71,9 @@ npm run build
 
 # Preview production build locally
 npm run preview
+
+# Deploy to GitHub Pages
+npm run deploy
 ```
 
 ## 🎯 How to Use
