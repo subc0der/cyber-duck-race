@@ -3,6 +3,7 @@ import { RACE_CONSTANTS, VISUAL_CONSTANTS, UI_CONSTANTS, ACCESSIBILITY_CONSTANTS
 import { RacePhysics } from '../utils/racePhysics';
 import { useRace } from '../contexts/RaceContext';
 import CountdownOverlay from './CountdownOverlay';
+import raceBackgroundImg from '/public/assets/race-background.jpg';
 import '../styles/RaceTrack.css';
 
 const RaceTrack = ({ isRacing, onRaceEnd }) => {
@@ -21,7 +22,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       racePhysicsRef.current = new RacePhysics();
     }
 
-    // Load background image directly as a static asset
+    // Load background image using Vite's asset handling
     const img = new window.Image();
     img.onload = () => {
       backgroundImageRef.current = img;
@@ -30,7 +31,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       console.warn('Failed to load background image, using fallback gradient');
       backgroundImageRef.current = null;
     };
-    img.src = VISUAL_CONSTANTS.BACKGROUND_IMAGE_PATH;
+    img.src = raceBackgroundImg;
 
     // Cleanup event listeners to prevent memory leaks
     return () => {
