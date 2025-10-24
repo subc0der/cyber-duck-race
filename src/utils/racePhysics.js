@@ -79,7 +79,7 @@ export class RacePhysics {
       acceleration: randomInRange(PHYSICS_CONSTANTS.ACCELERATION_MIN, PHYSICS_CONSTANTS.ACCELERATION_MAX), // How quickly they speed up (0.08-0.12)
       stamina: randomInRange(PHYSICS_CONSTANTS.STAMINA_MIN, PHYSICS_CONSTANTS.STAMINA_MAX), // Affects late-race performance (0.7-1.0)
       lastSpeedChange: Date.now(),
-      nextSpeedChangeTime: Date.now() + randomInRangeFromBase(RACE_CONSTANTS.SPEED_CHANGE_MIN_INTERVAL_MS, RACE_CONSTANTS.SPEED_CHANGE_MAX_INTERVAL_MS), // Precalculated next change time for performance
+      nextSpeedChangeTime: Date.now() + randomInRangeFromBase(RACE_CONSTANTS.SPEED_CHANGE_MIN_INTERVAL_MS, RACE_CONSTANTS.SPEED_CHANGE_MAX_INTERVAL_MS), // Initial speed change time; recalculated dynamically on each speed change
       finalSprintBoost: null, // Will be set if duck gets final sprint surge
     }));
 

@@ -12,7 +12,7 @@ export const RACE_CONSTANTS = {
   FINAL_SPRINT_END: 0.93, // 93% of race (14 seconds into 15s race)
   // Speed change timing for realistic racing dynamics
   SPEED_CHANGE_MIN_INTERVAL_MS: 1000, // Minimum 1 second between speed changes
-  SPEED_CHANGE_MAX_INTERVAL_MS: 2000, // Maximum 3 seconds (1s + random 2s)
+  SPEED_CHANGE_MAX_INTERVAL_MS: 2000, // Random additional interval up to 2 seconds (total interval: 1s to 3s)
 };
 
 export const VISUAL_CONSTANTS = {
