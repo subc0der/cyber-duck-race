@@ -151,7 +151,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
   const drawThrustTrails = (ctx, duckList, currentTime) => {
     duckList.forEach((duck) => {
-      // Use speedMultiplier to modulate trail intensity (0.5x to 2.5x range)
+      // Use speedMultiplier to modulate trail intensity (0.3x to 2.0x range)
       const speedFactor = Math.max(0.3, Math.min(2.0, duck.speedMultiplier || 1));
 
       // Add subtle pulsing animation for energy beam effect
@@ -174,9 +174,15 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       // Gradient stops: bright at duck, fading to transparent at trail end
       const baseOpacity = VISUAL_CONSTANTS.TRAIL_OPACITY_START * brightnessBoost;
       gradient.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity})`);
-      gradient.addColorStop(0.3, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity * 0.6})`);
-      gradient.addColorStop(0.7, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity * 0.3})`);
-      gradient.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
+      gradient.addColorStop(
+        VISUAL_CONSTANTS.TRAIL_GRADIENT_STOP_MID,
+        `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity * VISUAL_CONSTANTS.TRAIL_GRADIENT_MID_OPACITY})`
+      );
+      gradient.addColorStop(
+        VISUAL_CONSTANTS.TRAIL_GRADIENT_STOP_FAR,
+        `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity * VISUAL_CONSTANTS.TRAIL_GRADIENT_FAR_OPACITY})`
+      );
+      gradient.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${VISUAL_CONSTANTS.TRAIL_OPACITY_END})`);
 
       ctx.fillStyle = gradient;
       ctx.shadowColor = duck.color;
