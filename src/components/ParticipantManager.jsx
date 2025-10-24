@@ -16,7 +16,7 @@ const ParticipantManager = () => {
         setErrorMessage('');
       } else {
         setErrorMessage(result.error);
-        setTimeout(() => setErrorMessage(''), 3000);
+        setTimeout(() => setErrorMessage(''), UI_CONSTANTS.NOTIFICATION_DURATION);
       }
     }
   };

@@ -15,7 +15,7 @@ export const RaceProvider = ({ children }) => {
   const [raceState, setRaceState] = useState({
     isRacing: false,
     currentRace: null,
-    raceHistory: [],
+    currentRaceResult: null,
     participants: [],
     eventName: '',
     audioFile: null,
@@ -45,12 +45,12 @@ export const RaceProvider = ({ children }) => {
       isRacing: false,
       winner: winners.first, // Keep for WinnerModal compatibility
       currentRace: null,
-      raceHistory: [{
+      currentRaceResult: {
         first: winners.first,
         second: winners.second,
         third: winners.third,
         timestamp: Date.now(),
-      }], // Replace previous history (clear between races)
+      },
     }));
   }, []);
 

@@ -85,7 +85,7 @@ const EventBanner = () => {
       if (file.size > AUDIO_CONSTANTS.MAX_FILE_SIZE_BYTES) {
         setErrorMessage(`File size exceeds ${AUDIO_CONSTANTS.MAX_FILE_SIZE_MB}MB limit. Please select a smaller file.`);
         e.target.value = ''; // Reset file input
-        setTimeout(() => setErrorMessage(''), 5000);
+        setTimeout(() => setErrorMessage(''), UI_CONSTANTS.ERROR_MESSAGE_DURATION);
         return;
       }
 
@@ -100,7 +100,7 @@ const EventBanner = () => {
       } else {
         setErrorMessage('Please select an MP3, WAV, or FLAC file.');
         e.target.value = ''; // Reset file input
-        setTimeout(() => setErrorMessage(''), 5000);
+        setTimeout(() => setErrorMessage(''), UI_CONSTANTS.ERROR_MESSAGE_DURATION);
       }
     }
   };
