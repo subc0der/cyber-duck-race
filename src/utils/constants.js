@@ -34,6 +34,13 @@ export const VISUAL_CONSTANTS = {
   DUCK_NAME_OFFSET_Y: 5,
   DUCK_NAME_FONT: 'bold 24px monospace',
   DUCK_GLOW_BLUR: 15,
+  // Thrust trail VFX
+  TRAIL_LENGTH: 120, // Length of trail behind duck in pixels (increased for more dramatic effect)
+  TRAIL_SEGMENTS: 8, // Number of segments for smooth fade effect
+  TRAIL_WIDTH_START: 20, // Width at duck (thickest part)
+  TRAIL_WIDTH_END: 4, // Width at trail end (thinnest part)
+  TRAIL_OPACITY_START: 0.6, // Opacity at duck
+  TRAIL_OPACITY_END: 0, // Opacity at trail end (fully transparent)
   // UI positioning
   INFO_TEXT_GLOW_BLUR: 5,
   // Race info box

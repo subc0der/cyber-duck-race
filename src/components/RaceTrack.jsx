@@ -57,7 +57,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground(ctx, 0);
-    drawDucks(ctx, ducks);
+    drawDucks(ctx, ducks, null); // Pass null to disable trails
   }, [ducks, isRacing]);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       backgroundOffset = drawBackground(ctx, backgroundOffset);
 
       const updatedDucks = racePhysicsRef.current.updateDuckPositions(elapsed);
-      drawDucks(ctx, updatedDucks);
+      drawDucks(ctx, updatedDucks, currentTime);
 
       // Update ARIA announcement for accessibility
       if (currentTime - lastAnnouncementTimeRef.current > ACCESSIBILITY_CONSTANTS.ANNOUNCEMENT_INTERVAL_MS) {
@@ -135,7 +135,80 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     return offset;
   };
 
-  const drawDucks = (ctx, duckList) => {
+  const drawThrustTrails = (ctx, duckList, currentTime) => {
+    duckList.forEach((duck) => {
+      // Use speedMultiplier to modulate trail intensity (0.5x to 2.5x range)
+      const speedFactor = Math.max(0.3, Math.min(2.0, duck.speedMultiplier || 1));
+
+      // Add subtle pulsing animation (reduced from 0-1 to 0.85-1.0 for less flash)
+      const pulseFrequency = 3;
+      const pulsePhase = (currentTime / 1000) * pulseFrequency * Math.PI * 2;
+      const pulseIntensity = 0.85 + (Math.sin(pulsePhase) * 0.15); // Oscillates 0.85-1.0 (subtle)
+
+      // Modulate trail length and brightness based on speed
+      const trailLength = VISUAL_CONSTANTS.TRAIL_LENGTH * speedFactor;
+      const brightnessBoost = speedFactor * pulseIntensity;
+
+      // Use gradient for smooth beam effect
+      const rgb = hexToRgb(duck.color);
+      const gradient = ctx.createLinearGradient(
+        duck.displayX,
+        duck.y,
+        duck.displayX - trailLength,
+        duck.y
+      );
+
+      // Gradient stops: bright at duck, fading to transparent at trail end
+      const baseOpacity = VISUAL_CONSTANTS.TRAIL_OPACITY_START * brightnessBoost;
+      gradient.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity})`);
+      gradient.addColorStop(0.3, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity * 0.6})`);
+      gradient.addColorStop(0.7, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity * 0.3})`);
+      gradient.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
+
+      ctx.fillStyle = gradient;
+      ctx.shadowColor = duck.color;
+      ctx.shadowBlur = VISUAL_CONSTANTS.DUCK_GLOW_BLUR * brightnessBoost * 0.8;
+
+      // Draw concave cone shape (wider at duck, curved inward, narrower at tail)
+      const heightAtDuck = VISUAL_CONSTANTS.TRAIL_WIDTH_START * speedFactor * 0.7;
+      const heightAtTail = VISUAL_CONSTANTS.TRAIL_WIDTH_END * speedFactor;
+
+      ctx.beginPath();
+      // Start at top of duck position
+      ctx.moveTo(duck.displayX, duck.y - heightAtDuck / 2);
+
+      // Curve inward to tail top (concave curve)
+      ctx.quadraticCurveTo(
+        duck.displayX - trailLength * 0.3, // Control point X (30% back)
+        duck.y - heightAtDuck * 0.3, // Control point Y (curves inward)
+        duck.displayX - trailLength, // End point X
+        duck.y - heightAtTail / 2 // End point Y
+      );
+
+      // Bottom tail point
+      ctx.lineTo(duck.displayX - trailLength, duck.y + heightAtTail / 2);
+
+      // Curve inward back to duck bottom (concave curve)
+      ctx.quadraticCurveTo(
+        duck.displayX - trailLength * 0.3, // Control point X (30% back)
+        duck.y + heightAtDuck * 0.3, // Control point Y (curves inward)
+        duck.displayX, // End point X
+        duck.y + heightAtDuck / 2 // End point Y (bottom of duck)
+      );
+
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.shadowBlur = 0;
+    });
+  };
+
+  const drawDucks = (ctx, duckList, currentTime = null) => {
+    // Only draw thrust trails when currentTime is provided (during racing)
+    if (currentTime !== null) {
+      drawThrustTrails(ctx, duckList, currentTime);
+    }
+
     duckList.forEach((duck) => {
       ctx.fillStyle = duck.color;
       ctx.shadowColor = duck.color;
@@ -156,6 +229,16 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       ctx.shadowBlur = 0;
     });
+  };
+
+  // Helper function to convert hex color to RGB
+  const hexToRgb = (hex) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : { r: 0, g: 255, b: 255 }; // Fallback to cyan
   };
 
   const drawRaceInfo = (ctx, elapsed) => {
