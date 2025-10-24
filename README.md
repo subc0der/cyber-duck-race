@@ -14,15 +14,17 @@
 
 ### ✨ Features
 
-- 🎫 **Raffle Participant Management** - Add and manage participant names with visual duck assignment
+- 🎫 **Raffle Participant Management** - Add and manage participant names with visual duck assignment (up to 24)
 - 🏷️ **Custom Event Naming** - Personalize your raffle with custom event titles
+- 🎵 **Background Music** - Upload and play custom audio (MP3, WAV, FLAC) during races
 - 🌆 **Immersive Cyberpunk Aesthetic** - Scrolling cityscape background with neon glow effects
 - 🦆 **Dynamic Duck Assignment** - Each participant gets a unique cyber duck with distinct color
-- 🎲 **Crypto-Secure RNG** - Fair winner selection using Web Crypto API with Math.random fallback
-- 📊 **Real-time Leaderboard** - Track raffle winners and statistics across sessions
+- 🏁 **Fair Racing Physics** - Realistic racing mechanics with unique duck characteristics (speed, acceleration, stamina)
+- 📊 **Top 3 Finishers** - See 1st 🏆, 2nd 🥈, and 3rd 🥉 place after each race
 - 🎨 **Dynamic Canvas Rendering** - Smooth 60 FPS animation with scrolling backgrounds
+- ♿ **Accessibility** - ARIA live regions for screen readers announce race progress
 - ⚡ **Fast Development** - Built with Vite for lightning-fast HMR and builds
-- 🎯 **Fair Winner Selection** - Sophisticated physics engine ensures random, unbiased results
+- 🎯 **100% Fair & Random** - No predetermined winner - actual race physics determines outcomes
 
 ## 🚀 Quick Start
 
@@ -59,13 +61,16 @@ npm run preview
 
 ## 🎯 How to Use
 
-1. **Add Participants** - Enter participant names in the Participant Manager panel
+1. **Add Participants** - Enter participant names in the Participant Manager panel (up to 24)
 2. **Set Event Name** - Customize your event with a title (optional)
-3. **Start the Raffle** - Click "START RACE" to begin the winner selection
-4. **Watch the Race** - Cyber ducks representing each participant race for 15 seconds
-5. **See the Winner** - A modal displays the winning participant with celebratory effects
-6. **Check the Leaderboard** - View raffle history and past winners
-7. **Run Another Raffle** - Click "RESET RACE" to start over
+3. **Add Background Music** - Upload an audio file (MP3, WAV, FLAC) for atmosphere (optional)
+4. **Start the Raffle** - Click "START RACE" to begin the winner selection
+5. **Watch the Race** - Cyber ducks representing each participant race for 15 seconds with dynamic physics
+6. **See the Winners** - A modal displays the 1st place winner with celebratory effects
+7. **Check Results** - View top 3 finishers in the Race Results panel
+8. **Run Another Raffle** - Click "RESET RACE" to start over
+
+**For detailed instructions for non-developers, see [USER_GUIDE.md](USER_GUIDE.md)**
 
 ## 🏗️ Project Structure
 
@@ -117,40 +122,68 @@ cyber-duck-race/
 - **Browser Compatibility**: CSS and JS fallbacks for older browsers
 - **Clean Code**: Passes GitHub Copilot reviews on first attempt
 
-## 🧪 Winner Selection Engine
+## 🧪 Fair Racing Physics Engine
 
-The app features a sophisticated physics engine (`racePhysics.js`) that ensures fair, random winner selection:
+The app features a sophisticated physics engine (`racePhysics.js`) that ensures fair, random racing with exciting visual dynamics:
 
-- **Cryptographically Secure**: Uses Web Crypto API to randomly select winner before race starts
-- **Dynamic Speed Multipliers**: Speed changes every 2 seconds (0.6x - 1.4x range) for visual excitement
-- **Stage-Based Mechanics**: Different speed patterns for early/mid/late race stages
-- **Smooth Animation**: 60 FPS canvas rendering with position interpolation
-- **Scrolling Background**: Background moves at 300px/s while ducks stay centered
-- **Fair Selection**: No participant has any advantage; winner is truly random
+### How It Works
 
-### Race Constants
+- **No Predetermined Winner**: Unlike typical raffles, there's no winner selected upfront - the actual race physics determines who wins
+- **Unique Duck Characteristics**: Each duck gets random stats at race start:
+  - **Base Speed Factor** (0.85x - 1.15x): How naturally fast they are
+  - **Acceleration** (0.08 - 0.12): How quickly they respond to speed changes
+  - **Stamina** (0.7 - 1.0): Affects late-race performance
+- **Dynamic Speed Changes**: Every 1-3 seconds, ducks get random speed bursts or slowdowns (±40%)
+- **Stamina Effects**: After 60% of race, stamina becomes a factor (some ducks tire, others find extra gear)
+- **Final Sprint Surge**: At 87-93% completion, one random 2nd-4th place duck gets a dramatic 1.5x-2.0x boost
+- **Minimal Rubber-Banding**: Very slight adjustments (±5%) keep the race visually balanced without affecting fairness
+
+### Technical Details
 
 ```javascript
-RACE_DURATION: 15,              // 15-second raffle selection
-SPEED_CHANGE_INTERVAL: 2000,    // Speed changes every 2 seconds for visual variety
-MIN_SPEED_MULTIPLIER: 0.6,      // Minimum speed variation
-MAX_SPEED_MULTIPLIER: 1.4,      // Maximum speed variation
+// Core race parameters
+RACE_DURATION: 15,                      // 15-second race
+SPEED_CHANGE_MIN_INTERVAL_MS: 1000,     // Minimum 1s between speed changes
+SPEED_CHANGE_MAX_INTERVAL_MS: 2000,     // Random additional 0-2s (total: 1-3s)
+MIN_SPEED_MULTIPLIER: 0.4,              // Minimum speed (40%)
+MAX_SPEED_MULTIPLIER: 2.0,              // Maximum speed (200%)
+
+// Final sprint timing
+FINAL_SPRINT_START: 0.87,               // 87% of race (13s mark)
+FINAL_SPRINT_END: 0.93,                 // 93% of race (14s mark)
 ```
+
+### Why This Approach?
+
+1. **Truly Random**: Actual physics simulation, not predetermined outcomes
+2. **Exciting to Watch**: Dramatic speed changes and final sprint surges create suspense
+3. **Fair to All**: Every participant has equal probability of winning
+4. **Smooth Animation**: 60 FPS canvas rendering with position interpolation
+5. **Accessible**: ARIA live regions announce race progress for screen readers
 
 ## 📊 Features in Detail
 
 ### Participant Manager
-- Add participant names via text input
-- Visual duck color assignment
+- Add participant names via text input (press Enter or click ADD button)
+- Visual duck color assignment (6 unique cyberpunk colors)
 - Remove individual participants or clear all
 - Input validation (no duplicates, no empty names)
-- Maximum 30 characters per name
+- Maximum 30 characters per name, up to 24 participants total
+- Participants persist between races until manually cleared
 
-### Leaderboard System
-- Persistent raffle history (session-based)
-- Win counts per participant
-- Total raffle statistics
-- Last raffle winner highlight
+### Race Results Panel
+- Shows top 3 finishers from current race
+- 🏆 1st place with gold trophy
+- 🥈 2nd place with silver medal
+- 🥉 3rd place with bronze medal
+- Color-coded borders matching duck colors
+- Displays final position for each finisher
+
+### Event Customization
+- **Event Name**: Custom title for your raffle/event (max 100 characters)
+- **Background Music**: Upload audio files (MP3, WAV, FLAC, max 150MB)
+- **Audio Controls**: Play/Pause, Stop, Volume slider (0-100%), Repeat toggle
+- **Collapsible Panel**: Click 🔊 icon to show/hide audio controls
 
 ### Control Panel
 - Raffle countdown (3, 2, 1, GO!)
@@ -198,29 +231,35 @@ This project follows strict coding standards to maintain quality:
 
 ## 🎯 Roadmap
 
-### Current Features (v2.0)
-- [x] Canvas-based race rendering
-- [x] Dynamic participant management
+### Current Features (v3.0)
+- [x] Canvas-based race rendering with scrolling background
+- [x] Dynamic participant management (up to 24)
 - [x] Custom event naming
-- [x] Scrolling cyberpunk cityscape
-- [x] Crypto-secure winner selection
-- [x] Real-time leaderboard
+- [x] Background music support (MP3, WAV, FLAC)
+- [x] Fair racing physics engine (no predetermined winner)
+- [x] Top 3 finishers display
 - [x] Winner celebration modal
-- [x] Dynamic duck count based on participants
+- [x] Unique duck characteristics (speed, acceleration, stamina)
+- [x] Final sprint surge mechanic
+- [x] ARIA accessibility for screen readers
+- [x] Dynamic lane-based positioning
+- [x] Real-time race progress announcements
 
 ### Planned Features (Future)
-- [ ] Custom event banner with editable text
-- [ ] Sound effects and background music
+- [ ] Sound effects (countdown beep, race start, winner fanfare)
 - [ ] Mobile responsive design
-- [ ] Custom duck skins
+- [ ] Custom duck skins/themes
 - [ ] Race replay feature
 - [ ] Export race results (CSV/PDF)
-- [ ] Persistent storage (save participants/history)
+- [ ] Persistent storage (LocalStorage/IndexedDB)
+- [ ] Multiple language support
+- [ ] Race statistics and analytics
+- [ ] Tournament mode (multiple rounds)
 
 ## 🐛 Known Issues
 
-- Audio constants defined but not yet implemented
-- Session-based leaderboard (doesn't persist across page reloads)
+- Race history doesn't persist across page reloads (session-based only)
+- Audio playback may require user interaction on some browsers (autoplay restrictions)
 
 ## 📝 License
 
