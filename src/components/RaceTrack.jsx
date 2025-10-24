@@ -195,7 +195,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     const progress = Math.round((elapsed / RACE_CONSTANTS.RACE_DURATION) * 100);
 
     // Create announcement based on race progress
-    const announcement = `Race ${progress}% complete. ${leader.name} is in first place. ${second ? second.name + ' is in second place.' : ''}`;
+    const announcement = `Race ${progress}% complete. ${leader.name} is in first place.${second ? ' ' + second.name + ' is in second place.' : ''}`;
     setAriaAnnouncement(announcement);
   };
 

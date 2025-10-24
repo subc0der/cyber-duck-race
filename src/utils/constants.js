@@ -82,21 +82,21 @@ export const PHYSICS_CONSTANTS = {
   RUBBER_BAND_RANDOM_VARIANCE: 0.1, // ±5% random variance for natural movement
   // Duck characteristic ranges (random per duck for fair racing)
   BASE_SPEED_FACTOR_MIN: 0.85, // Slowest possible base speed multiplier
-  BASE_SPEED_FACTOR_MAX: 1.15, // Fastest possible base speed multiplier (0.85 + 0.3)
+  BASE_SPEED_FACTOR_MAX: 1.15, // Fastest possible base speed multiplier - Range: 0.3 (1.15 - 0.85)
   ACCELERATION_MIN: 0.08, // Slowest acceleration rate
-  ACCELERATION_MAX: 0.12, // Fastest acceleration rate (0.08 + 0.04)
+  ACCELERATION_MAX: 0.12, // Fastest acceleration rate - Range: 0.04 (0.12 - 0.08)
   STAMINA_MIN: 0.7, // Lowest stamina (tires easily)
-  STAMINA_MAX: 1.0, // Highest stamina (0.7 + 0.3)
+  STAMINA_MAX: 1.0, // Highest stamina - Range: 0.3 (1.0 - 0.7)
   // Speed variation for dramatic racing
   SPEED_BURST_MIN: 0.7, // Minimum speed multiplier for bursts/slowdowns
-  SPEED_BURST_RANGE: 0.8, // Range for dramatic ±40% variation (0.7 + 0.8 = 1.5)
+  SPEED_BURST_RANGE: 0.8, // Range for dramatic -30% to +50% variation (0.7 + 0.8 = 1.5)
   // Late race stamina effects
   LATE_RACE_THRESHOLD: 0.6, // 60% of race when stamina becomes a factor
   STAMINA_EFFECT_MIN: 0.7, // Minimum stamina multiplier effect
-  STAMINA_EFFECT_RANGE: 0.6, // Range for stamina effect (0.7 + 0.6 = 1.3)
+  STAMINA_EFFECT_RANGE: 0.6, // Range: 0.6 (1.3 - 0.7)
   // Final sprint surge boost
   FINAL_SPRINT_BOOST_MIN: 1.5, // Minimum boost for final sprint surge
-  FINAL_SPRINT_BOOST_RANGE: 0.5, // Range for boost (1.5 + 0.5 = 2.0)
+  FINAL_SPRINT_BOOST_RANGE: 0.5, // Range: 0.5 (2.0 - 1.5)
 };
 
 export const ANIMATION_CONSTANTS = {
