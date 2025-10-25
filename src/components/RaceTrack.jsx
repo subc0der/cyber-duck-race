@@ -6,12 +6,27 @@ import CountdownOverlay from './CountdownOverlay';
 import raceBackgroundImg from '../assets/race-background.jpg';
 import '../styles/RaceTrack.css';
 
+/**
+ * Converts a hex color string to RGB object
+ * @param {string} hex - Hex color string (e.g., "#00ffff")
+ * @returns {{r: number, g: number, b: number}} RGB color object
+ */
+const hexToRgb = (hex) => {
+  const result = /^#?([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$/.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : { r: 0, g: 255, b: 255 }; // Fallback to cyan
+};
+
 const RaceTrack = ({ isRacing, onRaceEnd }) => {
   const { participants, countdown } = useRace();
   const canvasRef = useRef(null);
   const animationFrameRef = useRef(null);
   const racePhysicsRef = useRef(null);
   const backgroundImageRef = useRef(null);
+  const rgbCacheRef = useRef(new Map()); // Cache for RGB conversions to avoid repeated calculations
   const [ducks, setDucks] = useState([]);
   const [ariaAnnouncement, setAriaAnnouncement] = useState('');
   const lastAnnouncementTimeRef = useRef(0);
@@ -44,6 +59,10 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
   useEffect(() => {
     if (!racePhysicsRef.current) return;
 
+    // Clear RGB cache when participants change to prevent unbounded growth
+    // Duck colors are limited (6 colors from DUCK_CONSTANTS), but clearing ensures fresh state
+    rgbCacheRef.current.clear();
+
     const initialDucks = racePhysicsRef.current.initializeDucks(participants);
     setDucks(initialDucks);
   }, [participants, countdown]);
@@ -57,7 +76,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground(ctx, 0);
-    drawDucks(ctx, ducks);
+    drawDucks(ctx, ducks); // No trails at start line (currentTime not provided)
   }, [ducks, isRacing]);
 
   useEffect(() => {
@@ -74,6 +93,8 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       if (elapsed >= RACE_CONSTANTS.RACE_DURATION) {
         const winners = racePhysicsRef.current.determineWinners();
+        // Clear RGB cache to prevent memory accumulation across multiple races
+        rgbCacheRef.current.clear();
         onRaceEnd(winners);
         return;
       }
@@ -84,7 +105,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       backgroundOffset = drawBackground(ctx, backgroundOffset);
 
       const updatedDucks = racePhysicsRef.current.updateDuckPositions(elapsed);
-      drawDucks(ctx, updatedDucks);
+      drawDucks(ctx, updatedDucks, currentTime); // Trails enabled (currentTime provided)
 
       // Update ARIA announcement for accessibility
       if (currentTime - lastAnnouncementTimeRef.current > ACCESSIBILITY_CONSTANTS.ANNOUNCEMENT_INTERVAL_MS) {
@@ -135,7 +156,92 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     return offset;
   };
 
-  const drawDucks = (ctx, duckList) => {
+  const drawThrustTrails = (ctx, duckList, currentTime) => {
+    duckList.forEach((duck) => {
+      // Use speedMultiplier to modulate trail intensity
+      const speedFactor = Math.max(
+        VISUAL_CONSTANTS.TRAIL_SPEED_FACTOR_MIN,
+        Math.min(VISUAL_CONSTANTS.TRAIL_SPEED_FACTOR_MAX, duck.speedMultiplier || 1)
+      );
+
+      // Add subtle pulsing animation for energy beam effect
+      const pulsePhase = (currentTime / UI_CONSTANTS.MILLISECONDS_TO_SECONDS) * VISUAL_CONSTANTS.TRAIL_PULSE_FREQUENCY * Math.PI * 2;
+      const pulseIntensity = VISUAL_CONSTANTS.TRAIL_PULSE_MIN + (Math.sin(pulsePhase) * VISUAL_CONSTANTS.TRAIL_PULSE_AMPLITUDE);
+
+      // Modulate trail length and brightness based on speed
+      const trailLength = VISUAL_CONSTANTS.TRAIL_LENGTH * speedFactor;
+      const brightnessBoost = speedFactor * pulseIntensity;
+
+      // Cache RGB conversion using Map to avoid mutating duck objects
+      const cache = rgbCacheRef.current;
+      if (!cache.has(duck.color)) {
+        cache.set(duck.color, hexToRgb(duck.color));
+      }
+      const rgb = cache.get(duck.color);
+      const gradient = ctx.createLinearGradient(
+        duck.displayX,
+        duck.y,
+        duck.displayX - trailLength,
+        duck.y
+      );
+
+      // Gradient stops: bright at duck, fading to transparent at trail end
+      const baseOpacity = VISUAL_CONSTANTS.TRAIL_OPACITY_START * brightnessBoost;
+      gradient.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity})`);
+      gradient.addColorStop(
+        VISUAL_CONSTANTS.TRAIL_GRADIENT_STOP_MID,
+        `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity * VISUAL_CONSTANTS.TRAIL_GRADIENT_MID_OPACITY})`
+      );
+      gradient.addColorStop(
+        VISUAL_CONSTANTS.TRAIL_GRADIENT_STOP_FAR,
+        `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${baseOpacity * VISUAL_CONSTANTS.TRAIL_GRADIENT_FAR_OPACITY})`
+      );
+      gradient.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${VISUAL_CONSTANTS.TRAIL_OPACITY_END})`);
+
+      ctx.fillStyle = gradient;
+      ctx.shadowColor = duck.color;
+      ctx.shadowBlur = VISUAL_CONSTANTS.DUCK_GLOW_BLUR * brightnessBoost * VISUAL_CONSTANTS.TRAIL_GLOW_INTENSITY;
+
+      // Draw concave cone shape (wider at duck, curved inward, narrower at tail)
+      const heightAtDuck = VISUAL_CONSTANTS.TRAIL_WIDTH_START * speedFactor * VISUAL_CONSTANTS.TRAIL_WIDTH_DUCK_SCALE;
+      const heightAtTail = VISUAL_CONSTANTS.TRAIL_WIDTH_END * speedFactor;
+
+      ctx.beginPath();
+      // Start at top of duck position
+      ctx.moveTo(duck.displayX, duck.y - heightAtDuck / 2);
+
+      // Curve inward to tail top (concave curve)
+      ctx.quadraticCurveTo(
+        duck.displayX - trailLength * VISUAL_CONSTANTS.TRAIL_CURVE_CONTROL_POINT,
+        duck.y - heightAtDuck * VISUAL_CONSTANTS.TRAIL_CURVE_CONTROL_POINT,
+        duck.displayX - trailLength,
+        duck.y - heightAtTail / 2
+      );
+
+      // Bottom tail point
+      ctx.lineTo(duck.displayX - trailLength, duck.y + heightAtTail / 2);
+
+      // Curve inward back to duck bottom (concave curve)
+      ctx.quadraticCurveTo(
+        duck.displayX - trailLength * VISUAL_CONSTANTS.TRAIL_CURVE_CONTROL_POINT,
+        duck.y + heightAtDuck * VISUAL_CONSTANTS.TRAIL_CURVE_CONTROL_POINT,
+        duck.displayX,
+        duck.y + heightAtDuck / 2
+      );
+
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.shadowBlur = 0;
+    });
+  };
+
+  const drawDucks = (ctx, duckList, currentTime = null) => {
+    // Draw thrust trails if currentTime is provided (during racing)
+    if (currentTime !== null) {
+      drawThrustTrails(ctx, duckList, currentTime);
+    }
+
     duckList.forEach((duck) => {
       ctx.fillStyle = duck.color;
       ctx.shadowColor = duck.color;

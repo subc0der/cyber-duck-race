@@ -7,9 +7,9 @@ export const RACE_CONSTANTS = {
   FINISH_LINE_X: 4500,
   DUCK_START_X: 80,
   DUCK_SPACING: 80,
-  // Final sprint timing (triggers dramatic surge in last 1-2 seconds)
-  FINAL_SPRINT_START: 0.87, // 87% of race (13 seconds into 15s race)
-  FINAL_SPRINT_END: 0.93, // 93% of race (14 seconds into 15s race)
+  // Final sprint timing (triggers dramatic surge near end of race)
+  FINAL_SPRINT_START: 0.87, // 87% of RACE_DURATION when final sprint begins
+  FINAL_SPRINT_END: 0.93, // 93% of RACE_DURATION when final sprint ends
   // Speed change timing for realistic racing dynamics
   SPEED_CHANGE_MIN_INTERVAL_MS: 1000, // Minimum 1 second between speed changes
   SPEED_CHANGE_MAX_INTERVAL_MS: 2000, // Random additional interval up to 2 seconds (total interval: 1s to 3s)
@@ -17,11 +17,9 @@ export const RACE_CONSTANTS = {
 
 export const VISUAL_CONSTANTS = {
   BACKGROUND_SCROLL_SPEED: 300,
-  DUCK_CENTER_ZONE_MIN: 80,
   CANVAS_WIDTH: 800,
   CANVAS_HEIGHT: 600,
   // Background rendering
-  BACKGROUND_IMAGE_PATH: '/assets/race-background.jpg',
   BACKGROUND_RECT_ORIGIN: 0,
   // Duck rendering
   DUCK_WIDTH: 25,
@@ -34,6 +32,24 @@ export const VISUAL_CONSTANTS = {
   DUCK_NAME_OFFSET_Y: 5,
   DUCK_NAME_FONT: 'bold 24px monospace',
   DUCK_GLOW_BLUR: 15,
+  // Thrust trail VFX
+  TRAIL_LENGTH: 120, // Length of trail behind duck in pixels (chosen for dramatic effect)
+  TRAIL_WIDTH_START: 20, // Width at duck (thickest part)
+  TRAIL_WIDTH_END: 4, // Width at trail end (thinnest part)
+  TRAIL_WIDTH_DUCK_SCALE: 0.7, // Multiplier applied to TRAIL_WIDTH_START for width at duck position
+  TRAIL_OPACITY_START: 0.6, // Opacity at duck
+  TRAIL_OPACITY_END: 0, // Opacity at trail end (fully transparent)
+  TRAIL_GRADIENT_STOP_MID: 0.3, // Gradient stop position for middle fade point (0-1 range)
+  TRAIL_GRADIENT_STOP_FAR: 0.7, // Gradient stop position for far fade point (0-1 range)
+  TRAIL_GRADIENT_MID_OPACITY: 0.6, // Opacity multiplier at mid gradient stop
+  TRAIL_GRADIENT_FAR_OPACITY: 0.3, // Opacity multiplier at far gradient stop
+  TRAIL_PULSE_FREQUENCY: 3, // Pulse frequency in Hz for trail animation
+  TRAIL_PULSE_MIN: 0.85, // Minimum pulse intensity (0-1 range)
+  TRAIL_PULSE_AMPLITUDE: 0.15, // Pulse amplitude variation (0-1 range)
+  TRAIL_CURVE_CONTROL_POINT: 0.3, // Bezier curve control point multiplier for concave shape
+  TRAIL_GLOW_INTENSITY: 0.8, // Shadow blur intensity multiplier for trail glow effect
+  TRAIL_SPEED_FACTOR_MIN: 0.3, // Minimum speed multiplier for trail visual effects
+  TRAIL_SPEED_FACTOR_MAX: 2.0, // Maximum speed multiplier for trail visual effects
   // UI positioning
   INFO_TEXT_GLOW_BLUR: 5,
   // Race info box
@@ -68,10 +84,6 @@ export const DUCK_CONSTANTS = {
 };
 
 export const PHYSICS_CONSTANTS = {
-  ACCELERATION_FACTOR: 0.1,
-  DECELERATION_FACTOR: 0.15,
-  MAX_POSITION_CHANGE: 30,
-  SPEED_VARIANCE: 0.2,
   POSITION_UPDATE_RATE: 60,
   // Position thresholds
   // Minimum distance (in pixels) for minimal rubber-banding adjustments.
@@ -83,28 +95,21 @@ export const PHYSICS_CONSTANTS = {
   RUBBER_BAND_RANDOM_VARIANCE: 0.1, // ±5% random variance for natural movement
   // Duck characteristic ranges (random per duck for fair racing)
   BASE_SPEED_FACTOR_MIN: 0.85, // Slowest possible base speed multiplier
-  BASE_SPEED_FACTOR_MAX: 1.15, // Fastest possible base speed multiplier - Range: 0.3 (1.15 - 0.85)
+  BASE_SPEED_FACTOR_MAX: 1.15, // Fastest possible base speed multiplier (range = MAX - MIN)
   ACCELERATION_MIN: 0.08, // Slowest acceleration rate
-  ACCELERATION_MAX: 0.12, // Fastest acceleration rate - Range: 0.04 (0.12 - 0.08)
+  ACCELERATION_MAX: 0.12, // Fastest acceleration rate (range = MAX - MIN)
   STAMINA_MIN: 0.7, // Lowest stamina (tires easily)
-  STAMINA_MAX: 1.0, // Highest stamina - Range: 0.3 (1.0 - 0.7)
+  STAMINA_MAX: 1.0, // Highest stamina (range = MAX - MIN)
   // Speed variation for dramatic racing
   SPEED_BURST_MIN: 0.7, // Minimum speed multiplier for bursts/slowdowns
-  SPEED_BURST_RANGE: 0.8, // Range for dramatic -30% to +50% variation (0.7 + 0.8 = 1.5)
+  SPEED_BURST_RANGE: 0.8, // Range for speed variation (max = MIN + RANGE)
   // Late race stamina effects
   LATE_RACE_THRESHOLD: 0.6, // 60% of race when stamina becomes a factor
   STAMINA_EFFECT_MIN: 0.7, // Minimum stamina multiplier effect
-  STAMINA_EFFECT_RANGE: 0.6, // Range for stamina effect (0.7 + 0.6 = 1.3)
+  STAMINA_EFFECT_RANGE: 0.6, // Range for stamina effect (max = MIN + RANGE)
   // Final sprint surge boost
   FINAL_SPRINT_BOOST_MIN: 1.5, // Minimum boost for final sprint surge
-  FINAL_SPRINT_BOOST_RANGE: 0.5, // Range: 0.5 (2.0 - 1.5)
-};
-
-export const ANIMATION_CONSTANTS = {
-  FPS: 60,
-  FRAME_TIME: 1000 / 60,
-  SMOOTHING_FACTOR: 0.1,
-  INTERPOLATION_STEPS: 5,
+  FINAL_SPRINT_BOOST_RANGE: 0.5, // Range added to MIN for maximum boost
 };
 
 export const ACCESSIBILITY_CONSTANTS = {
@@ -119,6 +124,7 @@ export const UI_CONSTANTS = {
   NOTIFICATION_DURATION: 3000,
   ERROR_MESSAGE_DURATION: 5000,
   BUTTON_DEBOUNCE: 500,
+  PERCENTAGE_MULTIPLIER: 100, // For converting decimals to percentages (0.5 * 100 = 50%)
   // Countdown
   COUNTDOWN_START_VALUE: 3,
   COUNTDOWN_INTERVAL: 1000,
@@ -166,6 +172,10 @@ export const AUDIO_CONSTANTS = {
   MASTER_VOLUME: 0.7,
   SFX_VOLUME: 0.8,
   MUSIC_VOLUME: 0.5,
+  // Volume slider configuration
+  VOLUME_SLIDER_MIN: 0,
+  VOLUME_SLIDER_MAX: 1,
+  VOLUME_SLIDER_STEP: 0.01,
   // Audio file size limits for uploaded background music
   MAX_FILE_SIZE_MB: MAX_FILE_SIZE_MB, // User-facing limit in megabytes
   // MAX_FILE_SIZE_BYTES is derived from MAX_FILE_SIZE_MB for file validation
