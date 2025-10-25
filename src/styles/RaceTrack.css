@@ -31,6 +31,43 @@
 }
 
 
+/* Background dim overlay for empty state */
+.background-dim-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Empty participants message */
+.empty-participants-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 36px;
+  font-weight: bold;
+  color: #00ffff;
+  text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+  font-family: monospace;
+  pointer-events: none;
+  z-index: 10;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 /* Screen reader only - visually hidden but accessible to assistive technologies */
 .sr-only {
   position: absolute;

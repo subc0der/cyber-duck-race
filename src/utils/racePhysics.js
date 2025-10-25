@@ -46,7 +46,7 @@ export class RacePhysics {
 
     const duckNames = validParticipants
       ? participants.map(p => p.name)
-      : DUCK_CONSTANTS.DUCK_NAMES;
+      : [];
 
     // Calculate lane height to spread evenly across bottom half of screen
     const topHalfHeight = VISUAL_CONSTANTS.CANVAS_HEIGHT * DUCK_CONSTANTS.RACE_AREA_TOP_FRACTION;
