@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { RACE_CONSTANTS, VISUAL_CONSTANTS, UI_CONSTANTS, ACCESSIBILITY_CONSTANTS } from '../utils/constants';
 import { RacePhysics } from '../utils/racePhysics';
 import { useRace } from '../contexts/RaceContext';
@@ -93,7 +93,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     if (ducks.length > 0) {
       drawDucks(ctx, ducks); // No trails at start line (currentTime not provided)
     }
-  }, [ducks, isRacing]);
+  }, [ducks, isRacing, drawDucks]);
 
   useEffect(() => {
     if (!isRacing || !canvasRef.current) return;
@@ -141,7 +141,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isRacing, onRaceEnd]);
+  }, [isRacing, onRaceEnd, drawDucks]);
 
   const drawBackground = (ctx, offset) => {
     const img = backgroundImageRef.current;
@@ -252,7 +252,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     });
   };
 
-  const drawDucks = (ctx, duckList, currentTime = null) => {
+  const drawDucks = useCallback((ctx, duckList, currentTime = null) => {
     // Draw thrust trails if currentTime is provided (during racing)
     if (currentTime !== null) {
       drawThrustTrails(ctx, duckList, currentTime);
@@ -281,7 +281,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       ctx.shadowBlur = 0;
     });
-  };
+  }, []); // Empty deps since all values used are from parameters or constants
 
   const drawRaceInfo = (ctx, elapsed) => {
     const timeLeft = Math.max(0, RACE_CONSTANTS.RACE_DURATION - elapsed);

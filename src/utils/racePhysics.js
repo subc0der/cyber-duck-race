@@ -218,7 +218,7 @@ export class RacePhysics {
    * @param {number} progressPercent - Race completion percentage (0-1)
    * @returns {number} - Speed adjustment multiplier
    */
-  calculateSpeedAdjustment(duck, progressPercent) {
+  calculateSpeedAdjustment(duck, _progressPercent) {
     let adjustment = 1;
 
     const positions = this.ducks.map(d => d.position);
