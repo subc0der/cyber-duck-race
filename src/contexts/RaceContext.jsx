@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { UI_CONSTANTS } from '../utils/constants';
+import { UI_CONSTANTS, AUDIO_CONSTANTS } from '../utils/constants';
 
 const RaceContext = createContext();
 
@@ -19,7 +19,7 @@ export const RaceProvider = ({ children }) => {
     participants: [],
     eventName: '',
     audioFile: null,
-    audioVolume: 0.5,
+    audioVolume: AUDIO_CONSTANTS.MUSIC_VOLUME,
     audioRef: null,
     winner: null,
     countdown: null,

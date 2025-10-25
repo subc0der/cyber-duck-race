@@ -12,7 +12,7 @@ import '../styles/RaceTrack.css';
  * @returns {{r: number, g: number, b: number}} RGB color object
  */
 const hexToRgb = (hex) => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  const result = /^#?([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})$/.exec(hex);
   return result ? {
     r: parseInt(result[1], 16),
     g: parseInt(result[2], 16),
@@ -76,7 +76,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground(ctx, 0);
-    drawDucks(ctx, ducks, false); // Disable trails at start line
+    drawDucks(ctx, ducks); // No trails at start line (currentTime not provided)
   }, [ducks, isRacing]);
 
   useEffect(() => {
@@ -93,6 +93,8 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       if (elapsed >= RACE_CONSTANTS.RACE_DURATION) {
         const winners = racePhysicsRef.current.determineWinners();
+        // Clear RGB cache to prevent memory accumulation across multiple races
+        rgbCacheRef.current.clear();
         onRaceEnd(winners);
         return;
       }
@@ -103,7 +105,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       backgroundOffset = drawBackground(ctx, backgroundOffset);
 
       const updatedDucks = racePhysicsRef.current.updateDuckPositions(elapsed);
-      drawDucks(ctx, updatedDucks, true, currentTime); // Enable trails during racing
+      drawDucks(ctx, updatedDucks, currentTime); // Trails enabled (currentTime provided)
 
       // Update ARIA announcement for accessibility
       if (currentTime - lastAnnouncementTimeRef.current > ACCESSIBILITY_CONSTANTS.ANNOUNCEMENT_INTERVAL_MS) {
@@ -156,11 +158,14 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
   const drawThrustTrails = (ctx, duckList, currentTime) => {
     duckList.forEach((duck) => {
-      // Use speedMultiplier to modulate trail intensity (0.3x to 2.0x range)
-      const speedFactor = Math.max(0.3, Math.min(2.0, duck.speedMultiplier || 1));
+      // Use speedMultiplier to modulate trail intensity
+      const speedFactor = Math.max(
+        VISUAL_CONSTANTS.TRAIL_SPEED_FACTOR_MIN,
+        Math.min(VISUAL_CONSTANTS.TRAIL_SPEED_FACTOR_MAX, duck.speedMultiplier || 1)
+      );
 
       // Add subtle pulsing animation for energy beam effect
-      const pulsePhase = (currentTime / 1000) * VISUAL_CONSTANTS.TRAIL_PULSE_FREQUENCY * Math.PI * 2;
+      const pulsePhase = (currentTime / UI_CONSTANTS.MILLISECONDS_TO_SECONDS) * VISUAL_CONSTANTS.TRAIL_PULSE_FREQUENCY * Math.PI * 2;
       const pulseIntensity = VISUAL_CONSTANTS.TRAIL_PULSE_MIN + (Math.sin(pulsePhase) * VISUAL_CONSTANTS.TRAIL_PULSE_AMPLITUDE);
 
       // Modulate trail length and brightness based on speed
@@ -231,9 +236,9 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     });
   };
 
-  const drawDucks = (ctx, duckList, shouldDrawTrails = false, currentTime = null) => {
-    // Draw thrust trails when explicitly enabled and currentTime is provided (during racing)
-    if (shouldDrawTrails && currentTime !== null) {
+  const drawDucks = (ctx, duckList, currentTime = null) => {
+    // Draw thrust trails if currentTime is provided (during racing)
+    if (currentTime !== null) {
       drawThrustTrails(ctx, duckList, currentTime);
     }
 

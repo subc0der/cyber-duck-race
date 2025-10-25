@@ -263,13 +263,13 @@ const EventBanner = () => {
 
             <div className="audio-volume-control">
               <label className="audio-volume-label">
-                Volume: {Math.round(audioVolume * 100)}%
+                Volume: {Math.round(audioVolume * UI_CONSTANTS.PERCENTAGE_MULTIPLIER)}%
               </label>
               <input
                 type="range"
-                min="0"
-                max="1"
-                step="0.01"
+                min={AUDIO_CONSTANTS.VOLUME_SLIDER_MIN}
+                max={AUDIO_CONSTANTS.VOLUME_SLIDER_MAX}
+                step={AUDIO_CONSTANTS.VOLUME_SLIDER_STEP}
                 value={audioVolume}
                 onChange={handleVolumeChange}
                 className="audio-volume-slider"
