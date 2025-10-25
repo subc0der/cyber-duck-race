@@ -172,7 +172,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     return offset;
   };
 
-  const drawThrustTrails = (ctx, duckList, currentTime) => {
+  const drawThrustTrails = useCallback((ctx, duckList, currentTime) => {
     duckList.forEach((duck) => {
       // Use speedMultiplier to modulate trail intensity
       const speedFactor = Math.max(
@@ -250,7 +250,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       ctx.shadowBlur = 0;
     });
-  };
+  }, []); // Empty deps since all values used are from parameters or constants
 
   const drawDucks = useCallback((ctx, duckList, currentTime = null) => {
     // Draw thrust trails if currentTime is provided (during racing)
@@ -281,7 +281,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       ctx.shadowBlur = 0;
     });
-  }, []); // Empty deps since all values used are from parameters or constants
+  }, [drawThrustTrails]); // Include drawThrustTrails since we call it
 
   const drawRaceInfo = (ctx, elapsed) => {
     const timeLeft = Math.max(0, RACE_CONSTANTS.RACE_DURATION - elapsed);
