@@ -46,7 +46,7 @@ export class RacePhysics {
 
     const duckNames = validParticipants
       ? participants.map(p => p.name)
-      : DUCK_CONSTANTS.DUCK_NAMES;
+      : [];
 
     // Calculate lane height to spread evenly across bottom half of screen
     const topHalfHeight = VISUAL_CONSTANTS.CANVAS_HEIGHT * DUCK_CONSTANTS.RACE_AREA_TOP_FRACTION;
@@ -218,7 +218,7 @@ export class RacePhysics {
    * @param {number} progressPercent - Race completion percentage (0-1)
    * @returns {number} - Speed adjustment multiplier
    */
-  calculateSpeedAdjustment(duck, progressPercent) {
+  calculateSpeedAdjustment(duck, _progressPercent) {
     let adjustment = 1;
 
     const positions = this.ducks.map(d => d.position);

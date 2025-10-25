@@ -1,5 +1,5 @@
 import { useRace } from '../contexts/RaceContext';
-import { UI_CONSTANTS, RACE_CONSTANTS } from '../utils/constants';
+import { RACE_CONSTANTS } from '../utils/constants';
 import '../styles/Leaderboard.css';
 
 const Leaderboard = () => {

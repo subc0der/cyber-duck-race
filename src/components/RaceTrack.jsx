@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { RACE_CONSTANTS, VISUAL_CONSTANTS, UI_CONSTANTS, ACCESSIBILITY_CONSTANTS } from '../utils/constants';
 import { RacePhysics } from '../utils/racePhysics';
 import { useRace } from '../contexts/RaceContext';
@@ -29,6 +29,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
   const rgbCacheRef = useRef(new Map()); // Cache for RGB conversions to avoid repeated calculations
   const [ducks, setDucks] = useState([]);
   const [ariaAnnouncement, setAriaAnnouncement] = useState('');
+  const [backgroundLoaded, setBackgroundLoaded] = useState(false);
   const lastAnnouncementTimeRef = useRef(0);
 
   // Initialize race physics and load background image on mount
@@ -41,10 +42,12 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     const img = new window.Image();
     img.onload = () => {
       backgroundImageRef.current = img;
+      setBackgroundLoaded(true);
     };
     img.onerror = () => {
       console.warn('Failed to load background image, using fallback gradient');
       backgroundImageRef.current = null;
+      setBackgroundLoaded(true); // Still set to true to trigger initial draw with fallback
     };
     img.src = raceBackgroundImg;
 
@@ -54,6 +57,15 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       img.onerror = null;
     };
   }, []);
+
+  // Draw background on initial load
+  useEffect(() => {
+    if (!canvasRef.current || !backgroundLoaded) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    drawBackground(ctx, 0);
+  }, [backgroundLoaded]);
 
   // Reset ducks when participants change or countdown starts
   useEffect(() => {
@@ -67,17 +79,21 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     setDucks(initialDucks);
   }, [participants, countdown]);
 
-  // Draw initial duck positions when not racing
+  // Draw initial state when not racing
   useEffect(() => {
-    if (isRacing || !canvasRef.current || ducks.length === 0) return;
+    if (isRacing || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground(ctx, 0);
-    drawDucks(ctx, ducks); // No trails at start line (currentTime not provided)
-  }, [ducks, isRacing]);
+
+    // Only draw ducks if there are any
+    if (ducks.length > 0) {
+      drawDucks(ctx, ducks); // No trails at start line (currentTime not provided)
+    }
+  }, [ducks, isRacing, drawDucks]);
 
   useEffect(() => {
     if (!isRacing || !canvasRef.current) return;
@@ -125,7 +141,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isRacing, onRaceEnd]);
+  }, [isRacing, onRaceEnd, drawDucks]);
 
   const drawBackground = (ctx, offset) => {
     const img = backgroundImageRef.current;
@@ -236,7 +252,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     });
   };
 
-  const drawDucks = (ctx, duckList, currentTime = null) => {
+  const drawDucks = useCallback((ctx, duckList, currentTime = null) => {
     // Draw thrust trails if currentTime is provided (during racing)
     if (currentTime !== null) {
       drawThrustTrails(ctx, duckList, currentTime);
@@ -247,22 +263,25 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       ctx.shadowColor = duck.color;
       ctx.shadowBlur = VISUAL_CONSTANTS.DUCK_GLOW_BLUR;
 
+      // Draw ellipse (body)
       ctx.beginPath();
       ctx.ellipse(duck.displayX, duck.y, VISUAL_CONSTANTS.DUCK_WIDTH, VISUAL_CONSTANTS.DUCK_HEIGHT, 0, 0, Math.PI * 2);
       ctx.fill();
 
+      // Draw eye (white)
       ctx.fillStyle = VISUAL_CONSTANTS.DUCK_EYE_COLOR;
       ctx.beginPath();
       ctx.arc(duck.displayX - VISUAL_CONSTANTS.DUCK_EYE_OFFSET_X, duck.y - VISUAL_CONSTANTS.DUCK_EYE_OFFSET_Y, VISUAL_CONSTANTS.DUCK_EYE_SIZE, 0, Math.PI * 2);
       ctx.fill();
 
+      // Draw name
       ctx.fillStyle = duck.color;
       ctx.font = VISUAL_CONSTANTS.DUCK_NAME_FONT;
       ctx.fillText(duck.name, duck.displayX + VISUAL_CONSTANTS.DUCK_NAME_OFFSET_X, duck.y + VISUAL_CONSTANTS.DUCK_NAME_OFFSET_Y);
 
       ctx.shadowBlur = 0;
     });
-  };
+  }, []); // Empty deps since all values used are from parameters or constants
 
   const drawRaceInfo = (ctx, elapsed) => {
     const timeLeft = Math.max(0, RACE_CONSTANTS.RACE_DURATION - elapsed);
@@ -332,6 +351,14 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
         height={VISUAL_CONSTANTS.CANVAS_HEIGHT}
         className="race-canvas"
       />
+      {participants.length === 0 && !isRacing && (
+        <>
+          <div className="background-dim-overlay"></div>
+          <div className="empty-participants-message">
+            Add participant names
+          </div>
+        </>
+      )}
       <div className="track-overlay"></div>
       <CountdownOverlay />
     </div>

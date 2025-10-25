@@ -3,6 +3,7 @@ import { UI_CONSTANTS, AUDIO_CONSTANTS } from '../utils/constants';
 
 const RaceContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useRace = () => {
   const context = useContext(RaceContext);
   if (!context) {

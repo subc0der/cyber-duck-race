@@ -1,0 +1,18 @@
+# Build output
+dist/
+build/
+
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Generated files
+coverage/
+
+# Other
+gemini/
+nul
