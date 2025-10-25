@@ -67,111 +67,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     drawBackground(ctx, 0);
   }, [backgroundLoaded]);
 
-  // Reset ducks when participants change or countdown starts
-  useEffect(() => {
-    if (!racePhysicsRef.current) return;
-
-    // Clear RGB cache when participants change to prevent unbounded growth
-    // Duck colors are limited (6 colors from DUCK_CONSTANTS), but clearing ensures fresh state
-    rgbCacheRef.current.clear();
-
-    const initialDucks = racePhysicsRef.current.initializeDucks(participants);
-    setDucks(initialDucks);
-  }, [participants, countdown]);
-
-  // Draw initial state when not racing
-  useEffect(() => {
-    if (isRacing || !canvasRef.current) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBackground(ctx, 0);
-
-    // Only draw ducks if there are any
-    if (ducks.length > 0) {
-      drawDucks(ctx, ducks); // No trails at start line (currentTime not provided)
-    }
-  }, [ducks, isRacing, drawDucks]);
-
-  useEffect(() => {
-    if (!isRacing || !canvasRef.current) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let startTime = Date.now();
-    let backgroundOffset = UI_CONSTANTS.INITIAL_BACKGROUND_OFFSET;
-
-    const animate = () => {
-      const currentTime = Date.now();
-      const elapsed = (currentTime - startTime) / UI_CONSTANTS.MILLISECONDS_TO_SECONDS;
-
-      if (elapsed >= RACE_CONSTANTS.RACE_DURATION) {
-        const winners = racePhysicsRef.current.determineWinners();
-        // Clear RGB cache to prevent memory accumulation across multiple races
-        rgbCacheRef.current.clear();
-        onRaceEnd(winners);
-        return;
-      }
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      backgroundOffset -= VISUAL_CONSTANTS.BACKGROUND_SCROLL_SPEED / UI_CONSTANTS.FRAME_RATE_DIVISOR;
-      backgroundOffset = drawBackground(ctx, backgroundOffset);
-
-      const updatedDucks = racePhysicsRef.current.updateDuckPositions(elapsed);
-      drawDucks(ctx, updatedDucks, currentTime); // Trails enabled (currentTime provided)
-
-      // Update ARIA announcement for accessibility
-      if (currentTime - lastAnnouncementTimeRef.current > ACCESSIBILITY_CONSTANTS.ANNOUNCEMENT_INTERVAL_MS) {
-        updateAriaAnnouncement(updatedDucks, elapsed);
-        lastAnnouncementTimeRef.current = currentTime;
-      }
-
-      drawRaceInfo(ctx, elapsed);
-
-      animationFrameRef.current = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, [isRacing, onRaceEnd, drawDucks]);
-
-  const drawBackground = (ctx, offset) => {
-    const img = backgroundImageRef.current;
-
-    if (img && img.complete && img.naturalWidth > 0) {
-      // Calculate scaling to fit canvas height while maintaining aspect ratio
-      const scale = ctx.canvas.height / img.height;
-      const scaledWidth = img.width * scale;
-
-      // Draw the image twice to create seamless scrolling effect
-      ctx.drawImage(img, offset, 0, scaledWidth, ctx.canvas.height);
-      ctx.drawImage(img, offset + scaledWidth, 0, scaledWidth, ctx.canvas.height);
-
-      // If we've scrolled past one full image width, reset offset
-      if (offset <= -scaledWidth) {
-        return 0;
-      }
-    } else {
-      // Fallback gradient if image hasn't loaded yet
-      const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
-      gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_START, '#0a0a0a');
-      gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_MIDDLE, '#1a0033');
-      gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_END, '#0a0a0a');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(VISUAL_CONSTANTS.BACKGROUND_RECT_ORIGIN, VISUAL_CONSTANTS.BACKGROUND_RECT_ORIGIN, ctx.canvas.width, ctx.canvas.height);
-    }
-
-    return offset;
-  };
-
+  // Define drawing functions before useEffect hooks that use them
   const drawThrustTrails = useCallback((ctx, duckList, currentTime) => {
     duckList.forEach((duck) => {
       // Use speedMultiplier to modulate trail intensity
@@ -282,6 +178,111 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
       ctx.shadowBlur = 0;
     });
   }, [drawThrustTrails]); // Include drawThrustTrails since we call it
+
+  // Reset ducks when participants change or countdown starts
+  useEffect(() => {
+    if (!racePhysicsRef.current) return;
+
+    // Clear RGB cache when participants change to prevent unbounded growth
+    // Duck colors are limited (6 colors from DUCK_CONSTANTS), but clearing ensures fresh state
+    rgbCacheRef.current.clear();
+
+    const initialDucks = racePhysicsRef.current.initializeDucks(participants);
+    setDucks(initialDucks);
+  }, [participants, countdown]);
+
+  // Draw initial state when not racing
+  useEffect(() => {
+    if (isRacing || !canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground(ctx, 0);
+
+    // Only draw ducks if there are any
+    if (ducks.length > 0) {
+      drawDucks(ctx, ducks); // No trails at start line (currentTime not provided)
+    }
+  }, [ducks, isRacing, drawDucks]);
+
+  useEffect(() => {
+    if (!isRacing || !canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let startTime = Date.now();
+    let backgroundOffset = UI_CONSTANTS.INITIAL_BACKGROUND_OFFSET;
+
+    const animate = () => {
+      const currentTime = Date.now();
+      const elapsed = (currentTime - startTime) / UI_CONSTANTS.MILLISECONDS_TO_SECONDS;
+
+      if (elapsed >= RACE_CONSTANTS.RACE_DURATION) {
+        const winners = racePhysicsRef.current.determineWinners();
+        // Clear RGB cache to prevent memory accumulation across multiple races
+        rgbCacheRef.current.clear();
+        onRaceEnd(winners);
+        return;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      backgroundOffset -= VISUAL_CONSTANTS.BACKGROUND_SCROLL_SPEED / UI_CONSTANTS.FRAME_RATE_DIVISOR;
+      backgroundOffset = drawBackground(ctx, backgroundOffset);
+
+      const updatedDucks = racePhysicsRef.current.updateDuckPositions(elapsed);
+      drawDucks(ctx, updatedDucks, currentTime); // Trails enabled (currentTime provided)
+
+      // Update ARIA announcement for accessibility
+      if (currentTime - lastAnnouncementTimeRef.current > ACCESSIBILITY_CONSTANTS.ANNOUNCEMENT_INTERVAL_MS) {
+        updateAriaAnnouncement(updatedDucks, elapsed);
+        lastAnnouncementTimeRef.current = currentTime;
+      }
+
+      drawRaceInfo(ctx, elapsed);
+
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [isRacing, onRaceEnd, drawDucks]);
+
+  const drawBackground = (ctx, offset) => {
+    const img = backgroundImageRef.current;
+
+    if (img && img.complete && img.naturalWidth > 0) {
+      // Calculate scaling to fit canvas height while maintaining aspect ratio
+      const scale = ctx.canvas.height / img.height;
+      const scaledWidth = img.width * scale;
+
+      // Draw the image twice to create seamless scrolling effect
+      ctx.drawImage(img, offset, 0, scaledWidth, ctx.canvas.height);
+      ctx.drawImage(img, offset + scaledWidth, 0, scaledWidth, ctx.canvas.height);
+
+      // If we've scrolled past one full image width, reset offset
+      if (offset <= -scaledWidth) {
+        return 0;
+      }
+    } else {
+      // Fallback gradient if image hasn't loaded yet
+      const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+      gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_START, '#0a0a0a');
+      gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_MIDDLE, '#1a0033');
+      gradient.addColorStop(UI_CONSTANTS.GRADIENT_STOP_END, '#0a0a0a');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(VISUAL_CONSTANTS.BACKGROUND_RECT_ORIGIN, VISUAL_CONSTANTS.BACKGROUND_RECT_ORIGIN, ctx.canvas.width, ctx.canvas.height);
+    }
+
+    return offset;
+  };
 
   const drawRaceInfo = (ctx, elapsed) => {
     const timeLeft = Math.max(0, RACE_CONSTANTS.RACE_DURATION - elapsed);
