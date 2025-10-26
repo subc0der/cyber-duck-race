@@ -191,6 +191,7 @@
   padding: 10px;
   margin-bottom: 8px;
   transition: all 0.3s ease;
+  min-width: 0;
 }
 
 .participant-item:hover {
@@ -215,6 +216,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .participant-remove-btn {
