@@ -81,7 +81,7 @@ export const RaceProvider = ({ children }) => {
       return {
         ...prev,
         participants: [...prev.participants, {
-          id: Date.now(),
+          id: crypto.randomUUID(),
           name: trimmedName,
         }],
       };
