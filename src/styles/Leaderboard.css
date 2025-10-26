@@ -120,4 +120,7 @@
   color: #00ffff;
   font-size: var(--font-size-lg);
   font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
