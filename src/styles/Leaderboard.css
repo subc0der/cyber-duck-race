@@ -75,6 +75,9 @@
 .name {
   color: #ffffff;
   font-size: var(--font-size-xl);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .wins {
