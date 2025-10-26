@@ -64,7 +64,6 @@
 }
 
 .event-banner-input:not(:placeholder-shown) {
-  color: #ff00ff;
   background: linear-gradient(90deg, #ff00ff, #9d00ff);
   -webkit-background-clip: text;
   background-clip: text;
@@ -99,7 +98,6 @@
   margin: 0;
   font-size: var(--font-size-md);
   font-weight: bold;
-  color: #ff00ff;
   background: linear-gradient(90deg, #ff00ff, #00ffff);
   -webkit-background-clip: text;
   background-clip: text;

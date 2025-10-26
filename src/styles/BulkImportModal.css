@@ -56,7 +56,6 @@
 .bulk-import-title {
   font-size: var(--font-size-xl);
   font-weight: bold;
-  color: #00ffff;
   background: linear-gradient(90deg, #00ffff, #9d00ff);
   -webkit-background-clip: text;
   background-clip: text;
@@ -72,7 +71,7 @@
   width: 32px;
   height: 32px;
   color: #ff0099;
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-lg);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -104,7 +103,7 @@
   border-radius: 5px;
   padding: 15px;
   color: #ffffff;
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-md);
   font-family: monospace;
   resize: vertical;
   outline: none;
