@@ -165,6 +165,7 @@ export const UI_CONSTANTS = {
   BULK_IMPORT_TEXTAREA_ROWS: 10,
   BULK_IMPORT_SUCCESS_MESSAGE_DURATION: 3000,
   BULK_IMPORT_DEBOUNCE_DELAY: 300,
+  // Used to force execution in a new macrotask in the event loop (e.g., via setTimeout(..., MACRO_TASK_DELAY))
   MACRO_TASK_DELAY: 0,
   // Event banner
   MAX_EVENT_NAME_LENGTH: 100,
