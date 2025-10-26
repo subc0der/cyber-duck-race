@@ -32,7 +32,7 @@ export const parseNameList = (text) => {
     })
     .filter((name) => {
       // Filter out empty strings and names that are too long
-      return name && name.length > 0 && name.length <= UI_CONSTANTS.MAX_PARTICIPANT_NAME_LENGTH;
+      return name && name.length <= UI_CONSTANTS.MAX_PARTICIPANT_NAME_LENGTH;
     });
 
   // Remove duplicates while preserving order
