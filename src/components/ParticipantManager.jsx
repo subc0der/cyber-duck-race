@@ -89,7 +89,7 @@ const ParticipantManager = () => {
           aria-label={UI_CONSTANTS.ARIA_LABELS.IMPORT_PARTICIPANTS}
           title={UI_CONSTANTS.TITLES.IMPORT_MULTIPLE}
         >
-          {UI_CONSTANTS.ICONS.IMPORT} {UI_CONSTANTS.TEXT.IMPORT} {UI_CONSTANTS.TEXT.LIST}
+          {UI_CONSTANTS.ICONS.IMPORT} {UI_CONSTANTS.TEXT.IMPORT_LIST}
         </button>
       </div>
 

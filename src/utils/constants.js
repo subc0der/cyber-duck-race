@@ -190,6 +190,7 @@ export const UI_CONSTANTS = {
     CANCEL: 'Cancel',
     IMPORT: 'Import',
     LIST: 'List',
+    IMPORT_LIST: 'Import List',
     CLEAR_ALL: 'Clear All',
     CLOSE: 'CLOSE',
     REMOVE_AUDIO: 'Remove Audio',
@@ -252,8 +253,7 @@ export const UI_CONSTANTS = {
     DUPLICATES_LABEL: 'Duplicates:',
     WILL_BE_SKIPPED: 'will be skipped',
     LIMIT_REACHED: 'Limit reached:',
-    EXCEED: 'exceed',
-    MAX: 'max',
+    EXCEEDS_MAX_LIMIT: 'exceeds the maximum of',
   },
   ARIA_LABELS: {
     ADD_PARTICIPANT: 'Add participant to raffle',

@@ -5,6 +5,17 @@ import { useRace } from '../contexts/RaceContext';
 import { useDebounce } from '../hooks/useDebounce';
 import '../styles/BulkImportModal.css';
 
+/**
+ * Helper function to get the correct plural or singular form of a word
+ * @param {number} count - The count to check
+ * @param {string} singular - The singular form of the word
+ * @param {string} plural - The plural form of the word
+ * @returns {string} The appropriate form based on count
+ */
+const pluralize = (count, singular, plural) => {
+  return count === UI_CONSTANTS.PARTICIPANT_COUNT_SINGULAR ? singular : plural;
+};
+
 const BulkImportModal = ({ isOpen, onClose, initialText = '' }) => {
   const { participants, addParticipant } = useRace();
   const [textInput, setTextInput] = useState('');
@@ -91,15 +102,19 @@ const BulkImportModal = ({ isOpen, onClose, initialText = '' }) => {
     });
 
     // Build success message
-    const participantText = importedCount === UI_CONSTANTS.PARTICIPANT_COUNT_SINGULAR
-      ? UI_CONSTANTS.MESSAGES.PARTICIPANT
-      : UI_CONSTANTS.MESSAGES.PARTICIPANTS;
+    const participantText = pluralize(
+      importedCount,
+      UI_CONSTANTS.MESSAGES.PARTICIPANT,
+      UI_CONSTANTS.MESSAGES.PARTICIPANTS
+    );
     let message = `${UI_CONSTANTS.MESSAGES.SUCCESSFULLY_IMPORTED} ${importedCount} ${participantText}`;
 
     if (previewInfo.duplicateCount > 0) {
-      const duplicateText = previewInfo.duplicateCount === UI_CONSTANTS.PARTICIPANT_COUNT_SINGULAR
-        ? UI_CONSTANTS.MESSAGES.DUPLICATE_SKIPPED
-        : UI_CONSTANTS.MESSAGES.DUPLICATES_SKIPPED;
+      const duplicateText = pluralize(
+        previewInfo.duplicateCount,
+        UI_CONSTANTS.MESSAGES.DUPLICATE_SKIPPED,
+        UI_CONSTANTS.MESSAGES.DUPLICATES_SKIPPED
+      );
       message += ` (${previewInfo.duplicateCount} ${duplicateText} ${UI_CONSTANTS.MESSAGES.SKIPPED})`;
     }
 
@@ -172,7 +187,9 @@ const BulkImportModal = ({ isOpen, onClose, initialText = '' }) => {
             <div className="bulk-import-preview">
               <div className="bulk-import-preview-stat">
                 <span className="bulk-import-preview-label">{UI_CONSTANTS.MESSAGES.READY_TO_IMPORT}</span>
-                <span className="bulk-import-preview-value">{previewInfo.validNames.length} {previewInfo.validNames.length === UI_CONSTANTS.PARTICIPANT_COUNT_SINGULAR ? UI_CONSTANTS.MESSAGES.NAME : UI_CONSTANTS.MESSAGES.NAMES}</span>
+                <span className="bulk-import-preview-value">
+                  {previewInfo.validNames.length} {pluralize(previewInfo.validNames.length, UI_CONSTANTS.MESSAGES.NAME, UI_CONSTANTS.MESSAGES.NAMES)}
+                </span>
               </div>
 
               {previewInfo.duplicateCount > 0 && (
@@ -185,7 +202,9 @@ const BulkImportModal = ({ isOpen, onClose, initialText = '' }) => {
               {previewInfo.limitReached > 0 && (
                 <div className="bulk-import-preview-stat bulk-import-preview-warning">
                   <span className="bulk-import-preview-label">{UI_CONSTANTS.MESSAGES.LIMIT_REACHED}</span>
-                  <span className="bulk-import-preview-value">{previewInfo.limitReached} {UI_CONSTANTS.MESSAGES.EXCEED} {UI_CONSTANTS.MAX_PARTICIPANTS} {UI_CONSTANTS.MESSAGES.MAX}</span>
+                  <span className="bulk-import-preview-value">
+                    {previewInfo.limitReached} {UI_CONSTANTS.MESSAGES.EXCEEDS_MAX_LIMIT} {UI_CONSTANTS.MAX_PARTICIPANTS}
+                  </span>
                 </div>
               )}
             </div>
