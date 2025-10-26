@@ -13,6 +13,7 @@
 .participant-title {
   font-size: var(--font-size-xl);
   font-weight: bold;
+  color: #ff00ff;
   background: linear-gradient(90deg, #ff00ff, #9d00ff);
   -webkit-background-clip: text;
   background-clip: text;
@@ -26,6 +27,7 @@
   display: flex;
   gap: 10px;
   margin-bottom: 15px;
+  flex-wrap: wrap;
 }
 
 .participant-input {
@@ -35,7 +37,7 @@
   border-radius: 5px;
   padding: 10px;
   color: #ffffff;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-2xl);
   outline: none;
   transition: all 0.3s ease;
 }
@@ -82,6 +84,40 @@
   transform: none;
 }
 
+.participant-import-btn {
+  background: linear-gradient(135deg, #00ffff, #9d00ff);
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  color: #ffffff;
+  font-size: var(--font-size-2xl);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  white-space: nowrap;
+}
+
+.participant-import-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+}
+
+.participant-import-btn:active {
+  transform: translateY(0);
+}
+
+.participant-import-btn:disabled {
+  background: #333;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.5;
+}
+
+.participant-import-btn:disabled:hover {
+  transform: none;
+}
+
 .participant-error-message {
   background: rgba(255, 0, 0, 0.2);
   border: 1px solid #ff0000;
@@ -108,7 +144,8 @@
 .participant-count {
   text-align: center;
   color: #00ffff;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-2xl);
+  font-weight: bold;
   margin-bottom: 15px;
   text-shadow: 0 0 3px rgba(0, 255, 255, 0.3);
 }

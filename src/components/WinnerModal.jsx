@@ -12,7 +12,7 @@ const WinnerModal = ({ winner, onClose }) => {
     }, UI_CONSTANTS.WINNER_DISPLAY_DURATION);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [winner]);
 
   return (
     <div className="winner-modal-overlay" onClick={onClose}>
@@ -34,26 +34,26 @@ const WinnerModal = ({ winner, onClose }) => {
         )}
 
         <div className="winner-content">
-          <h1 className="winner-title">WINNER!</h1>
+          <h1 className="winner-title">{UI_CONSTANTS.TITLES.WINNER}</h1>
           <div className="winner-name" style={{ color: winner.color }}>
             {winner.name}
           </div>
           <div className="winner-stats">
             <div className="stat">
-              <span className="stat-label">FINISH TIME</span>
+              <span className="stat-label">{UI_CONSTANTS.TEXT.FINISH_TIME}</span>
               <span className="stat-value">{winner.time || UI_CONSTANTS.DEFAULT_FINISH_TIME}s</span>
             </div>
             <div className="stat">
-              <span className="stat-label">AVG SPEED</span>
+              <span className="stat-label">{UI_CONSTANTS.TEXT.AVG_SPEED}</span>
               <span className="stat-value">{winner.avgSpeed || UI_CONSTANTS.DEFAULT_SPEED}px/s</span>
             </div>
           </div>
-          <button className="btn btn-close" onClick={onClose} aria-label="Close winner modal">
-            CLOSE
+          <button className="btn btn-close" onClick={onClose} aria-label={UI_CONSTANTS.ARIA_LABELS.CLOSE_WINNER_MODAL}>
+            {UI_CONSTANTS.TEXT.CLOSE}
           </button>
         </div>
 
-        <div className="trophy-icon">🏆</div>
+        <div className="trophy-icon">{UI_CONSTANTS.ICONS.TROPHY}</div>
       </div>
     </div>
   );
