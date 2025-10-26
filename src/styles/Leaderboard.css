@@ -69,16 +69,19 @@
   text-align: center;
   font-weight: bold;
   color: #ffff00;
+  font-size: var(--font-size-xl);
 }
 
 .name {
   color: #ffffff;
+  font-size: var(--font-size-xl);
 }
 
 .wins {
   text-align: center;
   color: #00ff00;
   font-weight: bold;
+  font-size: var(--font-size-xl);
 }
 
 .stats-section {

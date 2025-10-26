@@ -1,5 +1,5 @@
 import { useRace } from '../contexts/RaceContext';
-import { RACE_CONSTANTS } from '../utils/constants';
+import { RACE_CONSTANTS, UI_CONSTANTS } from '../utils/constants';
 import '../styles/Leaderboard.css';
 
 const Leaderboard = () => {
@@ -23,26 +23,26 @@ const Leaderboard = () => {
   return (
     <div className="leaderboard">
       <div className="leaderboard-header">
-        <h2 className="panel-title">RACE RESULTS</h2>
-        <span className="races-count">Current Race</span>
+        <h2 className="panel-title">{UI_CONSTANTS.TITLES.RACE_RESULTS}</h2>
+        <span className="races-count">{UI_CONSTANTS.TEXT.CURRENT_RACE}</span>
       </div>
 
       <div className="leaderboard-body">
         {topFinishers.length === 0 ? (
-          <div className="no-races">Race not completed yet</div>
+          <div className="no-races">{UI_CONSTANTS.MESSAGES.RACE_NOT_COMPLETED}</div>
         ) : (
           <div className="leaderboard-list">
             <div className="leaderboard-header-row">
-              <span className="rank-header">PLACE</span>
-              <span className="name-header">PARTICIPANT</span>
-              <span className="wins-header">POSITION</span>
+              <span className="rank-header">{UI_CONSTANTS.TEXT.PLACE}</span>
+              <span className="name-header">{UI_CONSTANTS.TEXT.PARTICIPANT}</span>
+              <span className="wins-header">{UI_CONSTANTS.TEXT.POSITION}</span>
             </div>
             {topFinishers.map((finisher) => (
               <div key={finisher.id} className="leaderboard-item" style={{ borderLeft: `4px solid ${finisher.color}` }}>
                 <span className="rank">
-                  {finisher.place === 1 && '🏆 1st'}
-                  {finisher.place === 2 && '🥈 2nd'}
-                  {finisher.place === 3 && '🥉 3rd'}
+                  {finisher.place === 1 && `${UI_CONSTANTS.ICONS.GOLD_MEDAL} ${UI_CONSTANTS.TEXT.FIRST_PLACE}`}
+                  {finisher.place === 2 && `${UI_CONSTANTS.ICONS.SILVER_MEDAL} ${UI_CONSTANTS.TEXT.SECOND_PLACE}`}
+                  {finisher.place === 3 && `${UI_CONSTANTS.ICONS.BRONZE_MEDAL} ${UI_CONSTANTS.TEXT.THIRD_PLACE}`}
                 </span>
                 <span className="name">{finisher.name}</span>
                 <span className="wins">{Math.round(finisher.position)}</span>
@@ -52,20 +52,20 @@ const Leaderboard = () => {
         )}
 
         <div className="stats-section">
-          <h3 className="section-title">RACE INFO</h3>
+          <h3 className="section-title">{UI_CONSTANTS.TEXT.RACE_INFO}</h3>
           <div className="stats-grid">
             <div className="stat-item">
-              <span className="stat-label">RACE DURATION</span>
+              <span className="stat-label">{UI_CONSTANTS.TEXT.RACE_DURATION}</span>
               <span className="stat-value">{RACE_CONSTANTS.RACE_DURATION}s</span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">1ST PLACE</span>
+              <span className="stat-label">{UI_CONSTANTS.TEXT.FIRST_PLACE_LABEL}</span>
               <span className="stat-value">
-                {currentRace && currentRace.first ? currentRace.first.name : 'N/A'}
+                {currentRace && currentRace.first ? currentRace.first.name : UI_CONSTANTS.TEXT.NOT_AVAILABLE}
               </span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">PARTICIPANTS</span>
+              <span className="stat-label">{UI_CONSTANTS.TEXT.PARTICIPANTS_LABEL}</span>
               <span className="stat-value">
                 {participants.length}
               </span>

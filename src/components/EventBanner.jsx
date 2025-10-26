@@ -83,7 +83,7 @@ const EventBanner = () => {
 
       // Check file size
       if (file.size > AUDIO_CONSTANTS.MAX_FILE_SIZE_BYTES) {
-        setErrorMessage(`File size exceeds ${AUDIO_CONSTANTS.MAX_FILE_SIZE_MB}MB limit. Please select a smaller file.`);
+        setErrorMessage(`${UI_CONSTANTS.MESSAGES.FILE_SIZE_EXCEEDED} ${AUDIO_CONSTANTS.MAX_FILE_SIZE_MB}${UI_CONSTANTS.MESSAGES.MB_LIMIT}`);
         e.target.value = ''; // Reset file input
         setTimeout(() => setErrorMessage(''), UI_CONSTANTS.ERROR_MESSAGE_DURATION);
         return;
@@ -98,7 +98,7 @@ const EventBanner = () => {
           audioRef.current.load();
         }
       } else {
-        setErrorMessage('Please select an MP3, WAV, or FLAC file.');
+        setErrorMessage(UI_CONSTANTS.MESSAGES.INVALID_FILE_FORMAT);
         e.target.value = ''; // Reset file input
         setTimeout(() => setErrorMessage(''), UI_CONSTANTS.ERROR_MESSAGE_DURATION);
       }
@@ -162,8 +162,8 @@ const EventBanner = () => {
         <button
           className="audio-toggle-btn-inline"
           onClick={() => setShowAudioPanel(!showAudioPanel)}
-          title="Audio Controls"
-          aria-label="Toggle audio controls panel"
+          title={UI_CONSTANTS.TITLES.AUDIO_CONTROLS}
+          aria-label={UI_CONSTANTS.ARIA_LABELS.TOGGLE_AUDIO_CONTROLS}
         >
           🔊
         </button>
@@ -173,7 +173,7 @@ const EventBanner = () => {
           className="event-banner-input"
           value={eventName}
           onChange={handleChange}
-          placeholder="Enter Event Name (Optional)"
+          placeholder={UI_CONSTANTS.PLACEHOLDERS.EVENT_NAME}
           maxLength={UI_CONSTANTS.MAX_EVENT_NAME_LENGTH}
         />
       </div>
@@ -181,13 +181,13 @@ const EventBanner = () => {
       {showAudioPanel && (
         <div ref={audioPanelRef} className="audio-upload-panel-banner">
           <div className="audio-panel-header">
-            <h3 className="audio-panel-title">Background Music</h3>
+            <h3 className="audio-panel-title">{UI_CONSTANTS.TITLES.BACKGROUND_MUSIC}</h3>
             <button
               className="audio-close-btn"
               onClick={() => setShowAudioPanel(false)}
-              aria-label="Close audio controls panel"
+              aria-label={UI_CONSTANTS.ARIA_LABELS.CLOSE_AUDIO_CONTROLS}
             >
-              ×
+              {UI_CONSTANTS.ICONS.CLOSE}
             </button>
           </div>
 
@@ -202,26 +202,26 @@ const EventBanner = () => {
                   <button
                     className="audio-control-btn"
                     onClick={handlePlayPause}
-                    title={isPlaying ? 'Pause' : 'Play'}
-                    aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
+                    title={isPlaying ? UI_CONSTANTS.TEXT.PAUSE : UI_CONSTANTS.TEXT.PLAY}
+                    aria-label={isPlaying ? UI_CONSTANTS.ARIA_LABELS.PAUSE_AUDIO : UI_CONSTANTS.ARIA_LABELS.PLAY_AUDIO}
                   >
-                    {isPlaying ? '⏸️' : '▶️'}
+                    {isPlaying ? UI_CONSTANTS.ICONS.PAUSE : UI_CONSTANTS.ICONS.PLAY}
                   </button>
                   <button
                     className="audio-control-btn"
                     onClick={handleStop}
-                    title="Stop"
-                    aria-label="Stop audio"
+                    title={UI_CONSTANTS.TEXT.STOP}
+                    aria-label={UI_CONSTANTS.ARIA_LABELS.STOP_AUDIO}
                   >
-                    ⏹️
+                    {UI_CONSTANTS.ICONS.STOP}
                   </button>
                   <button
                     className={`audio-control-btn ${shouldRepeat ? 'active' : ''}`}
                     onClick={handleRepeatToggle}
-                    title={shouldRepeat ? 'Repeat On' : 'Repeat Off'}
-                    aria-label={shouldRepeat ? 'Disable repeat' : 'Enable repeat'}
+                    title={shouldRepeat ? UI_CONSTANTS.TEXT.REPEAT_ON : UI_CONSTANTS.TEXT.REPEAT_OFF}
+                    aria-label={shouldRepeat ? UI_CONSTANTS.ARIA_LABELS.DISABLE_REPEAT : UI_CONSTANTS.ARIA_LABELS.ENABLE_REPEAT}
                   >
-                    🔁
+                    {UI_CONSTANTS.ICONS.REPEAT}
                   </button>
                 </div>
 
@@ -229,19 +229,19 @@ const EventBanner = () => {
                   className="audio-remove-btn"
                   onClick={handleRemoveAudio}
                 >
-                  Remove Audio
+                  {UI_CONSTANTS.TEXT.REMOVE_AUDIO}
                 </button>
               </div>
             ) : (
               <div className="audio-upload-section">
                 <p className="audio-upload-hint">
-                  Upload an audio file to play during races
+                  {UI_CONSTANTS.MESSAGES.UPLOAD_AUDIO_HINT}
                 </p>
                 <button
                   className="audio-upload-btn"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  Choose Audio File
+                  {UI_CONSTANTS.TEXT.CHOOSE_AUDIO_FILE}
                 </button>
                 <input
                   ref={fileInputRef}
@@ -251,11 +251,11 @@ const EventBanner = () => {
                   className="audio-file-input"
                 />
                 <div className="audio-supported-formats">
-                  Supported: MP3, WAV, FLAC
+                  {UI_CONSTANTS.MESSAGES.AUDIO_FORMATS_SUPPORTED}
                 </div>
                 {errorMessage && (
                   <div className="audio-error-message">
-                    ⚠️ {errorMessage}
+                    {UI_CONSTANTS.ICONS.WARNING} {errorMessage}
                   </div>
                 )}
               </div>
@@ -263,7 +263,7 @@ const EventBanner = () => {
 
             <div className="audio-volume-control">
               <label className="audio-volume-label">
-                Volume: {Math.round(audioVolume * UI_CONSTANTS.PERCENTAGE_MULTIPLIER)}%
+                {UI_CONSTANTS.TEXT.VOLUME} {Math.round(audioVolume * UI_CONSTANTS.PERCENTAGE_MULTIPLIER)}%
               </label>
               <input
                 type="range"
