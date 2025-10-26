@@ -12,6 +12,8 @@ const BulkImportModal = ({ isOpen, onClose, initialText = '' }) => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const textareaRef = useRef(null);
+  const successTimeoutRef = useRef(null);
+  const errorTimeoutRef = useRef(null);
   const debouncedTextInput = useDebounce(textInput, UI_CONSTANTS.BULK_IMPORT_DEBOUNCE_DELAY);
 
   // Handle modal state changes - set initial text when opening, clear state when closing
@@ -27,6 +29,15 @@ const BulkImportModal = ({ isOpen, onClose, initialText = '' }) => {
       setPreviewInfo(null);
       setSuccessMessage('');
       setErrorMessage('');
+      // Clear any pending timeouts
+      if (successTimeoutRef.current) {
+        clearTimeout(successTimeoutRef.current);
+        successTimeoutRef.current = null;
+      }
+      if (errorTimeoutRef.current) {
+        clearTimeout(errorTimeoutRef.current);
+        errorTimeoutRef.current = null;
+      }
     }
   }, [isOpen, initialText]);
 
@@ -43,10 +54,29 @@ const BulkImportModal = ({ isOpen, onClose, initialText = '' }) => {
     setPreviewInfo(importPreview);
   }, [debouncedTextInput, participants]);
 
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (successTimeoutRef.current) {
+        clearTimeout(successTimeoutRef.current);
+      }
+      if (errorTimeoutRef.current) {
+        clearTimeout(errorTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleImport = () => {
     if (!previewInfo || previewInfo.validNames.length === 0) {
       setErrorMessage(UI_CONSTANTS.MESSAGES.NO_VALID_NAMES);
-      setTimeout(() => setErrorMessage(''), UI_CONSTANTS.NOTIFICATION_DURATION);
+      // Clear any existing error timeout before setting a new one
+      if (errorTimeoutRef.current) {
+        clearTimeout(errorTimeoutRef.current);
+      }
+      errorTimeoutRef.current = setTimeout(() => {
+        setErrorMessage('');
+        errorTimeoutRef.current = null;
+      }, UI_CONSTANTS.NOTIFICATION_DURATION);
       return;
     }
 
@@ -81,13 +111,27 @@ const BulkImportModal = ({ isOpen, onClose, initialText = '' }) => {
     setTextInput('');
     setPreviewInfo(null);
 
-    setTimeout(() => {
+    // Clear any existing success timeout before setting a new one
+    if (successTimeoutRef.current) {
+      clearTimeout(successTimeoutRef.current);
+    }
+    successTimeoutRef.current = setTimeout(() => {
       setSuccessMessage('');
       onClose();
+      successTimeoutRef.current = null;
     }, UI_CONSTANTS.BULK_IMPORT_SUCCESS_MESSAGE_DURATION);
   };
 
   const handleClose = () => {
+    // Clear any pending timeouts
+    if (successTimeoutRef.current) {
+      clearTimeout(successTimeoutRef.current);
+      successTimeoutRef.current = null;
+    }
+    if (errorTimeoutRef.current) {
+      clearTimeout(errorTimeoutRef.current);
+      errorTimeoutRef.current = null;
+    }
     setTextInput('');
     setPreviewInfo(null);
     setSuccessMessage('');
