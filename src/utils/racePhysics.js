@@ -31,6 +31,12 @@ export class RacePhysics {
     this.finalSprintTriggered = false; // Track if final sprint surge has occurred
   }
 
+  /**
+   * Initializes duck racers with unique characteristics for fair racing.
+   *
+   * @param {Array<{name: string}>} participants - Array of participant objects with name property
+   * @returns {Array<Object>} Array of initialized duck objects with racing properties
+   */
   initializeDucks(participants = []) {
     // Input validation: ensure participants is an array of objects with a 'name' property
     const validParticipants = Array.isArray(participants) &&
@@ -86,6 +92,12 @@ export class RacePhysics {
     return this.ducks;
   }
 
+  /**
+   * Updates duck positions for the current frame using time-based movement.
+   *
+   * @param {number} elapsedSeconds - Total time elapsed since race start (used for progress tracking)
+   * @param {number} deltaTime - Time since last frame in seconds (used for frame rate independent movement)
+   */
   updateDuckPositions(elapsedSeconds, deltaTime) {
     const now = Date.now();
 
@@ -264,6 +276,11 @@ export class RacePhysics {
     };
   }
 
+  /**
+   * Resets the race physics state and reinitializes ducks with new participants.
+   *
+   * @param {Array<{name: string}>} participants - Array of participant objects with name property
+   */
   reset(participants = []) {
     this.initializeDucks(participants);
     this.raceStartTime = null;

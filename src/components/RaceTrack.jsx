@@ -218,6 +218,7 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
     const animate = () => {
       const currentTime = Date.now();
+      // Calculate time since last frame in seconds for frame rate independence
       const deltaTime = (currentTime - lastFrameTime) / UI_CONSTANTS.MILLISECONDS_TO_SECONDS;
       const elapsed = (currentTime - startTime) / UI_CONSTANTS.MILLISECONDS_TO_SECONDS;
       lastFrameTime = currentTime;
