@@ -213,11 +213,14 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     let startTime = Date.now();
+    let lastFrameTime = startTime;
     let backgroundOffset = UI_CONSTANTS.INITIAL_BACKGROUND_OFFSET;
 
     const animate = () => {
       const currentTime = Date.now();
+      const deltaTime = (currentTime - lastFrameTime) / UI_CONSTANTS.MILLISECONDS_TO_SECONDS;
       const elapsed = (currentTime - startTime) / UI_CONSTANTS.MILLISECONDS_TO_SECONDS;
+      lastFrameTime = currentTime;
 
       if (elapsed >= RACE_CONSTANTS.RACE_DURATION) {
         const winners = racePhysicsRef.current.determineWinners();
@@ -229,10 +232,11 @@ const RaceTrack = ({ isRacing, onRaceEnd }) => {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      backgroundOffset -= VISUAL_CONSTANTS.BACKGROUND_SCROLL_SPEED / UI_CONSTANTS.FRAME_RATE_DIVISOR;
+      // Time-based background scrolling: pixels per second * seconds = pixels moved
+      backgroundOffset -= VISUAL_CONSTANTS.BACKGROUND_SCROLL_SPEED * deltaTime;
       backgroundOffset = drawBackground(ctx, backgroundOffset);
 
-      const updatedDucks = racePhysicsRef.current.updateDuckPositions(elapsed);
+      const updatedDucks = racePhysicsRef.current.updateDuckPositions(elapsed, deltaTime);
       drawDucks(ctx, updatedDucks, currentTime); // Trails enabled (currentTime provided)
 
       // Update ARIA announcement for accessibility
