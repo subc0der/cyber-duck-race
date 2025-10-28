@@ -3,7 +3,7 @@ export const RACE_CONSTANTS = {
   SPEED_CHANGE_INTERVAL: 2000,
   MIN_SPEED_MULTIPLIER: 0.4,
   MAX_SPEED_MULTIPLIER: 2.0,
-  BASE_SPEED: 100,
+  BASE_SPEED: 200, // Doubled to match original 120Hz speed with delta time implementation
   FINISH_LINE_X: 4500,
   DUCK_START_X: 80,
   DUCK_SPACING: 80,
@@ -16,7 +16,7 @@ export const RACE_CONSTANTS = {
 };
 
 export const VISUAL_CONSTANTS = {
-  BACKGROUND_SCROLL_SPEED: 300,
+  BACKGROUND_SCROLL_SPEED: 600, // Doubled to match original 120Hz speed with delta time implementation
   CANVAS_WIDTH: 800,
   CANVAS_HEIGHT: 600,
   // Background rendering

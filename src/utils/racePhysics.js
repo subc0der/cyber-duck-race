@@ -86,7 +86,7 @@ export class RacePhysics {
     return this.ducks;
   }
 
-  updateDuckPositions(elapsedSeconds) {
+  updateDuckPositions(elapsedSeconds, deltaTime) {
     const now = Date.now();
 
     if (!this.lastSpeedUpdate || now - this.lastSpeedUpdate > RACE_CONSTANTS.SPEED_CHANGE_INTERVAL) {
@@ -104,7 +104,8 @@ export class RacePhysics {
 
       const effectiveSpeed = RACE_CONSTANTS.BASE_SPEED * duck.speedMultiplier * speedAdjustment;
 
-      duck.position += effectiveSpeed / PHYSICS_CONSTANTS.POSITION_UPDATE_RATE;
+      // Time-based movement: pixels per second * seconds = pixels moved
+      duck.position += effectiveSpeed * deltaTime;
 
       // Calculate displayX based on absolute position (starts at start line, moves right)
       // This ensures ducks race from left to right across the screen
